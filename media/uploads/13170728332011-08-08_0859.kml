@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document>
+<atom:author><atom:name>My Tracks running on HTC Wildfire</atom:name></atom:author>
+<name><![CDATA[2011-08-08 08:59]]></name>
+<description><![CDATA[]]></description>
+<Style id="track"><LineStyle><color>7f0000ff</color><width>4</width></LineStyle></Style>
+<Style id="sh_green-circle"><IconStyle><scale>1.3</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/grn-circle.png</href></Icon><hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/></IconStyle></Style>
+<Style id="sh_red-circle"><IconStyle><scale>1.3</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href></Icon><hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/></IconStyle></Style>
+<Style id="sh_ylw-pushpin"><IconStyle><scale>1.3</scale><Icon><href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href></Icon><hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/></IconStyle></Style>
+<Style id="sh_blue-pushpin"><IconStyle><scale>1.3</scale><Icon><href>http://maps.google.com/mapfiles/kml/pushpin/blue-pushpin.png</href></Icon><hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/></IconStyle></Style>
+<Style id="sh_green-pushpin"><IconStyle><scale>1.3</scale><Icon><href>http://maps.google.com/mapfiles/kml/pushpin/grn-pushpin.png</href></Icon><hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/></IconStyle></Style>
+<Style id="sh_red-pushpin"><IconStyle><scale>1.3</scale><Icon><href>http://maps.google.com/mapfiles/kml/pushpin/red-pushpin.png</href></Icon><hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/></IconStyle></Style>
+<Placemark>
+  <name><![CDATA[(Start)]]></name>
+  <description><![CDATA[]]></description>
+  <styleUrl>#sh_green-circle</styleUrl>
+  <Point>
+    <coordinates>-0.195098,51.515225</coordinates>
+  </Point>
+</Placemark>
+<Placemark>
+<name><![CDATA[2011-08-08 08:59]]></name>
+<description><![CDATA[]]></description>
+<styleUrl>#track</styleUrl>
+<MultiGeometry>
+<LineString><coordinates>-0.195098,51.515225,75.0 -0.195034,51.515037,75.0 -0.195055,51.514967,75.0 -0.195114,51.514924,75.0 -0.195157,51.514881,74.0 -0.195195,51.514838,74.0 -0.195275,51.51479,73.0 -0.195329,51.514753,74.0 -0.195366,51.514699,72.0 -0.195393,51.514651,71.0 -0.195468,51.514635,70.0 -0.195468,51.514635,70.0 -0.195468,51.514635,71.0 -0.195516,51.514586,70.0 -0.195516,51.514586,70.0 -0.195516,51.514586,71.0 -0.195592,51.514538,71.0 -0.195538,51.5145,72.0 -0.195484,51.514533,72.0 -0.195404,51.514554,71.0 -0.195495,51.514559,75.0 -0.195484,51.514613,76.0 -0.195538,51.514645,76.0 -0.195651,51.514624,76.0 -0.195661,51.514543,78.0 -0.195747,51.514495,78.0 -0.195817,51.514441,78.0 -0.195876,51.514399,77.0 -0.195935,51.514356,75.0 -0.195989,51.514323,75.0 -0.196101,51.514275,74.0 -0.196171,51.514222,75.0 -0.196225,51.514184,75.0 -0.1963,51.514125,76.0 -0.196337,51.514082,75.0 -0.196402,51.514039,76.0 -0.196482,51.514023,77.0 -0.196541,51.513991,78.0 -0.196584,51.513921,78.0 -0.196627,51.513873,78.0 -0.196686,51.513808,78.0 -0.196761,51.513744,78.0 -0.196852,51.51369,78.0 -0.196884,51.513648,78.0 -0.196954,51.513589,78.0 -0.197002,51.51354,78.0 -0.197067,51.513465,78.0 -0.197094,51.513417,78.0 -0.197153,51.513331,78.0 -0.197169,51.513277,78.0 -0.197201,51.513213,77.0 -0.197238,51.513154,77.0 -0.197265,51.513063,77.0 -0.197319,51.513031,77.0 -0.197351,51.512966,78.0 -0.197383,51.512891,78.0 -0.197399,51.512843,78.0 -0.197437,51.512789,78.0 -0.197496,51.512687,78.0 -0.197512,51.512634,78.0 -0.197571,51.512537,78.0 -0.197587,51.512483,78.0 -0.197598,51.51243,78.0 -0.197625,51.512333,77.0 -0.197635,51.512253,77.0 -0.197646,51.512199,77.0 -0.197657,51.51214,77.0 -0.197684,51.51206,77.0 -0.197694,51.512006,77.0 -0.1977,51.511947,77.0 -0.197705,51.511899,77.0 -0.1977,51.511834,76.0 -0.197678,51.51177,76.0 -0.197673,51.511716,76.0 -0.197657,51.511652,75.0 -0.197657,51.511593,75.0 -0.197646,51.511545,74.0 -0.197641,51.511453,74.0 -0.197651,51.511357,74.0 -0.19763,51.511303,74.0 -0.197576,51.511255,74.0 -0.197523,51.511164,74.0 -0.197485,51.511062,74.0 -0.197448,51.510955,73.0 -0.197437,51.51089,72.0 -0.197426,51.510826,72.0 -0.197399,51.510761,72.0 -0.197399,51.510702,72.0 -0.197389,51.510638,72.0 -0.197378,51.510584,72.0 -0.197362,51.51052,71.0 -0.197346,51.510461,71.0 -0.197324,51.510413,71.0 -0.197303,51.510359,72.0 -0.197287,51.510306,72.0 -0.197265,51.510177,72.0 -0.197255,51.510128,72.0 -0.19726,51.510059,72.0 -0.197233,51.510005,73.0 -0.197222,51.509951,73.0 -0.197233,51.509876,72.0 -0.197238,51.509812,73.0 -0.197238,51.509758,72.0 -0.197255,51.509699,73.0 -0.197185,51.50964,72.0 -0.197153,51.509576,74.0 -0.197147,51.509517,74.0 -0.197169,51.509458,75.0 </coordinates></LineString>
+</MultiGeometry>
+</Placemark>
+<Placemark>
+  <name><![CDATA[(End)]]></name>
+  <description><![CDATA[Created by <a href='http://mytracks.appspot.com'>My Tracks</a> on Android.<p>Total Distance: 0.81 km (0.5 mi)<br>Total Time: 3:41<br>Moving Time: 3:32<br>Average Speed: 13.11 km/h (8.1 mi/h)<br> Average Moving Speed: 13.69 km/h (8.5 mi/h)<br> Max Speed: 22.50 km/h (14.0 mi/h)<br>Min Elevation: 71 m (232 ft)<br>Max Elevation: 78 m (255 ft)<br>Elevation Gain: 9 m (28 ft)<br>Max Grade: 0 %<br>Min Grade: -3 %<br>Recorded: Mon Aug 08 08:59:56 CEST 2011<br>Activity type: -<br><img border="0" src="http://chart.apis.google.com/chart?&chs=600x350&cht=lxy&chtt=Elevation&chxt=x,y&chxr=0,0,0,0|1,0.0,100.0,25&chco=009A00&chm=B,00AA00,0,0,0&chg=100000,25.0,1,0&chd=e:,"/>]]></description>
+  <styleUrl>#sh_red-circle</styleUrl>
+  <Point>
+    <coordinates>-0.197169,51.509458</coordinates>
+  </Point>
+</Placemark>
+</Document>
+</kml>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document>
+	<name>Relatos de Queimadas no Brasil em 2010</name>
+	<description>Estes relatos foram coletados no mapa coletivo Chega de Queimadas durante o ano de 2010. Os dados foram geotaggeados em uma plataforma ushahidi - http://chegadequeimadas.crowdmap.com/</description>
+	<atom:author>
+        <atom:name>gufalei</atom:name>
+    </atom:author><atom:link href="http://geocommons.com/maps/82439"></atom:link>
+	<NetworkLink>
+		<name>Relatos de Queimadas no Brasil em 2010 -</name>
+		<Link>
+			<href>http://geocommons.com/maps/82439/layers/0.kmz?timestamp=MjAxMS0wNi0yNCAwMDowOToxMCBVVEM%3D</href>
+		</Link>
+	</NetworkLink>
+</Document>
+</kml>

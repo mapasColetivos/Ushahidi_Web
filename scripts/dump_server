@@ -1,0 +1,2 @@
+#!/usr/bin/env sh
+mysqldump -u root -ptomanik685secure mapas > base_dump.sql 

@@ -1,0 +1,58 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1038\cocoasubrtf360
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10440\viewh13980\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\f0\b\fs24 \cf0 [BTN_CONVIDAR]\
+\
+
+\b0 \
+\ul head code\ulnone \
+\
+<style type="text/css">\
+\
+input.groovybutton\
+\{\
+   font-size:12px;\
+   color:#066666;\
+   background-color:#FFFFFF;\
+   border-style:solid;\
+   border-color:#066666;\
+   border-width:1px;\
+\}\
+\
+</style>\
+\
+<script language="javascript">\
+\
+function goLite(FRM,BTN)\
+\{\
+   window.document.forms[FRM].elements[BTN].style.color = "#cc0000";\
+   window.document.forms[FRM].elements[BTN].style.borderColor = "#cc0000";\
+\}\
+\
+function goDim(FRM,BTN)\
+\{\
+   window.document.forms[FRM].elements[BTN].style.color = "#066666";\
+   window.document.forms[FRM].elements[BTN].style.borderColor = "#066666";\
+\}\
+\
+</script>
+\b \
+\
+\
+
+\b0 \ul Button code\
+\
+\ulnone <form name="groovyform">\
+<input\
+   type="button"\
+   name="groovybtn1"\
+   class="groovybutton"\
+   value="Convidar"\
+   title=""\
+   onMouseOver="goLite(this.form.name,this.name)"\
+   onMouseOut="goDim(this.form.name,this.name)">\
+</form>\
+}

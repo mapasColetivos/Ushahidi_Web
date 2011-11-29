@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.2">
+<Document>
+  <name>teste</name>
+  <description><![CDATA[]]></description>
+  <Style id="style2">
+    <IconStyle>
+      <Icon>
+        <href>http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png</href>
+      </Icon>
+    </IconStyle>
+  </Style>
+  <Style id="style3">
+    <IconStyle>
+      <Icon>
+        <href>http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png</href>
+      </Icon>
+    </IconStyle>
+  </Style>
+  <Style id="style1">
+    <IconStyle>
+      <Icon>
+        <href>http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png</href>
+      </Icon>
+    </IconStyle>
+  </Style>
+  <Placemark>
+    <name>Marcador de lugar 1</name>
+    <description><![CDATA[]]></description>
+    <styleUrl>#style2</styleUrl>
+    <Point>
+      <coordinates>-60.029297,-12.211180,0.000000</coordinates>
+    </Point>
+  </Placemark>
+  <Placemark>
+    <name>Marcador de lugar 2</name>
+    <description><![CDATA[]]></description>
+    <styleUrl>#style3</styleUrl>
+    <Point>
+      <coordinates>-60.030640,-12.210834,0.000000</coordinates>
+    </Point>
+  </Placemark>
+  <Placemark>
+    <name>trestes</name>
+    <description><![CDATA[dfs]]></description>
+    <styleUrl>#style1</styleUrl>
+    <Point>
+      <coordinates>-60.029694,-12.209282,0.000000</coordinates>
+    </Point>
+  </Placemark>
+</Document>
+</kml>

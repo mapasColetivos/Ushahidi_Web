@@ -1,0 +1,133 @@
+/*
+Theme Name: Workaholic
+Theme URI: http://graphpaperpress.com/
+Description: Showcase your work on the web.
+Version: 3.0.5
+Author: Chandra Maharzan for Graph Paper Press
+Author URI: http://graphpaperpress.com/
+Tags: minimalistic, clean, fixed width, three column, two column, separate blog, portfolio
+License: GPL
+*/
+
+/* load 960 framework */
+@import url("library/960/reset.css");
+@import url("library/960/text.css");
+@import url("library/960/960.css");
+@import url("library/nav/superfish.css");
+
+/* global styles */
+body {background-image: url('images/bg.jpg'); background-repeat: repeat; margin: 20px 0;color:#666}
+h1,h2,h3,h4,h5 {color:#444;}
+a {text-decoration: none;border-bottom:1px solid #ddd; color: #7ca3ce}
+a:hover {border-bottom:1px solid #d86e93; color: #d8528c}
+h4 {font-size:18px;margin:0;padding:0;color:#333}
+strong {font-weight: bold;}
+em {font-style: italic}
+
+/* headers */
+#header {margin-top: 25px;margin-bottom: 25px;}
+#header #logo {float:left}
+#header h1 {margin:0;text-transform: uppercase;font-size: 25px;padding:0;line-height: 1}
+#header h1 a {color: #333;border:none;}
+#header h1 a:hover {color:#666;}
+#header .description {color:#bbb;font-family: Georgia;font-style: italic;font-size: 14px }
+
+/* intro text */
+#introduction h2 {font-size:30px;font-family: Georgia;margin:0 0 5px 0;padding:0}
+#introduction h3 {line-height:1.3;color: #999;font-size: 18px}
+
+/* twitter */
+#twitter {background:url(images/twitter-bg.gif) 0px 30px no-repeat;margin-bottom:25px;}
+#twitter-top {background:url(images/twitter-top.gif)  0 0 no-repeat;}
+#twitter_update_list {list-style:none;margin:0;padding:0;background:url(images/twitter-bot.gif)  left bottom no-repeat;min-height:80px;}
+#twitter_update_list li {list-style: none;margin:0;font-size:12px;padding:25px 60px 15px 20px;line-height: 1.3}
+#twitter_update_list li span {display: block}
+
+/* Navigation Highlights */
+/*.current-cat a, .current_page_item a {font-weight:bold;}*/
+.sf-menu a:hover{color:#d852bc;}
+
+/* NAVIGATION - Search for something */
+#search { position: relative; float: right; top: 5px; height:40px; width:165px;}
+#search #s { float: left; display: block; margin:0;padding: 5px 5px 5px 20px; width: 140px; border: none; font-size: 12px; color: #999; vertical-align: bottom;  background: #e5ded6 url(images/search.png) 3px 5px no-repeat;-moz-border-radius: 5px;-webkit-border-radius: 5px;line-height: 1}
+#search #s:hover { color: #666;background: #ddd5cd url(images/search.png) 3px 5px no-repeat;}
+
+/* Portfolio Gallery */
+#gallery {border:10px solid #e5ded6;}
+#gallery-nav {margin:2px 0 25px 0;padding: 0;list-style: none;}
+#gallery-nav li { display: inline; margin:0;padding:4px 2px; background:#f6ede7; }
+#gallery-nav li.current {background: #e5ded6; }
+#gallery-nav li.current a {color:#666}
+#gallery-nav li a {color:#aaa;font-weight: bold; border: none; padding:5px}
+
+/* content */
+#content h2 {text-transform: uppercase;font-size: 20px;margin-bottom: 15px;font-weight: bold}
+#content div.portfolio{background: #fff url(images/thumb-bg.jpg) 8px 8px no-repeat;margin-bottom: 22px;}
+#content div.portfolio  a.thumb {display: block;position: relative;overflow: hidden;height: 134px;padding: 15px;color: #333;border:none;line-height: 1.2;border: 1px solid #eee;}
+#content div.portfolio h4 {position:relative;}
+#content div.portfolio a:focus, #content div.portfolio a:hover { text-decoration: none; }
+#content div.portfolio img {position: absolute;top: 8px;left: 8px;width: 284px;height: 150px;border: 0;z-index:3;}
+#content div.portfolio span.title { position:absolute;bottom:0;left:0;padding:20px 20px 38px 25px; line-height: 1.2}
+#content div.portfolio span.category { position:absolute;bottom:0;left:0;margin:0 20px 20px 25px; font-size:12px;color:#aaa;}
+#content div.portfolio span.category a {font-size:12px;border: none;color:#888;}
+
+/* prev next navigation */
+.navigation, .navigation-archive {clear: both;margin-bottom: 20px;height: 33px;text-align:center}
+.next  {background: url(images/next.gif) 0 -66px no-repeat;width: 85px; height: 33px;float: right}
+.prev  {background: url(images/prev.gif) 0 -66px no-repeat;width: 115px; height: 33px;float: right}
+.next a {background: url(images/next.gif) 0 0 no-repeat;}
+.prev a {background: url(images/prev.gif) 0 0 no-repeat;}
+.next a, .prev a {float:right;display:block; height:33px;text-indent:-9999px;border:none;}
+.next a {width:85px;}
+.prev a {width:115px;}
+.next a:hover, .prev a:hover {background-position: 0px -33px;border:none}
+.navigation-archive .prev, .page-template-page-blog-php .prev {float:left}
+
+/* widgets */
+h3.sub {margin-bottom:7px;font-weight: bold}
+.item ul li {display: block;list-style:none;border-top:1px solid #ddd;margin:0;padding:8px 0;}
+.item ul li a {display: block;border: none;font-weight: bold;}
+.item dt {font-weight: bold;float:left;width:80px;padding-bottom:7px;clear:left}
+.item dd {padding-bottom:7px;}
+.portfolio p {margin: 0;padding: 0;font-family:Georgia,Times; font-style: italic;font-size: 12px;}
+.item h4 {color:#666;margin-bottom: 10px}
+.textwidget {margin-bottom:30px}
+#wp-calendar  {width: 100%}
+#wp-calendar td {text-align: center;}
+#wp-calendar thead {font-weight: bold;background: #eee}
+#wp-calendar td#prev {text-align: left}
+#wp-calendar td#next {text-align: right}
+
+/* Content Area */
+.postmetadata {font-size: 12px;}
+small {color: #bbb}
+hr.dotted {border:none;border-bottom: 1px dotted #ccc }
+.pagetitle, .post h2 {margin-top:10px}
+.post h3 a{font-weight: bold} 
+
+/* Form Elements */
+input,textarea {-moz-border-radius-bottomleft:5px;-moz-border-radius-bottomright:5px;-moz-border-radius-topleft:5px;-moz-border-radius-topright:5px;font-size: 12px;-webkit-border-radius: 5px;border: none;padding:6px; background: #E5DED6;line-height: 1}
+textarea {font-family: "Lucida Sans"}
+#submit {font-weight: bold; padding: 5px 10px;border:1px solid #aaa}
+
+/* Comments */
+#respond h3 {border-bottom: 1px solid #ddd;padding-bottom:7px}
+.commentlist {padding: 0;margin: 0;}
+.commentlist li {margin: 10px 0 0px;padding: 10px 10px 10px 10px;list-style: none;border:1px solid #ddd; }
+.commentlist li ul {padding: 0;margin: 0;}
+.commentlist li ul li {margin-right: 0px;margin-left: 0px;}
+.commentlist li .avatar {float: left;border: 1px solid #eee;padding: 2px;background: #fff;margin-right:10px}
+.commentlist cite, .commentlist cite a {font-weight: bold;font-style: normal;}
+.commentmetadata {font-weight: normal;font-size: 11px}
+.children { padding: 0; }
+.nocomments {text-align: center;margin: 0;padding: 0;}
+.commentmetadata {margin: 0 0 10px 0;display: block;}
+.even, .alt {background:#f8f6f2;}
+ul.children li.odd {background: #f6ede7;}
+.thread-odd {background: #f6ede7;}
+.thread-even {background:#f8f6f2;}
+.depth-1 {}
+.says {display:none;}
+.cancel-comment-reply small {font-size:1em;}
+.bypostauthor {background: #fff}
+.cancel-comment-reply {margin-bottom: 20px}

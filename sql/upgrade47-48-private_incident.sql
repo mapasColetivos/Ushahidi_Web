@@ -1,0 +1,1 @@
+ALTER TABLE `incident` ADD `incident_privacy` boolean NOT NULL DEFAULT FALSE

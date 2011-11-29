@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+echo "Pushing"
+git push
+
+echo "Dump Database"
+mysqldump -u root -ptomanik685secure mapas > deploy.dump
+echo 'update settings SET api_google="ABQIAAAAIMSPETD5ilW0o9kLPhefHxSuMl42ozj_sI6By_NgYKwrepqxUBS755zq9G_pSlvuwbDuV_1pwlAxmQ";' >> deploy.dump
+
+echo "Sending dump to remote host"
+scp deploy.dump mapas:/home/mapascom/public_html/mapas/
+
+echo "Performing remote tasks"
+ssh mapas 'mysqldump -u mapascom_root -psecure_tailorbirds_685 mapascom_mapas > /home/mapascom/public_html/mapas/lastbkp;cd /home/mapascom/public_html/mapas/;git pull;mysql -u mapascom_root -psecure_tailorbirds_685 -D mapascom_mapas < /home/mapascom/public_html/mapas/deploy.dump;rm -Rf /home/mapascom/public_html/mapas/application/cache/*'
+
+echo "Cleaning"
+rm deploy.dump
