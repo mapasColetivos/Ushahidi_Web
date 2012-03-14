@@ -79,16 +79,20 @@
 					</table>
 					<div id="maps_count_list">
 						<ul class="map_list" id="created_counter_list">							
-							<?php foreach ($user->created_maps() as $map) { ?>
-								<li>
-									<a href="<?php echo url::base()."reports/view/".$map->id ?>">
-										<?php echo $map->incident_title ?>
-									</a>
-								</li>
-							<?php } ?>
+							<?php foreach ($user->created_maps() as $map) { 
+								  if ( $map->incident_privacy-1) { ?>
+								      <li>
+									      <a href="<?php echo url::base()."reports/view/".$map->id ?>">
+										      <?php echo $map->incident_title ?>
+									      </a>
+								      </li>
+							<?php 	  } 
+								}?>
+
 						</ul>				
 						<ul class="map_list" id="available_counter_list" style='display:none'>							
 							<?php foreach ($user->available_maps() as $map) { ?>
+
 								<li>
 									<a href="<?php echo url::base()."reports/view/".$map->id ?>">
 										<?php echo $map->incident_title ?>
