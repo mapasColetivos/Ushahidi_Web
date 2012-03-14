@@ -79,7 +79,7 @@ class LTASState extends WizardState {
                 <div class="inside" style="margin: 15px;">
                   <table class="form-table">
                     <tr>
-                      <?php $value = $_POST["jwplayermodule_plugin_ltas_enable"] ? $_POST["jwplayermodule_plugin_ltas_enable"] : $ltas["enabled"]; ?>
+                      <?php $value = isset($_POST["jwplayermodule_plugin_ltas_enable"]) ? $_POST["jwplayermodule_plugin_ltas_enable"] : isset($ltas["enabled"]) ? $ltas["enabled"] : false; ?>
                       <?php unset($_POST["jwplayermodule_plugin_ltas_enable"]); ?>
                       <td><input name="jwplayermodule_plugin_ltas_enable" type="checkbox" value="1" <?php checked(true , $value); ?> />
                       <span>Enable LongTail AdSolution</span>
@@ -89,7 +89,7 @@ class LTASState extends WizardState {
                       <td colspan="2"><span class="description"><?php echo JW_PLAYER_LTAS_DESC; ?></span></td>
                     </tr>
                     <tr>
-                      <?php $value = $_POST["jwplayermodule_plugin_ltas_cc"] ? $_POST["jwplayermodule_plugin_ltas_cc"] : $ltas["channel_code"]; ?>
+                      <?php $value = isset($_POST["jwplayermodule_plugin_ltas_cc"]) ? $_POST["jwplayermodule_plugin_ltas_cc"] : $ltas["channel_code"]; ?>
                       <?php unset($_POST["jwplayermodule_plugin_ltas_cc"]); ?>
                       <th>ltas.cc</th>
                       <td>

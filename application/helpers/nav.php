@@ -29,6 +29,11 @@ class nav_Core {
 		$menu .= ($this_page == "about") ? " id=\"active\"" : "";
 		$menu .= ">".Kohana::lang('ui_main.about')."</a></li></ul>";
 		
+		$menu .= "<li><a href=\"".url::site()."help\" ";
+		$menu .= ($this_page == "help") ? " id=\"active\"" : "";
+		//$menu .= ">".Kohana::lang('ui_main.help')."</a></li></ul>";
+		$menu .= ">como colaborar</a></li>"; 
+
 		
 		$menu .= "<ul id='galery'><li><a class='first' href=\"".url::site()."reports\" ";
 		$menu .= ($this_page == 'reports') ? " id=\"active\"" : "";
@@ -44,7 +49,7 @@ class nav_Core {
 
     $menu .= "<ul id='login'>";
 		$menu .= "<li><a href=\"".url::site()."reports/submit\" ";
- 		$menu .= ">Criar Mapa</a></li>";    
+ 		$menu .= ">Criar Novo Mapa</a></li>";    
 		// Login
 		if (!$user){
 			$menu .= "<li><a class='first' href=\"".url::site()."users/signup\" ";

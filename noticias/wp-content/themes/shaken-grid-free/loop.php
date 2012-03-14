@@ -15,23 +15,28 @@
     	<?php
 		if ( has_post_thumbnail() ){ ?>
 			<?php $thumbID = get_post_thumbnail_id($post->ID); ?>
-            <a href="<?php echo wp_get_attachment_url($thumbID); ?>" rel="gallery" title="<?php the_title(); ?>">        
+                 
                 <?php the_post_thumbnail(); ?>
-                <span class="view-large"></span>
+             
+   <!--<span class="view-large"></span>-->
+
             </a>
         <?php } ?>
-        
-        <!-- <h2><?php the_title(); ?></h2> -->
-        
-	<h2><a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title_attribute(); ?>"><?php the_title(); ?></a></h2>
+                <!-- <h2><?php the_title(); ?></h2> -->
+   <a href="<?php echo wp_get_attachment_url($thumbID); ?>" rel="gallery" title="<?php the_title(); ?>">  
+	
+<h2><a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title_attribute(); ?>"><?php the_title(); ?></a></h2>
 
-         <!-- <?php the_excerpt('<p>Continue Lendo &rarr;</p>'); ?></h2> -->
+
+      
 
 <?php the_excerpt(); ?>
-<p class="postmetadata"><?php the_time( get_option( 'date_format' ) ); ?>
-<!-- | <?php comments_popup_link('Comments &#187;', '1 Comment &#187;', '% Comments &#187;'); ?></p> ||Eu apaguei o link dos comentários-->
+<a href="<?php echo get_permalink(); ?>"> Leia + </a>
 
-        <?php edit_post_link('Edit this post'); ?>
+<p class="postmetadata"><?php the_time( get_option( 'date_format' ) ); ?>
+<!--<?php comments_popup_link('Comments &#187;', '1 Comment &#187;', '% Comments &#187;'); ?></p>-->
+
+        <?php edit_post_link('Edite este post (só administradores)'); ?>
     </div>
     <?php endwhile; ?>
     </div><!-- #sort -->
@@ -47,7 +52,7 @@
 <?php else : ?>
 <div id="sort">
 <div class="box">
-	<h2>Ops, nenhum post encontrado.</h2>
+	<h2>Nenhum post encontrado.</h2>
     <?php get_search_form(); ?>
 </div>
 </div><!-- #sort -->

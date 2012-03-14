@@ -66,45 +66,53 @@ class JWEmbedderConfig implements EmbedConfigInterface {
   private $conf;
   private $fvars;
   private $dim;
+  private $config;
 
-  function  __construct($divId, $player_path, $config, $params = array(), $flash_vars = array()) {
+  function  __construct($divId, $player_path, $config, $params = array(), $flash_vars = array(), $config_name = "") {
     $this->id = "jwplayer-" . $divId;
     $this->path = $player_path;
     $this->conf = $config;
+    $this->config = $config_name;
     $this->dim = $params;
     $this->fvars = $flash_vars;
   }
 
   public function generateDiv() {
     //The outer div is needed for LTAS support.
-    return  "<div id=\"$this->id-div\">\n" .
+    return  "<div id=\"$this->id-div\" class=\"$this->config\">\n" .
             "<div id=\"$this->id\"></div>\n" .
             "</div>\n";
   }
 
-  public function generateEmbedScript() {
+  private function generateSetup() {
     $events = array();
-    $script = $this->generateDiv();
-    $script .= "<script type=\"text/javascript\">";
-    $script .= "jwplayer(\"" . $this->id . "\").setup({";
-    $script .= "flashplayer: \"" . $this->path . "\", ";
-    $script .= "width: \"" . $this->dim["width"] . "\", ";
-    $script .= "height: \"" . $this->dim["height"] . "\", ";
-    $script .= "controlbar: \"" . $this->dim["controlbar"] . "\", ";
+    $eventValues = array();
+    $eventKeys = array();
+    $config = array(
+      "flashplayer" => $this->path,
+      "width" => $this->dim["width"],
+      "height" => $this->dim["height"],
+      "controlbar" => $this->dim["controlbar"]
+    );
     foreach ($this->fvars as $key => $value) {
       if (isset (self::$events[$key])) {
-        $events[] = "\"" . $key . "\"" . ": " . urldecode(html_entity_decode($value));
-      } else if ($key == "playlist") {
-        $script .= "playlist: " . $value . ", "; 
-      } else if ($key == "modes") {
-        $script .= "modes: " . $value . ", "; 
+        $eventValues[] = urldecode(html_entity_decode($value));
+        $events[$key] = "%function_$key%";
+        $eventKeys[] = "\"%function_$key%\"";
       } else {
-        $script .= "\"" . $key . "\"" . ": \"" . urldecode(html_entity_decode($value)) . "\", ";
+        $config[$key] = is_array($value) ? $value : urldecode(html_entity_decode($value));
       }
     }
-    if ($events != "") $script .= "events: {" . implode(", ", $events) . "}, ";
-    $script .= "config: \"" . $this->conf . "\"";
-    $script .= "});</script>";
+    if (count($events) > 0) {
+      $config["events"] = $events;
+    }
+    $json = json_encode($config);
+    return str_replace($eventKeys, $eventValues, $json);
+  }
+
+  public function generateEmbedScript() {
+    $script = $this->generateDiv();
+    $script .= "<script type='text/javascript'>jwplayer('" . $this->id . "').setup(" . $this->generateSetup() . ");</script>";
     return $script;
   }
 

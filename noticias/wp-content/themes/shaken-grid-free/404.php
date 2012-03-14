@@ -3,7 +3,7 @@
 <div class="wrap">    
     <div id="page">
     	<div class="wide-col">
-        	<h2>Sorry, página não encontrada</h2>
+        	<h2>Página não encontrada</h2>
             <?php get_search_form(); ?>
         </div>
         

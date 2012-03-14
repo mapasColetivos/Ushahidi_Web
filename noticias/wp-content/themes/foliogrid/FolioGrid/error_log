@@ -1,0 +1,5 @@
+[30-Jan-2012 21:04:44] PHP Fatal error:  Call to undefined function  get_header() in /home/mapascol/public_html/noticias/wp-content/themes/foliogrid/FolioGrid/index.php on line 1
+[31-Jan-2012 21:10:20] PHP Fatal error:  Call to undefined function  get_header() in /home/mapascol/public_html/noticias/wp-content/themes/foliogrid/FolioGrid/index.php on line 1
+[03-Feb-2012 04:02:38] PHP Fatal error:  Call to undefined function  get_header() in /home/mapascol/public_html/noticias/wp-content/themes/foliogrid/FolioGrid/index.php on line 1
+[05-Feb-2012 17:02:44] PHP Fatal error:  Call to undefined function  get_header() in /home/mapascol/public_html/noticias/wp-content/themes/foliogrid/FolioGrid/index.php on line 1
+[08-Feb-2012 08:21:56] PHP Fatal error:  Call to undefined function  get_header() in /home/mapascol/public_html/noticias/wp-content/themes/foliogrid/FolioGrid/index.php on line 1

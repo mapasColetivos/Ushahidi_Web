@@ -71,12 +71,14 @@
 			
 			
 				
-        <span class="padd"><a class="first" href="http://mapascoletivos.com/mapas/index.php/users/signup">Cadastre-se aqui</a>  para poder colaborar</span>
+        <span class="padd"><a class="first" href="http://mapascoletivos.com.br/index.php/users/signup">Cadastre-se aqui</a>  para poder colaborar</span>
         
   </div>
 	<div id="buttons">
-	    <a onclick="login_facebook()"><img src="media/img/fb_login.png"></a>
-	    <a style="visibility:hidden" onclick="login_twitter()"><img src="media/img/tw_login.png"></a> <br />
+  <!--	    <a onclick="login_facebook()"><img src="media/img/fb_login.png"></a>
+	    <a style="visibility:visible" onclick="login_twitter()"><img src="media/img/tw_login.png"></a> <br />   -->
+
+        
 	    
         <div id="fb-root"></div>
 		<script src="http://platform.twitter.com/anywhere.js?id=FFppDFVn2sGgAYzlyVJ3A" type="text/javascript"></script> 
@@ -88,6 +90,7 @@
             	appId:'259556637419906', cookie:true, 
             	status:true, xfbml:true 
          	});
+			
          	function login_facebook(){
 				    FB.login(function(response) {
 			        if (response.session) {

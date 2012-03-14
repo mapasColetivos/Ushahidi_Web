@@ -3,10 +3,10 @@
     global $install;
     
     //check if ushahidi is installed?.
-    if( $install->is_ushahidi_installed())
-    {
-        header('Location:../');
-    }
+    //if( $install->is_ushahidi_installed())
+   // {
+    //    header('Location:../');
+    //}
    
     $header = $install->_include_html_header();
     print $header;

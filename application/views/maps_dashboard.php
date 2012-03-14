@@ -1,11 +1,13 @@
 <div id="main" class="clearfix">
 	<div id='map_dash' class="static_content">
 	<div id="social">
-		<div id="facebook_button">
-			<a name="fb_share" type="icon" share_url="YOUR_URL" ></a>  
+		
+        <div id="facebook_button">
+			<a name="fb_share" type="icon" share_url="<?php echo $incident->share_url(); ?>" ></a>  
 			<script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript">
 			</script>
 		</div>
+        
 		<div id="twitter_button" >			
 			<a href="https://twitter.com/share" data-text="<?php echo $incident->incident_title; ?>" data-url="<?php echo $incident->share_url(); ?>" class="twitter-share-button" data-count="none" data-lang="pt">Tweetar</a>
 			<script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>

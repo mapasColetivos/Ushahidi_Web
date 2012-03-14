@@ -423,3 +423,1098 @@
 [23-Oct-2011 08:07:34] PHP Fatal error:  Class 'base' not found in /home/mapascom/public_html/application/views/static/narratives.php on line 3
 [23-Oct-2011 10:12:57] PHP Fatal error:  Class 'base' not found in /home/mapascom/public_html/application/views/static/narratives.php on line 3
 [23-Oct-2011 10:12:57] PHP Fatal error:  Class 'base' not found in /home/mapascom/public_html/application/views/static/narratives.php on line 3
+[28-Dec-2011 17:31:29] PHP Parse error:  syntax error, unexpected T_CONSTANT_ENCAPSED_STRING, expecting ')' in /home/mapascol/public_html/application/config/database.php on line 24
+[28-Dec-2011 17:31:30] PHP Parse error:  syntax error, unexpected T_CONSTANT_ENCAPSED_STRING, expecting ')' in /home/mapascol/public_html/application/config/database.php on line 24
+[28-Dec-2011 17:31:32] PHP Parse error:  syntax error, unexpected T_CONSTANT_ENCAPSED_STRING, expecting ')' in /home/mapascol/public_html/application/config/database.php on line 24
+[28-Dec-2011 17:32:14] PHP Parse error:  syntax error, unexpected T_CONSTANT_ENCAPSED_STRING, expecting ')' in /home/mapascol/public_html/application/config/database.php on line 24
+[28-Dec-2011 18:11:45] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[28-Dec-2011 18:31:54] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[28-Dec-2011 21:33:09] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Dec-2011 02:10:57] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Dec-2011 06:15:54] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Dec-2011 07:06:31] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Dec-2011 08:02:56] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Dec-2011 11:41:38] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[30-Dec-2011 13:32:29] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[30-Dec-2011 19:06:29] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[01-Jan-2012 13:10:38] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[03-Jan-2012 07:58:42] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[03-Jan-2012 09:17:59] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[04-Jan-2012 02:10:02] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[04-Jan-2012 08:32:13] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[05-Jan-2012 12:10:54] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Jan-2012 08:41:26] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Jan-2012 09:00:14] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Jan-2012 10:05:43] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Jan-2012 11:49:54] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Jan-2012 12:03:41] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Jan-2012 13:01:33] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Jan-2012 17:07:54] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Jan-2012 08:26:19] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Jan-2012 08:50:34] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[09-Jan-2012 08:50:34] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[09-Jan-2012 09:00:12] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Jan-2012 09:00:12] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Jan-2012 09:00:14] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Jan-2012 10:36:11] PHP Parse error:  syntax error, unexpected $end in /home/mapascol/public_html/application/views/admin/login.php on line 35
+[09-Jan-2012 10:39:42] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Jan-2012 12:38:58] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Jan-2012 13:00:42] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Jan-2012 13:41:02] PHP Parse error:  syntax error, unexpected '<', expecting ')' in /home/mapascol/public_html/application/controllers/contact.php on line 33
+[09-Jan-2012 14:14:40] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Jan-2012 14:14:41] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Jan-2012 15:10:54] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Jan-2012 15:42:03] PHP Fatal error:  Undefined class constant 'lang' in /home/mapascol/public_html/themes/default/views/footer.php on line 42
+[09-Jan-2012 16:00:50] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Jan-2012 16:00:52] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Jan-2012 16:09:17] PHP Parse error:  syntax error, unexpected '?' in /home/mapascol/public_html/application/views/users_dashboard.php on line 40
+[09-Jan-2012 16:09:24] PHP Parse error:  syntax error, unexpected '?' in /home/mapascol/public_html/application/views/users_dashboard.php on line 40
+[09-Jan-2012 17:01:51] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Jan-2012 18:05:12] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Jan-2012 18:05:12] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Jan-2012 11:08:48] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Jan-2012 12:01:20] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Jan-2012 13:56:04] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Jan-2012 14:01:34] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Jan-2012 15:40:08] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Jan-2012 21:03:31] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Jan-2012 21:03:33] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Jan-2012 08:52:55] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Jan-2012 10:32:37] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Jan-2012 11:04:01] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Jan-2012 12:50:59] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Jan-2012 14:08:41] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Jan-2012 15:01:50] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Jan-2012 16:00:17] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Jan-2012 17:00:43] PHP Parse error:  syntax error, unexpected '%' in /home/mapascol/public_html/application/models/incident.php on line 320
+[11-Jan-2012 17:03:03] PHP Parse error:  syntax error, unexpected ';' in /home/mapascol/public_html/application/models/incident.php on line 319
+[11-Jan-2012 17:06:52] PHP Parse error:  syntax error, unexpected ';' in /home/mapascol/public_html/application/models/incident.php on line 319
+[11-Jan-2012 17:09:16] PHP Parse error:  syntax error, unexpected '.' in /home/mapascol/public_html/application/models/incident.php on line 321
+[11-Jan-2012 17:09:25] PHP Parse error:  syntax error, unexpected '.' in /home/mapascol/public_html/application/models/incident.php on line 321
+[11-Jan-2012 17:12:25] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Jan-2012 17:17:27] PHP Parse error:  syntax error, unexpected $end in /home/mapascol/public_html/application/models/incident.php on line 310
+[11-Jan-2012 17:18:35] PHP Parse error:  syntax error, unexpected T_VARIABLE in /home/mapascol/public_html/application/models/incident.php on line 321
+[11-Jan-2012 17:31:06] PHP Parse error:  syntax error, unexpected '<', expecting T_STRING or T_VARIABLE or '{' or '$' in /home/mapascol/public_html/application/models/incident.php on line 318
+[11-Jan-2012 18:04:37] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Jan-2012 19:14:14] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Jan-2012 20:33:22] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Jan-2012 07:14:52] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Jan-2012 07:14:52] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Jan-2012 08:09:30] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Jan-2012 09:02:08] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Jan-2012 11:37:22] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Jan-2012 07:41:47] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Jan-2012 18:06:56] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[15-Jan-2012 08:07:43] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[15-Jan-2012 09:35:57] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[15-Jan-2012 14:16:27] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[15-Jan-2012 18:19:31] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[15-Jan-2012 23:46:04] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[16-Jan-2012 11:17:22] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[16-Jan-2012 12:02:14] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[16-Jan-2012 13:25:09] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[16-Jan-2012 13:25:10] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[16-Jan-2012 14:14:34] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[16-Jan-2012 14:14:35] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[16-Jan-2012 16:34:04] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[17-Jan-2012 03:55:41] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[17-Jan-2012 04:00:37] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[17-Jan-2012 08:52:34] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[17-Jan-2012 09:08:22] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[17-Jan-2012 11:20:40] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[18-Jan-2012 06:18:54] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[19-Jan-2012 07:44:48] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[19-Jan-2012 12:28:15] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[19-Jan-2012 16:46:18] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[19-Jan-2012 17:18:56] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[19-Jan-2012 18:07:01] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[20-Jan-2012 04:47:50] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[20-Jan-2012 06:00:42] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[20-Jan-2012 10:02:31] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[21-Jan-2012 13:51:14] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[21-Jan-2012 14:04:25] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[21-Jan-2012 14:04:27] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[21-Jan-2012 15:43:34] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[21-Jan-2012 16:05:58] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[21-Jan-2012 17:43:55] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[21-Jan-2012 18:16:46] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[21-Jan-2012 19:33:20] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[22-Jan-2012 06:52:32] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[22-Jan-2012 07:01:55] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[22-Jan-2012 12:56:43] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[22-Jan-2012 14:17:46] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[22-Jan-2012 15:17:49] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[22-Jan-2012 16:07:37] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[22-Jan-2012 17:28:12] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[22-Jan-2012 18:19:56] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[22-Jan-2012 19:04:56] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[22-Jan-2012 20:20:43] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[23-Jan-2012 02:43:35] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[23-Jan-2012 03:00:14] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[23-Jan-2012 04:23:14] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[23-Jan-2012 05:32:45] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[23-Jan-2012 06:00:45] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[23-Jan-2012 07:04:26] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[23-Jan-2012 07:04:34] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[23-Jan-2012 07:05:19] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[23-Jan-2012 08:19:09] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[23-Jan-2012 09:11:47] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[23-Jan-2012 12:14:59] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[24-Jan-2012 06:08:54] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[24-Jan-2012 08:32:36] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[24-Jan-2012 09:20:08] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[24-Jan-2012 10:39:24] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[24-Jan-2012 13:01:04] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[24-Jan-2012 15:54:24] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[25-Jan-2012 08:04:21] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[25-Jan-2012 21:14:21] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[26-Jan-2012 05:39:15] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[26-Jan-2012 07:19:16] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[26-Jan-2012 13:30:44] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[26-Jan-2012 14:29:11] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[26-Jan-2012 19:59:36] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[26-Jan-2012 20:00:41] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[26-Jan-2012 21:03:55] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[27-Jan-2012 05:05:30] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[27-Jan-2012 06:08:01] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[27-Jan-2012 07:10:15] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[27-Jan-2012 07:16:12] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[27-Jan-2012 07:55:46] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[27-Jan-2012 08:01:14] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[27-Jan-2012 09:01:33] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[27-Jan-2012 09:01:55] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[27-Jan-2012 09:18:14] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[27-Jan-2012 09:23:35] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_find_file_paths) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[27-Jan-2012 10:29:09] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[27-Jan-2012 11:02:11] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[27-Jan-2012 11:02:13] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[27-Jan-2012 12:00:22] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[27-Jan-2012 13:29:37] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[27-Jan-2012 14:11:57] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[27-Jan-2012 14:11:58] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[27-Jan-2012 15:23:52] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[27-Jan-2012 19:32:52] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[27-Jan-2012 20:30:16] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[28-Jan-2012 06:17:57] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[28-Jan-2012 06:17:59] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[28-Jan-2012 07:14:06] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[28-Jan-2012 09:09:09] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[28-Jan-2012 12:54:04] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[28-Jan-2012 13:28:06] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[28-Jan-2012 15:09:47] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[28-Jan-2012 16:14:50] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[28-Jan-2012 17:00:13] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[28-Jan-2012 19:29:10] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Jan-2012 07:16:46] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Jan-2012 08:01:41] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Jan-2012 09:00:10] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Jan-2012 10:03:41] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Jan-2012 10:03:41] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Jan-2012 10:03:42] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Jan-2012 11:32:15] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Jan-2012 12:02:46] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Jan-2012 13:01:16] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Jan-2012 17:55:40] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Jan-2012 18:15:26] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Jan-2012 19:11:36] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[30-Jan-2012 05:01:53] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[30-Jan-2012 06:14:54] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[30-Jan-2012 07:06:52] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[30-Jan-2012 07:33:34] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[30-Jan-2012 07:33:34] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[30-Jan-2012 08:05:59] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[30-Jan-2012 09:00:09] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[30-Jan-2012 10:02:01] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[30-Jan-2012 11:05:37] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[30-Jan-2012 12:20:24] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[30-Jan-2012 13:19:25] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[30-Jan-2012 14:02:24] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[30-Jan-2012 15:30:14] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[30-Jan-2012 16:06:44] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[30-Jan-2012 17:00:32] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[30-Jan-2012 18:13:55] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[30-Jan-2012 19:01:09] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[30-Jan-2012 21:05:04] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[31-Jan-2012 03:26:37] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[31-Jan-2012 04:00:23] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[31-Jan-2012 05:05:24] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[31-Jan-2012 06:41:37] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[31-Jan-2012 07:47:50] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[31-Jan-2012 08:11:10] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[31-Jan-2012 09:32:08] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[31-Jan-2012 10:00:09] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[31-Jan-2012 11:01:57] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[31-Jan-2012 12:03:08] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[31-Jan-2012 13:13:23] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[31-Jan-2012 14:55:34] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[31-Jan-2012 15:12:31] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[31-Jan-2012 16:28:46] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[31-Jan-2012 17:23:54] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[31-Jan-2012 18:01:52] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[31-Jan-2012 21:57:27] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[01-Feb-2012 05:29:21] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[01-Feb-2012 06:36:24] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[01-Feb-2012 07:02:54] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[01-Feb-2012 08:02:55] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[01-Feb-2012 10:17:58] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[01-Feb-2012 10:18:01] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[01-Feb-2012 12:45:21] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[01-Feb-2012 13:07:33] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[01-Feb-2012 14:14:26] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[01-Feb-2012 15:17:27] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[01-Feb-2012 16:00:22] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[01-Feb-2012 17:42:51] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[01-Feb-2012 18:01:55] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[01-Feb-2012 19:00:35] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[01-Feb-2012 20:07:47] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[01-Feb-2012 21:46:16] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Feb-2012 03:02:04] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Feb-2012 05:22:13] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Feb-2012 06:07:02] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Feb-2012 07:25:52] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Feb-2012 08:14:32] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Feb-2012 09:38:17] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Feb-2012 10:00:22] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Feb-2012 11:04:04] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Feb-2012 12:01:54] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Feb-2012 13:00:09] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Feb-2012 15:11:09] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Feb-2012 16:05:50] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Feb-2012 17:13:31] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Feb-2012 18:01:09] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Feb-2012 19:40:37] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[03-Feb-2012 03:47:02] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[03-Feb-2012 05:24:05] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[03-Feb-2012 06:04:25] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[03-Feb-2012 07:20:03] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[03-Feb-2012 08:11:37] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[03-Feb-2012 09:12:24] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[03-Feb-2012 10:58:24] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[03-Feb-2012 11:00:16] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[03-Feb-2012 12:49:33] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[03-Feb-2012 13:01:13] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[03-Feb-2012 14:09:48] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[03-Feb-2012 16:22:31] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[03-Feb-2012 18:08:51] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[03-Feb-2012 20:45:27] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[03-Feb-2012 21:00:48] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[03-Feb-2012 21:05:33] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[04-Feb-2012 06:36:47] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[04-Feb-2012 07:39:16] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[04-Feb-2012 08:00:27] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[04-Feb-2012 11:03:37] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[04-Feb-2012 12:06:48] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[05-Feb-2012 09:05:42] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[05-Feb-2012 09:15:14] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[05-Feb-2012 10:41:22] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[05-Feb-2012 11:45:50] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[05-Feb-2012 12:02:53] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[05-Feb-2012 13:19:47] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[05-Feb-2012 13:19:49] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[05-Feb-2012 17:54:12] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[05-Feb-2012 18:02:28] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[05-Feb-2012 20:51:38] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Feb-2012 04:41:56] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Feb-2012 05:12:51] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Feb-2012 06:00:31] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Feb-2012 07:38:43] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Feb-2012 08:24:08] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Feb-2012 08:39:57] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[06-Feb-2012 10:16:55] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Feb-2012 11:01:09] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Feb-2012 12:31:39] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Feb-2012 13:12:49] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Feb-2012 14:28:34] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Feb-2012 15:59:49] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Feb-2012 15:59:51] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Feb-2012 16:03:28] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Feb-2012 17:00:34] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Feb-2012 17:00:34] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Feb-2012 17:00:40] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Feb-2012 18:01:55] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Feb-2012 19:14:47] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Feb-2012 20:13:03] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Feb-2012 20:13:05] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Feb-2012 03:47:05] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Feb-2012 04:33:12] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Feb-2012 04:58:55] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[07-Feb-2012 05:26:30] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Feb-2012 06:10:50] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Feb-2012 07:01:38] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Feb-2012 07:54:58] PHP Fatal error:  Call to a member function photo() on a non-object in /home/mapascol/public_html/application/views/users_profile.php on line 52
+[07-Feb-2012 08:00:15] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Feb-2012 09:03:43] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Feb-2012 10:04:03] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Feb-2012 11:16:07] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Feb-2012 13:08:02] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Feb-2012 14:07:54] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Feb-2012 14:07:56] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Feb-2012 15:08:52] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Feb-2012 15:08:52] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Feb-2012 16:02:29] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Feb-2012 17:50:11] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Feb-2012 18:32:29] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Feb-2012 19:06:29] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Feb-2012 20:03:32] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Feb-2012 21:09:11] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Feb-2012 22:04:35] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Feb-2012 23:02:49] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Feb-2012 03:45:59] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Feb-2012 04:19:07] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Feb-2012 05:25:17] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Feb-2012 05:39:27] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_find_file_paths) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[08-Feb-2012 06:05:23] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Feb-2012 06:41:52] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_find_file_paths) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[08-Feb-2012 07:04:07] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Feb-2012 07:49:04] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[08-Feb-2012 07:49:04] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[08-Feb-2012 08:00:43] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Feb-2012 08:51:52] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_language) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[08-Feb-2012 09:00:26] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[08-Feb-2012 09:00:46] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Feb-2012 10:00:55] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Feb-2012 11:01:45] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Feb-2012 11:30:27] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[08-Feb-2012 12:02:00] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Feb-2012 12:06:15] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_language) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[08-Feb-2012 12:07:31] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_find_file_paths) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[08-Feb-2012 13:00:12] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Feb-2012 13:00:12] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Feb-2012 13:00:13] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Feb-2012 14:02:48] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Feb-2012 15:04:47] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Feb-2012 16:03:56] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Feb-2012 17:00:29] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Feb-2012 18:09:10] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Feb-2012 19:03:35] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Feb-2012 19:30:17] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[08-Feb-2012 19:30:17] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[08-Feb-2012 19:30:17] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[08-Feb-2012 20:00:51] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Feb-2012 21:35:00] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Feb-2012 22:15:33] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Feb-2012 02:34:11] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Feb-2012 04:07:11] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Feb-2012 04:38:25] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[09-Feb-2012 04:41:21] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[09-Feb-2012 04:57:39] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[09-Feb-2012 04:57:39] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[09-Feb-2012 04:57:39] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[09-Feb-2012 04:57:39] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[09-Feb-2012 05:00:49] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Feb-2012 05:20:44] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_find_file_paths) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[09-Feb-2012 06:01:09] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Feb-2012 06:01:34] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[09-Feb-2012 07:01:29] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Feb-2012 08:00:09] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Feb-2012 09:00:14] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Feb-2012 09:23:20] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[09-Feb-2012 09:23:20] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[09-Feb-2012 10:00:21] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Feb-2012 11:00:21] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Feb-2012 12:02:44] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Feb-2012 12:02:45] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Feb-2012 13:00:07] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Feb-2012 14:00:13] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Feb-2012 15:12:33] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Feb-2012 16:44:38] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Feb-2012 17:10:30] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Feb-2012 18:02:16] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Feb-2012 19:06:18] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Feb-2012 20:30:05] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Feb-2012 22:14:33] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Feb-2012 23:23:43] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Feb-2012 03:17:59] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Feb-2012 04:07:21] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Feb-2012 04:58:13] PHP Parse error:  syntax error, unexpected '<' in /home/mapascol/public_html/themes/default/views/header.php on line 50
+[10-Feb-2012 04:58:16] PHP Parse error:  syntax error, unexpected '<' in /home/mapascol/public_html/themes/default/views/header.php on line 50
+[10-Feb-2012 05:00:19] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Feb-2012 05:11:10] PHP Parse error:  syntax error, unexpected $end in /home/mapascol/public_html/themes/default/views/main.php on line 87
+[10-Feb-2012 05:12:06] PHP Warning:  Unexpected character in input:  ''' (ASCII=39) state=1 in /home/mapascol/public_html/themes/default/views/main.php on line 127
+[10-Feb-2012 05:12:06] PHP Warning:  Unexpected character in input:  '\' (ASCII=92) state=1 in /home/mapascol/public_html/themes/default/views/main.php on line 127
+[10-Feb-2012 05:12:06] PHP Warning:  Unexpected character in input:  ''' (ASCII=39) state=1 in /home/mapascol/public_html/themes/default/views/main.php on line 127
+[10-Feb-2012 05:12:06] PHP Parse error:  syntax error, unexpected ')' in /home/mapascol/public_html/themes/default/views/main.php on line 127
+[10-Feb-2012 05:17:03] PHP Parse error:  syntax error, unexpected $end in /home/mapascol/public_html/themes/default/views/main.php on line 227
+[10-Feb-2012 05:23:30] PHP Parse error:  syntax error, unexpected $end in /home/mapascol/public_html/themes/default/views/main.php on line 228
+[10-Feb-2012 05:50:16] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[10-Feb-2012 05:51:21] PHP Parse error:  syntax error, unexpected $end in /home/mapascol/public_html/themes/default/views/reports.php on line 32
+[10-Feb-2012 06:00:35] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Feb-2012 06:24:20] PHP Parse error:  syntax error, unexpected T_ECHO in /home/mapascol/public_html/application/helpers/nav.php on line 36
+[10-Feb-2012 06:24:57] PHP Parse error:  syntax error, unexpected $end in /home/mapascol/public_html/themes/default/views/header.php on line 31
+[10-Feb-2012 06:39:03] PHP Parse error:  syntax error, unexpected T_STRING in /home/mapascol/public_html/application/helpers/nav.php on line 34
+[10-Feb-2012 06:39:04] PHP Parse error:  syntax error, unexpected T_STRING in /home/mapascol/public_html/application/helpers/nav.php on line 34
+[10-Feb-2012 06:39:09] PHP Parse error:  syntax error, unexpected T_STRING in /home/mapascol/public_html/application/helpers/nav.php on line 34
+[10-Feb-2012 06:39:09] PHP Parse error:  syntax error, unexpected T_STRING in /home/mapascol/public_html/application/helpers/nav.php on line 34
+[10-Feb-2012 06:39:14] PHP Parse error:  syntax error, unexpected T_STRING in /home/mapascol/public_html/application/helpers/nav.php on line 34
+[10-Feb-2012 06:39:19] PHP Parse error:  syntax error, unexpected T_STRING in /home/mapascol/public_html/application/helpers/nav.php on line 34
+[10-Feb-2012 06:39:24] PHP Parse error:  syntax error, unexpected T_STRING in /home/mapascol/public_html/application/helpers/nav.php on line 34
+[10-Feb-2012 06:39:39] PHP Parse error:  syntax error, unexpected T_STRING in /home/mapascol/public_html/application/helpers/nav.php on line 34
+[10-Feb-2012 06:40:06] PHP Parse error:  syntax error, unexpected T_STRING in /home/mapascol/public_html/application/helpers/nav.php on line 34
+[10-Feb-2012 06:40:11] PHP Parse error:  syntax error, unexpected '/' in /home/mapascol/public_html/application/helpers/nav.php on line 34
+[10-Feb-2012 06:40:23] PHP Parse error:  syntax error, unexpected '/' in /home/mapascol/public_html/application/helpers/nav.php on line 34
+[10-Feb-2012 06:41:27] PHP Parse error:  syntax error, unexpected '/' in /home/mapascol/public_html/application/helpers/nav.php on line 34
+[10-Feb-2012 07:00:43] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Feb-2012 07:00:57] PHP Parse error:  syntax error, unexpected T_PAAMAYIM_NEKUDOTAYIM in /home/mapascol/public_html/themes/default/views/reports_submit.php on line 23
+[10-Feb-2012 07:22:32] PHP Fatal error:  Call to undefined method form::limit_chars() in /home/mapascol/public_html/themes/default/views/reports_submit.php on line 22
+[10-Feb-2012 07:22:41] PHP Fatal error:  Call to undefined method form::limit_chars() in /home/mapascol/public_html/themes/default/views/reports_submit.php on line 22
+[10-Feb-2012 07:23:28] PHP Parse error:  syntax error, unexpected $end in /home/mapascol/public_html/themes/default/views/reports_submit.php on line 104
+[10-Feb-2012 08:03:13] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Feb-2012 09:05:56] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Feb-2012 10:00:32] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Feb-2012 11:02:41] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Feb-2012 12:04:12] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Feb-2012 12:27:21] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_find_file_paths) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[10-Feb-2012 13:00:22] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Feb-2012 14:12:13] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Feb-2012 14:12:34] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[10-Feb-2012 15:04:56] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Feb-2012 16:25:48] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Feb-2012 17:01:30] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Feb-2012 18:00:19] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Feb-2012 19:21:56] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Feb-2012 21:13:40] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Feb-2012 00:21:21] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Feb-2012 03:19:53] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Feb-2012 04:04:17] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Feb-2012 05:20:29] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Feb-2012 06:01:20] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Feb-2012 07:57:14] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Feb-2012 08:00:13] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Feb-2012 09:07:15] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Feb-2012 10:00:09] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Feb-2012 11:25:10] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Feb-2012 12:26:43] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Feb-2012 13:01:29] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Feb-2012 17:53:15] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Feb-2012 18:07:09] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Feb-2012 19:01:23] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Feb-2012 20:08:10] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Feb-2012 23:04:49] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Feb-2012 02:18:31] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Feb-2012 05:55:14] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Feb-2012 06:24:43] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Feb-2012 07:56:01] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Feb-2012 08:21:56] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Feb-2012 09:02:37] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Feb-2012 10:25:17] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Feb-2012 11:00:55] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Feb-2012 12:11:12] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Feb-2012 13:30:59] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Feb-2012 14:24:55] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Feb-2012 15:36:29] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Feb-2012 16:06:08] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Feb-2012 17:22:50] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Feb-2012 18:04:24] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Feb-2012 19:04:08] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Feb-2012 20:27:51] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Feb-2012 03:42:35] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Feb-2012 04:35:10] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Feb-2012 04:38:30] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[13-Feb-2012 04:38:30] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[13-Feb-2012 05:05:48] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Feb-2012 06:07:26] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Feb-2012 06:40:34] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[13-Feb-2012 06:40:34] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[13-Feb-2012 06:40:34] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_find_file_paths) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[13-Feb-2012 06:41:35] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[13-Feb-2012 07:00:24] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Feb-2012 07:32:19] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[13-Feb-2012 08:00:33] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Feb-2012 09:02:14] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Feb-2012 10:12:31] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Feb-2012 11:11:21] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Feb-2012 12:12:23] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Feb-2012 13:22:39] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Feb-2012 14:01:35] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Feb-2012 15:09:28] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Feb-2012 16:05:31] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Feb-2012 17:08:04] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[14-Feb-2012 02:29:11] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[14-Feb-2012 03:58:22] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[14-Feb-2012 04:00:23] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[14-Feb-2012 05:42:14] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[14-Feb-2012 07:00:23] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[14-Feb-2012 08:11:19] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[14-Feb-2012 09:21:17] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[14-Feb-2012 10:10:45] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[14-Feb-2012 11:13:08] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[14-Feb-2012 12:17:57] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[14-Feb-2012 13:17:47] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[14-Feb-2012 14:00:52] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[14-Feb-2012 15:01:04] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[14-Feb-2012 16:14:10] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[14-Feb-2012 17:01:15] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[14-Feb-2012 18:03:30] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[14-Feb-2012 20:07:21] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[15-Feb-2012 03:58:48] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[15-Feb-2012 03:59:01] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[15-Feb-2012 04:20:41] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[15-Feb-2012 05:14:10] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[15-Feb-2012 06:04:39] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[15-Feb-2012 06:04:39] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[15-Feb-2012 06:47:58] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[15-Feb-2012 07:01:00] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[15-Feb-2012 07:16:52] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_find_file_paths) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[15-Feb-2012 07:17:01] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[15-Feb-2012 07:17:01] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[15-Feb-2012 08:04:57] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[15-Feb-2012 09:01:14] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[15-Feb-2012 10:22:33] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[15-Feb-2012 11:01:48] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[15-Feb-2012 12:00:56] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[15-Feb-2012 13:27:07] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[15-Feb-2012 14:06:58] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[15-Feb-2012 14:59:02] PHP Fatal error:  Call to a member function photo() on a non-object in /home/mapascol/public_html/application/views/users_profile.php on line 52
+[15-Feb-2012 15:02:37] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[15-Feb-2012 15:09:09] PHP Fatal error:  Call to a member function photo() on a non-object in /home/mapascol/public_html/application/views/users_profile.php on line 52
+[15-Feb-2012 15:23:14] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[15-Feb-2012 16:00:20] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[15-Feb-2012 17:34:23] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[15-Feb-2012 18:33:04] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[15-Feb-2012 19:04:36] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[15-Feb-2012 20:25:17] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[15-Feb-2012 21:08:37] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[15-Feb-2012 22:26:44] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[16-Feb-2012 03:12:39] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[16-Feb-2012 04:13:36] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[16-Feb-2012 05:04:51] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[16-Feb-2012 05:26:53] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[16-Feb-2012 05:26:56] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_find_file_paths) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[16-Feb-2012 06:00:24] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[16-Feb-2012 07:07:02] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[16-Feb-2012 08:01:50] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[16-Feb-2012 09:19:46] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[16-Feb-2012 10:08:45] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[16-Feb-2012 11:04:17] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[16-Feb-2012 12:13:20] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[16-Feb-2012 13:02:01] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[16-Feb-2012 15:03:59] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[16-Feb-2012 16:06:12] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[16-Feb-2012 17:02:15] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[16-Feb-2012 18:09:59] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[16-Feb-2012 19:36:43] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[16-Feb-2012 21:15:57] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[16-Feb-2012 23:25:17] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[17-Feb-2012 03:08:30] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[17-Feb-2012 04:46:18] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[17-Feb-2012 05:06:26] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[17-Feb-2012 06:38:58] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[17-Feb-2012 06:38:58] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[17-Feb-2012 07:31:50] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[17-Feb-2012 08:16:35] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[17-Feb-2012 09:22:09] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[17-Feb-2012 09:22:09] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[17-Feb-2012 10:02:22] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[17-Feb-2012 11:02:21] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[17-Feb-2012 12:20:49] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[17-Feb-2012 13:12:57] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[17-Feb-2012 14:13:49] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[17-Feb-2012 15:10:32] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[17-Feb-2012 16:12:56] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[17-Feb-2012 17:01:27] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[17-Feb-2012 18:21:47] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[17-Feb-2012 21:33:36] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[17-Feb-2012 22:52:56] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[18-Feb-2012 01:03:24] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[18-Feb-2012 07:31:59] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[18-Feb-2012 08:04:21] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[18-Feb-2012 09:30:06] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[18-Feb-2012 10:55:14] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[18-Feb-2012 11:37:35] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[18-Feb-2012 14:02:42] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[18-Feb-2012 15:08:12] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[18-Feb-2012 16:49:22] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[18-Feb-2012 17:56:28] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[18-Feb-2012 19:43:18] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[18-Feb-2012 22:47:49] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[19-Feb-2012 03:53:46] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[19-Feb-2012 04:12:06] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[19-Feb-2012 05:06:00] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[19-Feb-2012 06:46:14] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[19-Feb-2012 09:32:27] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[19-Feb-2012 10:29:14] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[19-Feb-2012 11:34:01] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[19-Feb-2012 12:00:57] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[19-Feb-2012 14:59:45] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[19-Feb-2012 17:42:08] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[19-Feb-2012 21:44:47] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[19-Feb-2012 22:48:16] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[20-Feb-2012 03:49:40] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[20-Feb-2012 04:34:55] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[20-Feb-2012 06:29:38] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[20-Feb-2012 07:46:37] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[20-Feb-2012 08:34:48] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[20-Feb-2012 09:12:41] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[20-Feb-2012 10:12:07] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[20-Feb-2012 11:04:16] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[20-Feb-2012 13:09:43] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[20-Feb-2012 14:48:05] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[20-Feb-2012 15:04:04] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[20-Feb-2012 17:15:05] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[20-Feb-2012 18:40:56] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[20-Feb-2012 19:28:54] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[20-Feb-2012 22:19:05] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[21-Feb-2012 06:50:32] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[21-Feb-2012 06:54:39] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[21-Feb-2012 07:08:00] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[21-Feb-2012 08:09:29] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[21-Feb-2012 09:35:19] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[21-Feb-2012 10:37:13] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[21-Feb-2012 13:45:26] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[21-Feb-2012 14:31:26] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[21-Feb-2012 15:39:27] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[21-Feb-2012 16:23:47] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[21-Feb-2012 17:02:01] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[21-Feb-2012 18:06:36] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[21-Feb-2012 21:07:05] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[21-Feb-2012 22:52:11] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[22-Feb-2012 03:59:50] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[22-Feb-2012 04:26:38] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[22-Feb-2012 05:09:50] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[22-Feb-2012 06:05:06] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[22-Feb-2012 07:11:47] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[22-Feb-2012 07:42:51] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[22-Feb-2012 07:42:51] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[22-Feb-2012 08:27:04] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[22-Feb-2012 09:00:56] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[22-Feb-2012 10:03:25] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[22-Feb-2012 11:00:22] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[22-Feb-2012 12:04:22] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[22-Feb-2012 13:01:33] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[22-Feb-2012 14:02:43] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[22-Feb-2012 15:02:20] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[22-Feb-2012 16:07:30] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[22-Feb-2012 17:07:18] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[22-Feb-2012 18:06:36] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[22-Feb-2012 19:03:12] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[22-Feb-2012 20:00:35] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[22-Feb-2012 21:34:50] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[22-Feb-2012 22:10:09] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[23-Feb-2012 01:43:22] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[23-Feb-2012 03:25:38] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[23-Feb-2012 03:32:27] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[23-Feb-2012 03:32:27] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[23-Feb-2012 04:09:49] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[23-Feb-2012 04:33:50] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[23-Feb-2012 04:53:08] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[23-Feb-2012 04:53:08] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[23-Feb-2012 05:00:44] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[23-Feb-2012 05:00:46] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[23-Feb-2012 05:05:17] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[23-Feb-2012 06:03:23] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[23-Feb-2012 07:00:14] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[23-Feb-2012 08:00:15] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[23-Feb-2012 09:15:19] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[23-Feb-2012 10:03:30] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[23-Feb-2012 10:10:17] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[23-Feb-2012 11:07:24] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[23-Feb-2012 12:00:09] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[23-Feb-2012 13:00:34] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[23-Feb-2012 14:02:14] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[23-Feb-2012 15:00:49] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[23-Feb-2012 16:00:36] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[24-Feb-2012 04:07:13] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[24-Feb-2012 04:15:03] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[24-Feb-2012 04:31:20] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_language) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[24-Feb-2012 04:40:06] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[24-Feb-2012 04:41:19] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_find_file_paths) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[24-Feb-2012 05:00:50] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[24-Feb-2012 05:17:18] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[24-Feb-2012 06:02:28] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[24-Feb-2012 06:36:43] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[24-Feb-2012 07:06:10] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[24-Feb-2012 08:19:32] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[24-Feb-2012 09:15:55] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[24-Feb-2012 10:00:44] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[24-Feb-2012 10:00:45] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[24-Feb-2012 11:01:09] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[24-Feb-2012 12:06:18] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[24-Feb-2012 12:50:14] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[24-Feb-2012 13:05:06] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[24-Feb-2012 13:05:06] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[24-Feb-2012 13:05:07] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[24-Feb-2012 14:06:44] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[24-Feb-2012 15:04:38] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[24-Feb-2012 16:04:29] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[24-Feb-2012 17:04:48] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[24-Feb-2012 18:02:17] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[25-Feb-2012 02:41:26] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[25-Feb-2012 03:19:56] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[25-Feb-2012 06:31:44] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[25-Feb-2012 07:41:46] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[25-Feb-2012 08:02:22] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[25-Feb-2012 10:07:17] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[25-Feb-2012 11:18:25] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[25-Feb-2012 12:29:03] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[25-Feb-2012 13:20:22] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[25-Feb-2012 14:13:48] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[25-Feb-2012 15:20:17] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[25-Feb-2012 16:07:27] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[25-Feb-2012 17:05:39] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[25-Feb-2012 18:37:01] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[25-Feb-2012 19:52:34] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[25-Feb-2012 21:37:07] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[25-Feb-2012 22:32:58] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[26-Feb-2012 02:14:36] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[26-Feb-2012 04:03:46] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[26-Feb-2012 06:04:37] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[26-Feb-2012 07:35:16] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[26-Feb-2012 08:17:37] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[26-Feb-2012 09:20:45] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[26-Feb-2012 10:15:39] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[26-Feb-2012 12:05:04] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[26-Feb-2012 13:41:02] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[26-Feb-2012 15:10:07] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[26-Feb-2012 16:12:09] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[26-Feb-2012 17:23:18] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[26-Feb-2012 18:47:35] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[26-Feb-2012 19:56:32] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[26-Feb-2012 20:02:12] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[26-Feb-2012 21:08:13] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[27-Feb-2012 00:59:44] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[27-Feb-2012 01:00:20] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[27-Feb-2012 02:06:29] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[27-Feb-2012 05:12:28] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[27-Feb-2012 05:42:37] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[27-Feb-2012 06:02:59] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[27-Feb-2012 06:21:08] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[27-Feb-2012 07:01:18] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[27-Feb-2012 08:01:27] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[27-Feb-2012 09:03:37] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[27-Feb-2012 10:01:06] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[27-Feb-2012 11:00:34] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[27-Feb-2012 12:07:01] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[27-Feb-2012 13:00:12] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[27-Feb-2012 14:04:00] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[27-Feb-2012 15:07:31] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[27-Feb-2012 17:00:46] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[27-Feb-2012 18:26:24] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[27-Feb-2012 19:12:11] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[27-Feb-2012 21:01:11] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[27-Feb-2012 22:31:52] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[28-Feb-2012 02:09:08] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[28-Feb-2012 03:53:14] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[28-Feb-2012 04:00:46] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[28-Feb-2012 05:23:45] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[28-Feb-2012 06:25:28] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[28-Feb-2012 07:13:22] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[28-Feb-2012 08:19:15] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[28-Feb-2012 08:24:24] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[28-Feb-2012 09:03:55] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[28-Feb-2012 10:00:42] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[28-Feb-2012 11:00:42] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[28-Feb-2012 12:00:27] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[28-Feb-2012 13:04:24] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[28-Feb-2012 14:03:59] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[28-Feb-2012 15:00:40] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[28-Feb-2012 15:01:55] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[28-Feb-2012 16:12:08] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[28-Feb-2012 17:25:07] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[28-Feb-2012 18:13:09] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[28-Feb-2012 19:29:21] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[28-Feb-2012 20:02:45] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[28-Feb-2012 22:06:39] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[28-Feb-2012 23:23:08] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Feb-2012 00:32:31] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Feb-2012 04:07:57] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Feb-2012 05:27:19] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Feb-2012 06:06:12] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Feb-2012 07:02:16] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Feb-2012 08:00:14] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Feb-2012 08:00:14] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Feb-2012 09:03:06] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Feb-2012 09:03:07] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Feb-2012 10:00:43] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Feb-2012 11:01:41] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Feb-2012 11:01:42] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Feb-2012 12:07:11] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Feb-2012 13:00:33] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Feb-2012 14:19:24] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Feb-2012 15:00:26] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Feb-2012 16:04:38] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Feb-2012 17:07:41] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Feb-2012 18:10:47] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Feb-2012 19:06:56] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[29-Feb-2012 20:12:30] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[01-Mar-2012 03:07:56] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[01-Mar-2012 03:07:58] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[01-Mar-2012 04:45:31] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[01-Mar-2012 05:31:51] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[01-Mar-2012 06:16:29] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[01-Mar-2012 07:02:22] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[01-Mar-2012 07:58:21] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[01-Mar-2012 08:05:51] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[01-Mar-2012 08:05:51] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[01-Mar-2012 09:02:26] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[01-Mar-2012 15:39:17] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[01-Mar-2012 16:07:59] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[01-Mar-2012 17:12:08] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[01-Mar-2012 18:02:58] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[01-Mar-2012 19:05:43] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[01-Mar-2012 20:24:40] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[01-Mar-2012 21:47:13] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Mar-2012 03:20:49] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Mar-2012 04:39:35] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Mar-2012 05:25:37] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Mar-2012 06:07:41] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Mar-2012 06:53:56] PHP Parse error:  syntax error, unexpected T_PAAMAYIM_NEKUDOTAYIM in /home/mapascol/public_html/application/views/admin/reports.php on line 95
+[02-Mar-2012 06:55:21] PHP Parse error:  syntax error, unexpected T_PAAMAYIM_NEKUDOTAYIM in /home/mapascol/public_html/application/views/admin/reports.php on line 95
+[02-Mar-2012 07:22:30] PHP Parse error:  syntax error, unexpected T_PAAMAYIM_NEKUDOTAYIM in /home/mapascol/public_html/application/views/admin/reports.php on line 95
+[02-Mar-2012 07:22:45] PHP Parse error:  syntax error, unexpected T_PAAMAYIM_NEKUDOTAYIM in /home/mapascol/public_html/application/views/admin/reports.php on line 95
+[02-Mar-2012 07:22:52] PHP Parse error:  syntax error, unexpected T_PAAMAYIM_NEKUDOTAYIM in /home/mapascol/public_html/application/views/admin/reports.php on line 95
+[02-Mar-2012 07:23:24] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Mar-2012 07:23:25] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Mar-2012 07:39:58] PHP Parse error:  syntax error, unexpected T_PAAMAYIM_NEKUDOTAYIM in /home/mapascol/public_html/application/views/admin/reports.php on line 95
+[02-Mar-2012 08:00:20] PHP Parse error:  syntax error, unexpected T_PAAMAYIM_NEKUDOTAYIM in /home/mapascol/public_html/application/views/admin/reports.php on line 95
+[02-Mar-2012 08:00:38] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Mar-2012 09:00:37] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Mar-2012 09:14:56] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_find_file_paths) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[02-Mar-2012 10:06:32] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Mar-2012 10:52:43] PHP Parse error:  syntax error, unexpected T_PAAMAYIM_NEKUDOTAYIM in /home/mapascol/public_html/application/views/admin/reports.php on line 95
+[02-Mar-2012 11:01:01] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Mar-2012 12:06:02] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Mar-2012 13:00:08] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Mar-2012 14:00:39] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Mar-2012 15:07:22] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Mar-2012 16:28:36] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Mar-2012 17:00:23] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Mar-2012 18:17:13] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Mar-2012 19:19:14] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Mar-2012 20:45:14] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Mar-2012 21:02:49] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Mar-2012 22:03:16] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[02-Mar-2012 23:00:28] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[03-Mar-2012 00:01:26] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[03-Mar-2012 01:20:30] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[03-Mar-2012 03:04:06] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[03-Mar-2012 05:25:58] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[03-Mar-2012 06:11:16] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[03-Mar-2012 07:53:34] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[03-Mar-2012 08:12:32] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[03-Mar-2012 10:28:34] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[03-Mar-2012 13:12:35] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[03-Mar-2012 14:03:04] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[03-Mar-2012 15:21:52] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[03-Mar-2012 16:06:36] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[03-Mar-2012 17:05:17] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[03-Mar-2012 18:11:38] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[03-Mar-2012 19:04:41] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[03-Mar-2012 20:03:27] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[04-Mar-2012 01:00:23] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[04-Mar-2012 02:53:32] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[04-Mar-2012 05:54:56] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[04-Mar-2012 06:21:58] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[04-Mar-2012 07:09:25] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[04-Mar-2012 08:22:49] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[04-Mar-2012 09:17:14] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[04-Mar-2012 10:13:16] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[04-Mar-2012 11:28:43] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[04-Mar-2012 13:30:23] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[04-Mar-2012 14:21:32] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[04-Mar-2012 16:21:24] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[04-Mar-2012 18:03:32] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[04-Mar-2012 19:19:06] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[04-Mar-2012 19:19:09] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[04-Mar-2012 20:19:09] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[04-Mar-2012 22:29:23] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[04-Mar-2012 23:18:41] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[05-Mar-2012 03:45:08] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[05-Mar-2012 05:26:41] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[05-Mar-2012 06:06:56] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[05-Mar-2012 07:06:48] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[05-Mar-2012 08:04:46] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[05-Mar-2012 09:04:28] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[05-Mar-2012 10:00:12] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[05-Mar-2012 11:01:42] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[05-Mar-2012 12:01:24] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[05-Mar-2012 13:04:23] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[05-Mar-2012 14:00:58] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[05-Mar-2012 15:02:53] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[05-Mar-2012 15:14:28] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[05-Mar-2012 16:05:47] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[05-Mar-2012 17:08:44] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[05-Mar-2012 17:08:46] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[05-Mar-2012 18:03:49] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[05-Mar-2012 19:07:20] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[05-Mar-2012 21:14:28] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[05-Mar-2012 22:03:33] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Mar-2012 01:16:18] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Mar-2012 03:57:03] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Mar-2012 05:31:04] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Mar-2012 06:06:07] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Mar-2012 07:09:18] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Mar-2012 08:27:19] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Mar-2012 08:27:21] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Mar-2012 09:00:08] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Mar-2012 09:18:45] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[06-Mar-2012 10:07:21] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Mar-2012 11:00:53] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Mar-2012 12:00:43] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Mar-2012 13:00:23] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Mar-2012 13:53:19] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[06-Mar-2012 14:05:15] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Mar-2012 14:46:06] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_language) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[06-Mar-2012 15:03:39] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Mar-2012 16:12:02] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Mar-2012 17:11:09] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Mar-2012 18:02:24] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Mar-2012 19:22:45] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Mar-2012 20:03:03] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Mar-2012 22:14:55] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Mar-2012 22:14:56] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[06-Mar-2012 22:20:48] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[06-Mar-2012 22:20:48] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[06-Mar-2012 23:45:27] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Mar-2012 00:03:02] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Mar-2012 02:51:24] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Mar-2012 03:42:16] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[07-Mar-2012 03:45:22] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Mar-2012 05:18:06] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Mar-2012 05:18:08] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Mar-2012 06:11:12] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Mar-2012 06:58:43] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[07-Mar-2012 06:58:43] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[07-Mar-2012 07:01:36] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Mar-2012 08:14:59] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Mar-2012 08:15:00] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Mar-2012 09:20:41] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Mar-2012 10:06:15] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Mar-2012 11:03:04] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Mar-2012 12:21:34] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Mar-2012 13:00:14] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Mar-2012 13:33:29] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[07-Mar-2012 14:08:12] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Mar-2012 15:00:49] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Mar-2012 16:31:21] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Mar-2012 17:00:31] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Mar-2012 18:06:04] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Mar-2012 19:28:12] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[07-Mar-2012 21:00:45] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Mar-2012 04:05:00] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Mar-2012 04:07:54] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[08-Mar-2012 06:50:28] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Mar-2012 07:10:49] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Mar-2012 08:18:56] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Mar-2012 09:00:23] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Mar-2012 10:12:23] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Mar-2012 10:16:37] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[08-Mar-2012 10:23:46] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[08-Mar-2012 11:00:50] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Mar-2012 12:00:34] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Mar-2012 13:07:34] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[08-Mar-2012 13:07:42] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Mar-2012 14:25:37] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Mar-2012 15:02:11] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Mar-2012 16:13:16] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Mar-2012 17:00:54] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Mar-2012 18:01:47] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Mar-2012 19:01:00] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Mar-2012 21:04:07] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Mar-2012 22:02:13] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[08-Mar-2012 23:17:52] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Mar-2012 00:20:43] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Mar-2012 01:25:19] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Mar-2012 04:34:10] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Mar-2012 05:03:18] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Mar-2012 06:04:20] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Mar-2012 06:04:38] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[09-Mar-2012 06:04:50] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[09-Mar-2012 06:58:04] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[09-Mar-2012 07:00:17] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Mar-2012 08:00:52] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Mar-2012 08:02:17] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[09-Mar-2012 09:00:13] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Mar-2012 10:19:38] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Mar-2012 11:02:42] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Mar-2012 12:00:19] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Mar-2012 13:01:05] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Mar-2012 14:07:45] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Mar-2012 15:01:32] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Mar-2012 16:03:18] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Mar-2012 17:06:37] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Mar-2012 18:16:24] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Mar-2012 19:03:16] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Mar-2012 21:25:31] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[09-Mar-2012 22:01:32] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Mar-2012 01:43:15] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Mar-2012 01:44:39] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[10-Mar-2012 06:34:54] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Mar-2012 07:45:51] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Mar-2012 07:45:52] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Mar-2012 08:40:55] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Mar-2012 09:06:28] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Mar-2012 10:03:18] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Mar-2012 11:22:44] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Mar-2012 12:05:16] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Mar-2012 14:01:09] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Mar-2012 16:24:46] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Mar-2012 17:23:00] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Mar-2012 18:51:04] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Mar-2012 19:02:58] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Mar-2012 20:42:22] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Mar-2012 21:43:17] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[10-Mar-2012 22:02:41] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Mar-2012 03:31:25] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[11-Mar-2012 04:30:34] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Mar-2012 07:21:49] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Mar-2012 09:26:54] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Mar-2012 09:58:19] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[11-Mar-2012 10:02:03] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Mar-2012 10:04:50] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[11-Mar-2012 10:05:19] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[11-Mar-2012 10:19:01] PHP Warning:  unlink(/home/mapascol/public_html/application/cache/kohana_configuration) [<a href='function.unlink'>function.unlink</a>]: No such file or directory in /home/mapascol/public_html/system/core/Kohana.php on line 586
+[11-Mar-2012 11:04:16] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Mar-2012 13:14:09] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Mar-2012 14:12:39] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Mar-2012 15:33:47] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Mar-2012 16:59:56] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Mar-2012 17:12:26] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Mar-2012 18:03:37] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Mar-2012 18:03:38] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Mar-2012 19:28:15] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Mar-2012 20:07:29] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Mar-2012 21:10:09] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[11-Mar-2012 21:10:09] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Mar-2012 02:15:34] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Mar-2012 03:39:16] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Mar-2012 06:00:46] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Mar-2012 08:12:06] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Mar-2012 09:04:06] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Mar-2012 10:14:01] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Mar-2012 11:02:25] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Mar-2012 12:02:02] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Mar-2012 13:03:25] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Mar-2012 14:05:15] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Mar-2012 14:05:16] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Mar-2012 15:07:14] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Mar-2012 16:56:44] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Mar-2012 17:27:47] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Mar-2012 18:18:52] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Mar-2012 19:09:53] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Mar-2012 20:31:09] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Mar-2012 21:09:01] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Mar-2012 21:09:02] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Mar-2012 22:14:13] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[12-Mar-2012 22:14:15] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Mar-2012 00:47:36] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Mar-2012 01:57:11] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Mar-2012 02:23:20] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Mar-2012 05:18:08] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Mar-2012 06:46:27] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Mar-2012 07:14:55] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Mar-2012 08:02:43] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Mar-2012 08:02:44] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Mar-2012 09:03:14] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Mar-2012 10:22:19] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Mar-2012 11:22:43] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Mar-2012 12:05:18] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Mar-2012 13:00:09] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Mar-2012 14:02:59] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Mar-2012 15:11:06] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Mar-2012 16:22:28] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Mar-2012 17:28:21] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Mar-2012 18:01:02] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Mar-2012 19:06:07] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Mar-2012 20:23:08] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Mar-2012 21:45:39] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786
+[13-Mar-2012 21:45:39] PHP Notice: A feed could not be found at  in /home/mapascol/public_html/application/libraries/SimplePie.php on line 1786

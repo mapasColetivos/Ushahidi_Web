@@ -97,7 +97,7 @@ function onFeatureSelect(location)
 {
 	if (!(location.fid === undefined)){
 		onPopupClose(null);
-        selectedFeature = event;
+        selectedFeature = location.event;
 
 		zoom_point = location.geometry.getBounds().getCenterLonLat();
 		lon = zoom_point.lon;

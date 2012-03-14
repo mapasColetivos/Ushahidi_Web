@@ -1,11 +1,15 @@
 <!-- main body -->
+
+<title>iframe</title>
+
 <div id="news_place" ></div>
 <div id="main" class="clearingfix">
 	<div id="mainmiddle" class="floatbox withright">
 
-	<?php if($site_message != '') { ?>
-		<div class="green-box">
-			<h3><?php echo $site_message; ?></h3>
+	<?php if($site_message = "Mutirão de Dados Compartilhados") { ?>
+		<!--<h3><div class="green-box"></h3>-->
+            <h9><?php echo $site_message; ?></h9>
+        
 		</div>
 	<?php } ?>
 	
@@ -163,7 +167,7 @@
   				<?php								
   				// Map and Timeline Blocks
   				echo $div_map;
-  				echo $div_timeline;
+  				//echo $div_timeline;
   				?>
   			</div>
 
@@ -172,11 +176,11 @@
 		<!-- / content column -->
 
 	</div>
-</div>
-<!-- / main body -->
 
-<div id="black-separator">
+<!-- / main body
 </div>
+<div id="black-separator">
+</div> -->
 
 <!-- left content block -->
 <div class="content-block-left" style="display:none">
@@ -225,8 +229,9 @@
 	</div>
 </div>
 <div>
-  <iframe id="news_iframe" scrolling="no" frameborder="0" width="100%" height="600px" src="http://www.mapascoletivos.com/noticias"></iframe>
+  <iframe id="news_iframe" frameborder="0" width="100%" height="700px" overflow-y="auto" src="http://mapascoletivos.com.br/noticias"></iframe>
 </div>
+
 
 <!-- content -->
 <div class="content-container" style="display:none">

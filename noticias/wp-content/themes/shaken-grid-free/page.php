@@ -7,7 +7,7 @@
             
             	<h2><?php the_title(); ?></h2>
                 <?php the_content(); ?>
-                <?php edit_post_link('Edit this post'); ?>
+                <?php edit_post_link('Edite este post'); ?>
             <?php endwhile; endif; ?>
         </div>
         

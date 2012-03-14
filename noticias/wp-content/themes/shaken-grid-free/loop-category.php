@@ -10,7 +10,13 @@
             </a>
         <?php } ?>
         
-        <h2><?php the_title(); ?></h2>
+       <h2><?php the_title(); ?></h2>
+	<h2><a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title_attribute(); ?>"><?php the_title(); ?></a></h2>
+
+      
+	<?php the_excerpt(); ?>
+	<a href="<?php echo get_permalink(); ?>"> Leia +</a>
+
         <?php the_content(); ?>
     </div>
     <?php endwhile; ?>
@@ -26,6 +32,6 @@
 
 <?php else : ?>
 <div class="box">
-	<h2>Sorry, nenhum post encontrado</h2>
+	<h2>Nenhum post encontrado</h2>
 </div>
 <?php endif; ?>

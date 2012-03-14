@@ -7,6 +7,7 @@
 			Event::run('ushahidi_filter.report_stats', $report_stats);
 			echo $report_stats;
 			?>
+            
 			<div style="clear:both;"></div>
 			<div class="r_cat_tooltip"> <a href="#" class="r-3">2a. Structures a risque | Structures at risk</a> </div>
 			<div class="reports-box">
@@ -21,9 +22,9 @@
   					// Trim to 150 characters without cutting words
   					// XXX: Perhaps delcare 150 as constant
 
-  					$incident_description = text::limit_chars(strip_tags($incident_description), 150, "...", true);
+  					//$incident_description = text::limit_chars(strip_tags($incident_description), 150, "...", true);
   					$incident_date = date('H:i M d, Y', strtotime($incident->incident_date));
-  					//$incident_time = date('H:i', strtotime($incident->incident_date));
+ 					//$incident_time = date('H:i', strtotime($incident->incident_date));
   					$location_name = $incident->incident_title;
 					
   					$comment_count = $incident->comment->count();
@@ -71,7 +72,7 @@
 						<div class="r_details">
 							<h3><a class="r_title" href="<?php echo url::site(); ?>reports/view/<?php echo $incident_id; ?>"><?php echo $location_name; ?></a> <a href="<?php echo url::site(); ?>reports/view/<?php echo $incident_id; ?>#discussion" class="r_comments"><?php echo $comment_count; ?></a></h3>
 							<p class="r_date r-3 bottom-cap"><?php echo $incident_date; ?></p>
-							<div class="r_description"> <?php echo $incident_description; ?> </div>
+							<div class="r_description"> <?php echo $incident_description; ?></div>
 						</div>
 					</div>
 				<?php }} ?>

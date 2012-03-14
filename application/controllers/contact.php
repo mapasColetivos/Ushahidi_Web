@@ -30,7 +30,7 @@ class Contact_Controller extends Main_Controller
         $form = array (
             'contact_name' => '',
             'contact_email' => '',
-            'contact_phone' => '',
+			'contact_phone' => '',
             'contact_subject' => '',			
             'contact_message' => '',
             'captcha' => ''
@@ -66,7 +66,7 @@ class Contact_Controller extends Main_Controller
                 $site_email = Kohana::config('settings.site_email');
                 $message = Kohana::lang('ui_admin.sender').": " . $post->contact_name . "\n";
                 $message .= Kohana::lang('ui_admin.email').": " . $post->contact_email . "\n";
-                $message .= Kohana::lang('ui_admin.phone').": " . $post->contact_phone . "\n\n";
+                // $message .= Kohana::lang('ui_admin.phone').": " . $post->contact_phone . "\n\n";
                 $message .= Kohana::lang('ui_admin.message').": \n" . $post->contact_message . "\n\n\n";
                 $message .= "~~~~~~~~~~~~~~~~~~~~~~\n";
                 $message .= Kohana::lang('ui_admin.sent_from_website'). url::base();

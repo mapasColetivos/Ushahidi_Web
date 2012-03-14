@@ -83,22 +83,21 @@ a.more-link p{
 	letter-spacing:1px;
 	margin-bottom:20px;
 	font-weight:normal;
-	text-transform:uppercase;
+	
 	color:#666;
 	border-bottom:1px solid #eee;
 	text-shadow:1px 1px 2px rgba(0,0,0,0.13);
 	-moz-text-shadow:1px 1px 2px rgba(0,0,0,0.13);
 }
 .box h2{
-	font-size:12px;
-	text-transform:uppercase;
+	font-size:16px;
+	/*text-transform:uppercase;*/
 	color:#777;
 	margin-bottom:5px;
 }
 
 .box h2 a{
-	font-size:12px;
-	text-transform:uppercase;
+	font-size:14px;
 	color:color:#777;
 	margin-bottom:5px;
 	text-decoration: none;
@@ -286,7 +285,7 @@ ul{
 		background:#FFF;
 		float:left;
 		clear:right;
-		width:640px;
+		width:700px;
 		-webkit-box-shadow:1px 1px 3px rgba(0,0,0,0.2);
 		-moz-box-shadow:1px 1px 3px rgba(0,0,0,0.2);
 		box-shadow:1px 1px 3px rgba(0,0,0,0.2);
@@ -296,7 +295,7 @@ ul{
 		background:#FFF;
 		float:right;
 		clear:right;
-		width:300px;
+		width:240px;
 		-webkit-box-shadow:1px 1px 3px rgba(0,0,0,0.2);
 		-moz-box-shadow:1px 1px 3px rgba(0,0,0,0.2);
 		box-shadow:1px 1px 3px rgba(0,0,0,0.2);

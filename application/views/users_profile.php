@@ -51,7 +51,8 @@
 				<h4>Photo</h4>
 				<img src="<?php echo $user->photo(154) ?>" />
 				<br/>
-				Para alterar sua imagem, acesse ou crie sua conta no <a href="http://en.gravatar.com/" target="_blank" >Gravatar</a> usando o mesmo e-mail cadastrado (<?php echo $user->email ?>)
+				Para alterar sua imagem, acesse ou crie sua conta no <a href="http://en.gravatar.com/" target="_blank" >Gravatar</a> usando o mesmo e-mail cadastrado (<?php echo $user->email ?>). <br>
+                Assegure-se de que a foto esteja classificada no gravatar como "G".
 			</div>
 			<div class="row">
 				<h4><?php echo Kohana::lang('ui_main.full_name');?></h4>

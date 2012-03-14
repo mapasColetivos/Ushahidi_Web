@@ -1,0 +1,4 @@
+[31-Dec-2011 07:45:41] PHP Fatal error:  Call to undefined function  get_header() in /home/mapascol/public_html/noticias/wp-content/themes/workaholic/index.php on line 1
+[01-Jan-2012 17:26:33] PHP Fatal error:  Call to undefined function  get_header() in /home/mapascol/public_html/noticias/wp-content/themes/workaholic/index.php on line 1
+[03-Jan-2012 14:00:57] PHP Fatal error:  Call to undefined function  get_header() in /home/mapascol/public_html/noticias/wp-content/themes/workaholic/index.php on line 1
+[05-Jan-2012 08:37:04] PHP Fatal error:  Call to undefined function  get_header() in /home/mapascol/public_html/noticias/wp-content/themes/workaholic/index.php on line 1

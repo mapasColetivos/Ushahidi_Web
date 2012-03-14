@@ -1,11 +1,11 @@
 <?php
 if(preg_match('#' . basename(__FILE__) . '#', $_SERVER['PHP_SELF'])) { die('You are not allowed to call this page directly.'); }
 
-define(DOWNLOAD_ERROR, "Download failed.");
-define(WRITE_ERROR, "Write failed");
-define(READ_ERROR, "Read failed");
-define(ZIP_ERROR, "Zip classes missing");
-define(SUCCESS, "Success");
+define("DOWNLOAD_ERROR", "Download failed.");
+define("WRITE_ERROR", "Write failed");
+define("READ_ERROR", "Read failed");
+define("ZIP_ERROR", "Zip classes missing");
+define("SUCCESS", "Success");
 
 ?>
 
@@ -24,7 +24,7 @@ if (isset($_POST["Non_commercial"]) || isset($_POST["Install"])) {
 function unpack_player_archive($player_package) {
 
   if (!class_exists("ZipArchive")) {
-    return zip_fallback($player_package);;
+    return zip_fallback($player_package);
   }
 
   $zip = new ZipArchive();
@@ -147,13 +147,18 @@ function download_state() { ?>
     </table>
   </form>
   <?php } else if ($result == DOWNLOAD_ERROR) {
-    error_message("Not able to download JW Player.  Please check your internet connection. <br/> If you already have the JW Player then you can install it using the <a href='admin.php?page=jwplayer-update'>upgrade page</a>.  " . JW_FILE_PERMISSIONS);
+    error_message("Not able to download JW Player.  Please check your internet connection. <br/>
+    If you already have the JW Player then you can install it using the <a href='admin.php?page=jwplayer-update'>upgrade page</a>.<br/>
+    Alternatively you may FTP the player files directly to your site.  Place the player.swf and jwplayer.js files in " . JWPLAYER_FILES_DIR . "/player/. <br/> " . JW_FILE_PERMISSIONS);
   } else if ($result == WRITE_ERROR) {
-    error_message("Not able to install JW Player.  Please make sure the " . LongTailFramework::getPlayerPath() . " directory exists (and is writabe) and then visit the <a href='admin.php?page=jwplayer-update'>upgrade page</a>.  " . JW_FILE_PERMISSIONS);
+    error_message("Not able to install JW Player.
+    Please make sure the " . JWPLAYER_FILES_DIR . "/player/ directory exists (and is writabe) and then visit the <a href='admin.php?page=jwplayer-update'>upgrade page</a>.<br/>
+    Alternatively you may FTP the player.swf and jwplayer.js files directly to your site. <br/>" . JW_FILE_PERMISSIONS);
   } else if ($result == ZIP_ERROR) {
-    error_message("The necessary zip classes are missing.  Please upload the player manually instead using the <a href='admin.php?page=jwplayer-update'>upgrade page</a>.");
+    error_message("The necessary zip classes are missing.  Please FTP the player manually.  <br/>Place the player.swf and jwplayer.js files in " . JWPLAYER_FILES_DIR . "/player/.");
   } else if ($result == READ_ERROR) {
-    error_message("Could not find player.swf or yt.swf.  Either they are not present or the archive is invalid.");
+    error_message("Could not find player.swf or jwplayer.js.  Either they are not present or the archive is invalid.<br/>
+    Alternatively you may FTP the player files directly to your site.  Place the player.swf and jwplayer.js files in " . JWPLAYER_FILES_DIR . "/player/.");
   }
 }
 
@@ -204,6 +209,7 @@ function embed_demo_player($download = false) {
     "image" => "http://content.longtailvideo.com/videos/bunny.jpg",
     "id" => "jwplayer-1"
   );
+  wp_print_scripts('swfobject');
   $swf = LongTailFramework::generateSWFObject($atts, false); ?>
   <script type="text/javascript">
     var player, t;

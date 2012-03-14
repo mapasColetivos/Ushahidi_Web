@@ -1,6 +1,6 @@
 <div id="main" class="clearfix">
 	<div class="static_content">
-    <iframe id="news_iframe" frameborder="0" scrolling="no" width="100%" height="600px" src="<?php echo url::base(); ?>/noticias/?m=all"></iframe>	
+    <iframe id="news_iframe" frameborder="0" width="100%" height="100%" overflow-y="auto" src="<?php echo url::base(); ?>/noticias/?m=all"></iframe>	
 	</div>
 </div>
 
@@ -12,7 +12,7 @@ $(document).ready(function() {
   }
   
   $("#news_iframe").load(function(){
-    $("#news_iframe").contents().find('[href^="http://mapascoletivos.com"]').click(iframe_link);    
+    $("#news_iframe").contents().find('[href^="http://mapascoletivos.com.br/"]').click(iframe_link);    
     $("#news_iframe").height($("#news_iframe").contents().find("html").height());    
   });
 });

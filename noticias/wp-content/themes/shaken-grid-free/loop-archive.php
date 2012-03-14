@@ -21,9 +21,14 @@
             </a>
         <?php } ?>
         
-        <h2><?php the_title(); ?></h2>
-        <?php the_content('<p>Continue Lendo &rarr;</p>'); ?>
-        <?php edit_post_link('Edit this post'); ?>
+        <!--<?php the_title(); ?>-->
+        <h2><a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title_attribute(); ?>"><?php the_title(); ?></a></h2>
+
+	<?php the_excerpt(); ?>
+	<a href="<?php echo get_permalink(); ?>"> Leia +</a>
+
+        <!--<?php the_content('<p>Continue Lendo &rarr;</p>'); ?>
+        <?php edit_post_link('Edite este post'); ?>-->
     </div>
     <?php endwhile; ?>
     </div><!-- #sort -->
@@ -39,7 +44,7 @@
 <?php else : ?>
 <div id="sort">
 <div class="box">
-	<h2>Sorry, nenhum post encontrado</h2>
+	<h2>Nenhum post encontrado</h2>
     <?php get_search_form(); ?>
 </div>
 </div><!-- #sort -->

@@ -93,7 +93,9 @@
     }
       
       function get_location_from_server(id){
-		$('#location_box').html('<img src="<?php echo url::base() . "index.php/media/img/loading_g.gif"; ?>">');		
+                console.log("AA");
+                $('#location_box').show();
+		//$('#location_box').html('<img src="<?php echo url::base() . "media/img/loading_g.gif"; ?>">');		
 		map_id = $("#incident_id").val();
 		if (id <= 0){
 			$("#location_box").html(empty_location_form);
@@ -298,7 +300,7 @@
 		}			
 		});
 
-		$("#new_layer").live("click",function(){
+		$("#new_layer").live("click",function(){ console.log("LAB MACAMBIRA");
 			id = $("#incident_id").val();
 			$.get("<?php echo url::base() ?>index.php/layers/create/"+id,function(data,textStatus,jqXHR){
 				$("#table_of_contents").append(data);

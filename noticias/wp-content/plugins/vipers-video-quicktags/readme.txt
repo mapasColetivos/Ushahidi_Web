@@ -3,7 +3,7 @@ Contributors: Viper007Bond
 Donate link: http://www.viper007bond.com/donate/
 Tags: video, quicktags, wysiwyg, tinymce, youtube, google video, dailymotion, vimeo, veoh, viddler, metacafe, blip.tv, flickr, ifilm, myspace, flv, quicktime
 Requires at least: 2.8
-Tested up to: 3.2.x
+Tested up to: 3.3
 Stable tag: trunk
 
 Allows easy and XHTML valid posting of videos from various websites such as YouTube, DailyMotion, Vimeo, and more.
@@ -98,6 +98,23 @@ Sure! I do this in my free time and I appreciate all donations that I get. It ma
 2. DailyMotion configuration page with Farbtastic color picker showing.
 
 == Changelog ==
+
+= v6.3.4 =
+
+* **DailyMotion:** Fix incorrect fallback URL. A slash was missing. Props [Sutherland Boswell](http://sutherlandboswell.com/) for [findind the bug]((http://wordpress.org/support/topic/plugin-video-thumbnails-thumnail-not-found-for-dailymotion-videos).
+
+= v6.3.3 =
+
+* **General:** A couple CSS tweaks and Javascript improvements thanks to Andrew Ozz (azaozz).
+
+= v6.3.2 =
+
+* **YouTube:** Fix for YouTube playlists. See [forum thread](http://wordpress.org/support/topic/plugin-vipers-video-quicktags-youtube-playlists-do-not-work) for details.
+* **General:** Fix buttons in HTML editor for WordPress 3.3.
+
+= October 13th, 2011 (no version bump) ==
+
+* **Localization:** Added Norwegian translation thanks to [Kristoffer Risanger](http://kristofferr.com/).
 
 = v6.3.1 =
 
@@ -479,3 +496,14 @@ This is a hotfix version to address WordPress 2.5 plus some bugfixes and such. A
 = v1.0.0 =
 
 * Inital release.
+
+== Upgrade Notice ==
+
+= 6.3.4 =
+DailyMotion bug fix.
+
+= 6.3.3 =
+Various minor editor improvements thanks to Andrew Ozz (azaozz).
+
+= 6.3.2 =
+YouTube playlists fixed and better WordPress 3.3 support.

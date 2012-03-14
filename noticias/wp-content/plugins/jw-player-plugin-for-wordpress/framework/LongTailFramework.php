@@ -29,7 +29,7 @@ class LongTailFramework
 
   /**
    * Sets the current config being worked with.  The passed in config is set as
-   * the current config and it's configuration is loaded into memoery.
+   * the current config and it's configuration is loaded into memory.
    * @param string $config The player config we would like to perform operations
    * on.
    */
@@ -44,11 +44,22 @@ class LongTailFramework
    * values.
    * @return array The array representation of config values.
    */
-  public static function getConfigValues() {
+  public static function getConfigValues($flat = false) {
     $target = array();
     if (LongTailFramework::$current_config_values != null) {
-      foreach(LongTailFramework::$current_config_values as $name => $value) {
-        $target[$name] = (string) $value;
+      foreach(LongTailFramework::$current_config_values as $flash_var) {
+        if ($flash_var["type"] == "Additional") {
+          if ($flat) {
+            $target[$flash_var->getName()] = (string) $flash_var;
+          } else {
+            if (!array_key_exists("Additional", $target)) {
+              $target["Additional"] = array();
+            }
+            $target["Additional"][$flash_var->getName()] = (string) $flash_var;
+          }
+        } else {
+          $target[$flash_var->getName()] = (string) $flash_var;
+        }
       }
     }
     return $target;
@@ -79,9 +90,13 @@ class LongTailFramework
 
   /**
    * Save the Player configuration to an xml file.
-   * @param string $xmlString The xml formatted content to be saved.
+   * @param $xml_string
    * @param string $target Specified config file to save to.  Default is null,
    * in which case the currently loaded config is used.
+   * @return bool
+   *
+   * @internal param string $xmlString The xml formatted content to be saved.
+   *
    */
   public static function saveConfig($xml_string, $target = "") {
     $xml_file = "";
@@ -92,7 +107,8 @@ class LongTailFramework
     }
     $xml_handle = @fopen($xml_file, "w");
     if (!$xml_handle) return false;
-    fwrite($xml_handle, "<config>\n" . $xml_string . "</config>");
+    $configStr = "<?xml version='1.0' encoding='UTF-8' ?>\n<config>\n" . $xml_string . "</config>";
+    fwrite($xml_handle, $configStr);
     fclose($xml_handle);
     chmod($xml_file, 0755);
     return true;
@@ -178,7 +194,7 @@ class LongTailFramework
 
   /**
    * Checks if there are any custom Player configs available.
-   * @return boolean If there are any configs or not. 
+   * @return boolean If there are any configs or not.
    */
   public static function configsAvailable() {
     $configs = LongTailFramework::getConfigs();
@@ -200,7 +216,7 @@ class LongTailFramework
   }
 
   /**
-   * Get the complete path to the JW Embbeder javascript file.
+   * Get the complete path to the JW Embedder javascript file.
    * @return string The path to the JW Embedder.
    */
   public static function getEmbedderPath() {
@@ -208,7 +224,7 @@ class LongTailFramework
   }
 
   /**
-   * Get the complete path to the primary (and execpted) player location.
+   * Get the complete path to the primary (and excepted) player location.
    * @return string The path to the player.
    */
   public static function getPrimaryPlayerPath() {
@@ -286,7 +302,9 @@ class LongTailFramework
 
   /**
    * For the given Player configuration, returns the LTAS details.
-   * @param string $config The name of the Player configuration
+
+   *
+   * @internal param string $config The name of the Player configuration
    * @return array An array containing the enabled state and channel code.
    */
   public static function getLTASConfig() {
@@ -311,7 +329,9 @@ class LongTailFramework
 
   /**
    * Generates a list of the available plugins along with their flashvars and default values.
-   * @param string $config (optional) Pass in if you wish to load the plugin enabled state and flashvar values.
+   * @param null $config_values
+   *
+   * @internal param string $config (optional) Pass in if you wish to load the plugin enabled state and flashvar values.
    * @return array The list of available plugins
    */
   public static function getPlugins(&$config_values = null) {
@@ -356,15 +376,18 @@ class LongTailFramework
         $skins[$info[0]] = $info[1];
       }
     }
+    ksort($skins);
     return $skins;
   }
 
-  /**
-   * Get the necessary embed parameters for embedding a flash object.  For now we assume
-   * the flash object will be as big as the dimensions of the player.
-   * @param string @config The Player configuration that is going to be embedded
-   * @return array The array with the flash object dimensions
-   */
+    /**
+     * Get the necessary embed parameters for embedding a flash object.  For now we assume
+     * the flash object will be as big as the dimensions of the player.
+
+     *
+     * @internal param $string @config The Player configuration that is going to be embedded
+     * @return array The array with the flash object dimensions
+     */
   public static function getEmbedParameters() {
     //If no config has been passed, use the player defaults.
     if (LongTailFramework::$current_config == "") {
@@ -381,14 +404,19 @@ class LongTailFramework
 
   /**
    * Generates the SWFObjectConfig object which acts as a wrapper for the SWFObject javascript library.
-   * @param array $flashVars The array of flashVars to be used in the embedding
+   * @param $flash_vars
+   * @param bool $useJWEmbedder
+   * @param string $customLocation
+   *
+   * @internal param array $flashVars The array of flashVars to be used in the embedding
    * @return SWFObjectConfig The configured SWFObjectConfig object to be used for embedding
    */
-  public static function generateSWFObject($flash_vars, $useJWEmbedder = false) {
+  public static function generateSWFObject($flash_vars, $useJWEmbedder = false, $customLocation = "") {
+    $playerLocation = $customLocation ? $customLocation . "player.swf" : LongTailFramework::getPlayerURL();
     if ($useJWEmbedder) {
-      return new JWEmbedderConfig(LongTailFramework::$div_id++, LongTailFramework::getPlayerURL(), LongTailFramework::getConfigURL(), LongTailFramework::getEmbedParameters(), $flash_vars);
+      return new JWEmbedderConfig(LongTailFramework::$div_id++, $playerLocation, LongTailFramework::getConfigURL(), LongTailFramework::getEmbedParameters(), $flash_vars, LongTailFramework::$current_config);
     }
-    return new SWFObjectConfig(LongTailFramework::$div_id++, LongTailFramework::getPlayerURL(), LongTailFramework::getConfigURL(), LongTailFramework::getEmbedParameters(), $flash_vars);
+    return new SWFObjectConfig(LongTailFramework::$div_id++, $playerLocation, LongTailFramework::getConfigURL(), LongTailFramework::getEmbedParameters(), $flash_vars, LongTailFramework::$current_config);
   }
 
   /**
@@ -403,8 +431,10 @@ class LongTailFramework
 
   /**
    * Helper function to flatten the additional flashvars into a string representation.
-   * @param array The array of additional flashvars
-   * @return string The string represetnation of the additional flashvars
+   * @param $flashvars
+   *
+   * @internal param \The $array array of additional flashvars
+   * @return string The string representation of the additional flashvars
    */
   private static function flattenAdditionalFlashVars($flashvars) {
     $output = "";
@@ -412,7 +442,7 @@ class LongTailFramework
     foreach ($flashvars as $key => $value) {
       $output_array[] = $key . "=" . $value;
     }
-    $output = implode(",", $output_array);
+    $output = implode("\n", $output_array);
     return $output;
   }
 
@@ -443,9 +473,11 @@ class LongTailFramework
             $default = (string) $config_file->{$flash_var->name};
             $default = str_replace(LongTailFramework::getSkinURL(), "", $default);
             $default = preg_replace("/(\.swf|\.zip)/", "", $default);
+            $parts = explode("/", $default);
+            $default = empty($parts) ? $default : $parts[0];
           }
           $values = (array) $flash_var->select;
-          $val = $values["option"];
+          $val = isset($values["option"]) ? $values["option"] : "";
           $type = (string) $flash_var["type"];
           //Load the possible values for the skin flashvar.
           if ($flash_var->name == "skin") {
@@ -463,8 +495,8 @@ class LongTailFramework
     unset($config_values["plugins"]);
     unset($config_values["ltas.cc"]);
     LongTailFramework::getPlugins($config_values);
-    if ($config_values) {
-      LongTailFramework::$loaded_additional_flash_vars = LongTailFramework::flattenAdditionalFlashVars($config_values);
+    if ($config_values && array_key_exists("Additional", $config_values)) {
+      LongTailFramework::$loaded_additional_flash_vars = LongTailFramework::flattenAdditionalFlashVars($config_values["Additional"]);
     }
     LongTailFramework::$loaded_flash_vars = $f_vars;
   }
@@ -493,7 +525,7 @@ class LongTailFramework
     } else {
       $config_found = false;
     }
-    $enabled = strstr((string) $config_file->plugins, $repository) ? true : false;
+    $enabled = isset($config_file) && strstr((string) $config_file->plugins, $repository) ? true : false;
     $f_vars = array();
     //Process the flashvars in the plugin xml file.
     foreach($plugin_xml->flashvars as $flash_vars) {
@@ -512,9 +544,10 @@ class LongTailFramework
           $default = (string) $config_file->{$plugin_name . "." . $flash_var->name};
         }
         $values = (array) $flash_var->select;
+        $value_option = isset($values["option"]) ? (array) $values["option"] : array();
         $temp_var = new FlashVar(
           (string) $flash_var->name, $default, (string) $flash_var->description,
-          (array) $values["option"], (string) $flash_var["type"]
+          $value_option, (string) $flash_var["type"]
         );
         $f_var[(string) $flash_var->name] = $temp_var;
       }

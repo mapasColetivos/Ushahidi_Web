@@ -359,7 +359,7 @@
 	'reports_return' => 'Voltar à página de relatos',
 	'reports_select_city' => 'Selecionar a cidade',
 	'reports_submitted' => 'Seu relato foi enviado para revisão. Nossa equipe entrará em contato em breve, se necessário.',
-	'reports_submit_new' => 'Criar novo Mapa',
+	'reports_submit_new' => 'Criar Novo Mapa',
 	'reports_time' => 'Horário',
 	'reports_timeline' => 'Cronologia',
 	'reports_title' => 'Nome do Mapa',

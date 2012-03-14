@@ -2,7 +2,8 @@
 	<div class="content-bg">
 		<!-- start contacts block -->
 		<div class="big-block">
-			<h1><?php echo Kohana::lang('ui_main.contact'); ?></h1>
+	<br></br>
+    <br></br>
 			<div id="contact_us" class="contact">
 				<?php
 				if ($form_error)
@@ -42,11 +43,15 @@
 					<strong>E-mail:</strong><br />
 					<?php print form::input('contact_email', $form['contact_email'], ' class="text"'); ?>
 				</div>
-				<div class="report_row">
+				
+                 <!--
+                <div class="report_row">
 					Telefone (opcional):<br />
 					<?php print form::input('contact_phone', $form['contact_phone'], ' class="text"'); ?>
 				</div>
-				<div class="report_row">
+                 -->
+				
+                <div class="report_row">
 					<strong>Assunto:</strong><br />
 					<?php print form::input('contact_subject', $form['contact_subject'], ' class="text"'); ?>
 				</div>								
@@ -54,18 +59,22 @@
 					<strong>Mensagem:</strong><br />
 					<?php print form::textarea('contact_message', $form['contact_message'], ' rows="4" cols="40" class="textarea long" ') ?>
 				</div>		
-				<div class="report_row">
-					<strong>Código de Segurança:</strong><br />
-					<?php print $captcha->render(); ?><br />
-					<?php print form::input('captcha', $form['captcha'], ' class="text"'); ?>
-				</div>
+				
+                <div class="report_row">
+					<strong>Código de Segurança:</strong><br /> 
+                    </div>
+                    <?php print $captcha->render(); ?><br /> 	
+                    				<?php print form::input('captcha', $form['captcha'], ' class="text"'); ?> 
+				
+
+                
 				<div class="report_row">
 					<input name="submit" type="submit" value="Enviar" class="btn_submit" />
                 </div>      
               <br />
 			  </p>
-              <p style="padding-left: 60px;"><span style="color: #000000;">ou escreva diretamente para <strong>contato@mapascoletivos.com</strong></span></p>
-              <p style="padding-left: 60px;"><span style="color: #000000;">em caso de dúvidas técnicas ou relato de bugs escreva para: <strong>suporte@mapascoletivos.com</strong> </span></p>  
+              <p style="padding-left: 60px;"><span style="color: #000000; font-size:14px;">ou escreva diretamente para <strong>contato@mapascoletivos.com</strong></span></p>
+              <p style="padding-left: 60px;"><span style="color: #000000; font-size:14px;">em caso de dúvidas técnicas ou relato de bugs escreva para: <strong>suporte@mapascoletivos.com</strong> </span></p>  
                 </div>          
                 
 				<?php print form::close(); ?>

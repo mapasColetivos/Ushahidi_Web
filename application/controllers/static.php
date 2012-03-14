@@ -19,7 +19,7 @@ class Static_Controller extends Main_Controller {
 		$this->template->header->header_block = $this->themes->header_block();		
         $this->template->header->this_page = 'about';		
 	}
-	
+		
 	public function narratives(){
 		$this->template->content = new View('static/narratives');
 		$this->template->header->header_block = $this->themes->header_block();		
@@ -52,8 +52,8 @@ class Static_Controller extends Main_Controller {
 		$this->template->header->header_block = $this->themes->header_block();		
 	}
 	
-	public function blogs(){
-		$this->template->content = new View('static/blogs');
+	public function credits(){
+		$this->template->content = new View('static/credits');
 		$this->template->header->header_block = $this->themes->header_block();		
 	}	
 	

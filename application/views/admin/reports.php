@@ -92,7 +92,7 @@
 								{
 									$incident_id = $incident->id;
 									$incident_title = $incident->incident_title;
-									$incident_description = text::limit_chars($incident->incident_description, 150, "...", true);
+									$incident_description =  $incident-> incident_description;
 									$incident_date = $incident->incident_date;
 									$incident_date = date('Y-m-d', strtotime($incident->incident_date));
 									$incident_mode = $incident->incident_mode;	// Mode of submission... WEB/SMS/EMAIL?
@@ -173,7 +173,7 @@
 										$incident_translation .= "<div class=\"post-trans\">";
 										$incident_translation .= Kohana::lang('ui_main.translation'). $i . ": ";
 										$incident_translation .= "<a href=\"" . url::base() . 'admin/reports/translate/'. $translation->id .'/?iid=' . $incident_id . "\">"
-											. text::limit_chars($translation->incident_title, 150, "...", true)
+											//. text::limit_chars($translation->incident_title, 150, "...", true)
 											. "</a>";
 										$incident_translation .= "</div>";
 									}

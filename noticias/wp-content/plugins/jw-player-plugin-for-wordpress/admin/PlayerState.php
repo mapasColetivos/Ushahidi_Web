@@ -22,6 +22,9 @@ class PlayerState extends AdminState {
 
   /**
    * @see AdminState::__construct()
+   * @param $player
+   * @param string $post_values
+   * @return \PlayerState
    */
   public function __construct($player, $post_values = "") {
     parent::__construct($player, $post_values);
@@ -29,6 +32,7 @@ class PlayerState extends AdminState {
 
   /**
    * @see AdminState::getID()
+   * @return string
    */
   public static function getID() {
     return "player";
@@ -36,6 +40,7 @@ class PlayerState extends AdminState {
 
   /**
    * @see AdminState::getNextState()
+   * @return \BasicState
    */
   public function getNextState() {
     LongTailFramework::setConfig($this->current_player);
@@ -68,7 +73,7 @@ class PlayerState extends AdminState {
    */
   public function render() {
     $players = LongTailFramework::getConfigs();
-    if (!$players) $this->infoMessage("If you wish to create custom players please make sure the uploads/jw-player-plugin-for-wordpress/configs directory exists and is writable.  This directory is necessary for creating custom players.  " . JW_FILE_PERMISSIONS)?>
+    if (!$players) $this->infoMessage("If you wish to create custom players please make sure the " . JWPLAYER_FILES_DIR . "/configs/" . " directory exists and is writable.  This directory is necessary for creating custom players.  " . JW_FILE_PERMISSIONS)?>
     <div class="wrap">
 
       <script type="text/javascript">
@@ -104,38 +109,48 @@ class PlayerState extends AdminState {
 
       <h2>JW Player Setup</h2>
       <p><span><?php echo JW_SETUP_DESC; ?></span><p>
-      <?php if (file_exists(LongTailFramework::getPrimaryPlayerPath())) {?>
+      <?php if (file_exists(LongTailFramework::getPrimaryPlayerPath())) { ?>
         <form name="<?php echo LONGTAIL_KEY . "upgrade_form" ?>" method="post" action="admin.php?page=jwplayer-update">
           <?php $version = get_option(LONGTAIL_KEY . "version"); ?>
-          <?php if (isset($version) && !empty($version)) { ?>
+          <?php $alternate = get_option(LONGTAIL_KEY . "player_location_enable"); ?>
+          <?php $location = get_option(LONGTAIL_KEY . "player_location"); ?>
+          <?php $jwPlayer = file_exists(LongTailFramework::getPlayerPath()); ?>
+          <?php $jwEmbedder = file_exists(LongTailFramework::getEmbedderPath()); ?>
             <div id="poststuff">
               <div id="post-body">
                 <div id="post-body-content">
                   <div class="stuffbox">
-                    <h3 class="hndle"><span>JW Player Version</span></h3>
+                    <h3 class="hndle"><span>JW Player Status</span></h3>
                     <div class="inside" style="margin: 15px;">
                       <table>
                         <tr valign="top">
                           <td>
                             <div>
-                              <p><span><?php echo "<strong>Current Player:</strong> JW Player " . $version; ?></span></p>
+                            <?php if (!$alternate) { ?>
+                              <p>
+                                <span><strong>JW Player:</strong> <?php echo $jwPlayer ? "Installed" : "Not detected"; echo $version && $jwPlayer ? " (JW Player $version)" : ""; ?></span>
+                              </p>
+                              <p><span><strong>JW Embedder:</strong></span> <?php echo $jwEmbedder ? "Installed" : "Not detected (SWFObject will be used instead)"; ?></p>
                               <?php if (!strstr($version, "Licensed")) { ?>
                                 <p><span><?php echo JW_LICENSED; ?></span></p>
                                 <p><input class="button-secondary" type="submit" name="Update_Player" value="Click Here to Upgrade" /></p>
                               <?php } ?>
-                            </div>
-                          </td>
-                        </tr>
-                      </table>
-                    </div>
+                            <?php } else if ($alternate) { ?>
+                              <p><span><?php echo "<strong>Current Player:</strong> Version Unknown"; ?></span></p>
+                              <p><span>The player is being loaded from an alternate location (<strong><?php echo $location; ?></strong>) and is not being managed by the plugin.</span></p>
+                            <?php } else { ?>
+                              <p><span><?php echo "<strong>Current Player:</strong> Version Unknown"; ?></span></p>
+                              <p><input class="button-secondary" type="submit" name="Update_Player" value="Click Here to Reinstall" /></p>
+                            <?php } ?>
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
                   </div>
                 </div>
               </div>
             </div>
-          <?php } else { ?>
-            <span><?php echo "<strong>Current Player:</strong> Version Unknown"; ?></span>
-            <input class="button-secondary" type="submit" name="Update_Player" value="Click Here to Reinstall" />
-          <?php } ?>
+          </div>
         </form>
       <?php } else if (file_exists(LongTailFramework::getSecondaryPlayerPath())) { ?>
         <form name="<?php echo LONGTAIL_KEY . "upgrade_form" ?>" method="post" action="admin.php?page=jwplayer-update">
@@ -158,7 +173,7 @@ class PlayerState extends AdminState {
                           <table class="widefat" cellspacing="0">
                             <thead>
                               <tr>
-                                <th class="manage-column column-name">Default</th>
+                                <th class="manage-column column-name" style="text-shadow: none;">Default</th>
                                 <th class="manage-column column-name">Players</th>
                                 <th class="manage-column column-name">Control Bar</th>
                                 <th class="manage-column column-name">Skin</th>
@@ -166,7 +181,7 @@ class PlayerState extends AdminState {
                                 <th class="manage-column column-name">Autostart</th>
                                 <th class="manage-column column-name">Height</th>
                                 <th class="manage-column column-name">Width</th>
-                                <th class="manage-column column-name">Actions</th>
+                                <th class="manage-column column-name" style="text-shadow: none;">Actions</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -213,38 +228,9 @@ class PlayerState extends AdminState {
                           </table>
                           <br/>
                           <input class="button-secondary action" type="submit" name="Next" value="Create Custom Player"/>
-                          <div style="display: inline-block; float: right;">
-                            <label for="<?php echo LONGTAIL_KEY . "show_archive"; ?>">Apply filter to excerpt on Category and Search pages</label>
-                            <input id="<?php echo LONGTAIL_KEY . "show_archive"; ?>" type="checkbox" name="<?php echo LONGTAIL_KEY . "show_archive"; ?>" onclick="form.submit();" <?php checked(true, get_option(LONGTAIL_KEY . "show_archive")); ?>/>
-                          </div>
                           <input id="<?php echo LONGTAIL_KEY . "new_player"; ?>" type="hidden" name="<?php echo LONGTAIL_KEY . "new_player"; ?>" value=""/>
                           <input id="<?php echo LONGTAIL_KEY . "player"; ?>" type="hidden" name="<?php echo LONGTAIL_KEY . "config" ?>" value=""/>
                           <input type="hidden" name="<?php echo LONGTAIL_KEY . "state" ?>" value=<?php echo PlayerState::getID(); ?> />
-                        </div>
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div id="poststuff">
-          <div id="post-body">
-            <div id="post-body-content">
-              <div class="stuffbox">
-                <h3 class="hndle"><span>JW Player Plugin for WordPress Uninstall</span></h3>
-                <div class="inside" style="margin: 15px;">
-                  <table>
-                    <tr valign="top">
-                      <td>
-                        <div>
-                          <p><?php _e('To fully remove the plugin, click the Uninstall button.  Deactivating without uninstalling will not remove the data created by the plugin.') ;?></p>
-                        </div>
-                        <p><font color="red"><strong><?php _e('WARNING:') ;?></strong><br />
-                        <?php _e('This cannot be undone.  Since this is deleting data from your database, it is recommended that you create a backup.') ;?></font></p>
-                        <div align="left">
-                          <input type="submit" name="Uninstall" class="button-secondary delete" value="<?php _e('Uninstall plugin') ?>" onclick="return confirm('<?php _e('You are about to Uninstall this plugin from WordPress.\nThis action is not reversible.\n\nChoose [Cancel] to Stop, [OK] to Uninstall.\n'); ?>');"/>
                         </div>
                       </td>
                     </tr>

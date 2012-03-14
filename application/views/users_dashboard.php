@@ -3,21 +3,22 @@
 		<div id="social">
 			<div id="facebook_button">
 				<a name="fb_share" type="icon" share_url="YOUR_URL" ></a> 
-				<script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript">
-				</script>
+				<script type="text/javascript" src="http://static.ak.fbcdn.net/connect.php/js/FB.Share"></script>
 			</div>
+            
 			<div id="twitter_button" >			
-				<a href="https://twitter.com/share" data-text="<?php echo $user->name; ?>" class="twitter-share-button" data-count="none" data-lang="pt">Tweetar</a>
+				<a href="https://twitter.com/share" data-text="<?php echo $user->name; ?>" class="twitter-share-button" data-count="none" data-lang="pt">Tweetou</a>
 				<script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
 			</div>
-		</div>
+		
+        </div>
 		<div id="left_column_profile">
 			<p id="mapeador">
 				<?php if ($myself and ($myself->id != $user->id)) {
 					if ($myself->follows($user)) {
-						echo "<a href='".url::base()."social/unfollow/".$user->id."'><img src='".url::base()."media/img/btn_seguir_mapeador.png'></a>";
+						echo "<a href='".url::base()."social/unfollow/".$user->id."'><img src='".url::base()."media/img/btn_deixar_seguir_mapeador.png'></a>";
 					} else {
-						echo "<a href='".url::base()."social/follow/".$user->id."'><img src='".url::base()."media/img/btn_deixar_seguir_mapeador.png'></a>";
+						echo "<a href='".url::base()."social/follow/".$user->id."'><img src='".url::base()."media/img/btn_seguir_mapeador.png'></a>";
 					}
 				} ?>	
 			</p>
@@ -36,6 +37,7 @@
 				</p>
 				<p>
 					web: <?php if ($user->web) {echo "<a href='".$user->web."' >".$user->web."</a>";} else {echo "Não informado";} ?>
+                    
 				</p>
 				<p>
 					bio: <?php if ($user->bio) {echo $user->bio;} else {echo "Não informado";} ?>

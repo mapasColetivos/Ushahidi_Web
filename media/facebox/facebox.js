@@ -86,14 +86,14 @@
       opacity      : 0.2,
       overlay      : true,
       loadingImage : '/facebox/loading.gif',
-      closeImage   : "<?php echo url::base(); ?>/media/img/close.png",
+      closeImage   : '/facebox/closelabel.png',
       imageTypes   : [ 'png', 'jpg', 'jpeg', 'gif' ],
       faceboxHtml  : '\
     <div id="facebox" style="display:none;"> \
       <div class="popup_facebox"> \
         <div class="content_facebox"> \
         </div> \
-        <a href="#" class="close"><img src="<?php echo url::base(); ?>/media/img/close.png" title="close" class="close_image" /></a> \
+        <a href="#" class="close"><img src="/facebox/closelabel.png" title="close" class="close_image" /></a> \
       </div> \
     </div>'
     },

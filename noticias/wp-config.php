@@ -16,13 +16,13 @@
 
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define('DB_NAME', 'mapascom_wrdp1');
+define('DB_NAME', 'mapascol_wordpress1');
 
 /** MySQL database username */
-define('DB_USER', 'mapascom_wrdp1');
+define('DB_USER', 'mapascol_juliana');
 
 /** MySQL database password */
-define('DB_PASSWORD', 'tc7chlvZp07t');
+define('DB_PASSWORD', 'mapascoletivos');
 
 /** MySQL hostname */
 define('DB_HOST', 'localhost');
@@ -42,14 +42,14 @@ define('DB_COLLATE', '');
  *
  * @since 2.6.0
  */
-define('AUTH_KEY',         '@j?ipQ1nR,yuuCW@Umapascoletivos.comAS-{%gQEpSr_+<dyb+>:Yd#nWbetyh~4rmMUap4Q6rZEcZy');
-define('SECURE_AUTH_KEY',  '+hOIBXnJ~C;ftmT([CA|]_wDSmapascoletivos.comG<K?#S8{H>//EaLy7]h:jhRfj.K=Usg#g&$9+ox');
-define('LOGGED_IN_KEY',    'c8K?-u_wU{BZ2yHK_sbOo1@?!mapascoletivos.com}H<`PM%7^l6VJTY,~DSOJ,zCtVI@Ym$WZi1@5x5');
-define('NONCE_KEY',        's5,9YV+%:+HFX#l~ %RE`AZ/pmapascoletivos.comUzn<&<R%71t-|[H-L+}AtN9/thH&dMcVM8WN|Q}');
-define('AUTH_SALT',        'KUEIq@~d.Tk+~t>1:HS9$8G_*mapascoletivos.comzG,jcuq2l=7l#KE[-1c)QW3a{LwGi-kwhRVP&]g');
-define('SECURE_AUTH_SALT', ';0GoKVCGWIZh:YOa*h[]-T&Dimapascoletivos.comnp=:iQ;z$>OkEYNi2@Y`|5-c|n:Jb #}97E?LX7');
-define('LOGGED_IN_SALT',   'we3RP{hVolwbVh-((L%LEcHKlmapascoletivos.com[IaA9<bDvi`h/M:3U7xK8S]A|.Q,2$|*jcOqWNB');
-define('NONCE_SALT',       '~<MckLITBiGaIV)497^JDbe-)mapascoletivos.comG:*}/Prup?HeQMLNLz2kG~d/306X7Noin@gGh7+');
+define('AUTH_KEY',         'put your unique phrase here');
+define('SECURE_AUTH_KEY',  'put your unique phrase here');
+define('LOGGED_IN_KEY',    'put your unique phrase here');
+define('NONCE_KEY',        'put your unique phrase here');
+define('AUTH_SALT',        'put your unique phrase here');
+define('SECURE_AUTH_SALT', 'put your unique phrase here');
+define('LOGGED_IN_SALT',   'put your unique phrase here');
+define('NONCE_SALT',       'put your unique phrase here');
 
 /**#@-*/
 
@@ -64,12 +64,12 @@ $table_prefix  = 'wp_';
 /**
  * WordPress Localized Language, defaults to English.
  *
- * Change this to localize WordPress.  A corresponding MO file for the chosen
+ * Change this to localize WordPress. A corresponding MO file for the chosen
  * language must be installed to wp-content/languages. For example, install
- * de.mo to wp-content/languages and set WPLANG to 'de' to enable German
+ * de_DE.mo to wp-content/languages and set WPLANG to 'de_DE' to enable German
  * language support.
  */
-define ('WPLANG', '');
+define('WPLANG', '');
 
 /**
  * For developers: WordPress debugging mode.

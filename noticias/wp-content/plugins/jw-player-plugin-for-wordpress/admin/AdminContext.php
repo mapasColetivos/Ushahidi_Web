@@ -24,7 +24,7 @@ class AdminContext {
    * Given the current wizard state, determines the next state.
    */
   public function processState() {
-    $state = $_POST[LONGTAIL_KEY . "state"];
+    $state = isset($_POST[LONGTAIL_KEY . "state"]) ? $_POST[LONGTAIL_KEY . "state"] : null;
     if (isset($_POST["breadcrumb"]) && !empty($_POST["breadcrumb"])) {
       $state = $_POST["breadcrumb"];
     }
@@ -42,7 +42,7 @@ class AdminContext {
         $state = new PluginState($_POST[LONGTAIL_KEY . "config"]);
         break;
       default :
-        $state = new PlayerState($_POST[LONGTAIL_KEY . "config"]);
+        $state = new PlayerState(isset($_POST[LONGTAIL_KEY . "config"]) ? $_POST[LONGTAIL_KEY . "config"] : "");
         break;
     }
     $this->processPost($state);
@@ -55,10 +55,7 @@ class AdminContext {
    */
   private function processPost($st) {
     $state = $st;
-    if ( isset($_POST['Uninstall']) ) {
-      $this->uninstall();
-      $state->render();
-    } else if (isset($_POST["Next"])) {
+    if (isset($_POST["Next"])) {
       if ($_POST["Next"] == "Delete") {
         LongTailFramework::setConfig($_POST[LONGTAIL_KEY . "config"]);
         LongTailFramework::deleteConfig();
@@ -108,7 +105,7 @@ class AdminContext {
       } else if (!empty($_POST)) {
         update_option(LONGTAIL_KEY . "show_archive", false);
       }
-      LongTailFramework::setConfig($_POST[LONGTAIL_KEY . "config"]);
+      LongTailFramework::setConfig(isset($_POST[LONGTAIL_KEY . "config"]) ? $_POST[LONGTAIL_KEY . "config"] : "");
       $state->render();
     }
   }
@@ -121,6 +118,7 @@ class AdminContext {
   private function processSubmit() {
     $data = LongTailFramework::getConfigValues();
     $plugins = array();
+    $additional_plugins = "";
     foreach ($_POST as $name => $value) {
       if (strstr($name, LONGTAIL_KEY . "player_")) {
         $val = esc_html($value);
@@ -129,11 +127,22 @@ class AdminContext {
         if ($new_name == "skin") {
           if ($new_val != "[Default]") {
             $skins = LongTailFramework::getSkins();
-            $new_val = LongTailFramework::getSkinURL() . $val . "." . $skins[$val];
+            $skin_new = LongTailFramework::getSkinPath() . "$val/$val." . $skins[$val];
+            if (file_exists($skin_new)) {
+              $new_val = LongTailFramework::getSkinURL() . "$val/$val." . $skins[$val];
+            } else {
+              $new_val = LongTailFramework::getSkinURL() . "$val." . $skins[$val];
+            }
             $data[$new_name] = $new_val;
+          } else {
+            unset($data[$new_name]);
           }
+        } else if ($new_name == "playlist_position") {
+          $data[str_replace("_", ".", $new_name)] = $new_val;
         } else if ($new_name == "flashvars") {
           $this->parseFlashvarString($new_val, $data);
+        } else if ($new_name == "plugins") {
+          $additional_plugins = $new_val;
         } else if (!empty($new_val)) {
           $data[$new_name] = $new_val;
         } else {
@@ -166,25 +175,28 @@ class AdminContext {
       }
     }
     $plugin_string = implode(",", $active_plugins);
+    $plugin_string = empty($plugin_string) ? $additional_plugins : $plugin_string . "," . $additional_plugins;
     if (!empty($plugins)) {
       $data["plugins"] = $plugin_string;
     }
-    if ($data["plugins"] == "" || empty($data["plugins"])) {
+    if (!isset($data["plugins"]) || $data["plugins"] == "" || empty($data["plugins"])) {
       unset($data["plugins"]);
     }
     return $data;
   }
 
   private function parseFlashvarString($fv_str, &$data) {
-    $regex = "~([a-zA-Z0-9.]+)=([a-zA-Z0-9:_\-./]+)~";
+    $additional = array();
+    $regex = "~^([a-zA-Z0-9._]+)=(.+)~m";
     preg_match_all($regex, $fv_str, $matches);
     for ($i = 0; $i < count($matches[0]); $i++) {
-      $data[trim($matches[1][$i])] = trim($matches[2][$i]);
+      $additional[trim($matches[1][$i])] = trim($matches[2][$i]);
     }
+    $data["Additional"] = $additional;
   }
 
   /**
-   * Converts an one dimensional array into an XML string representation.
+   * Converts a one dimensional array into an XML string representation.
    * @param Array $target The one dimensional array to be converted to an XML
    * string.
    * @return An xml string representation of $target.
@@ -192,7 +204,13 @@ class AdminContext {
   private function convertToXML($target) {
     $output = "";
     foreach($target as $name => $value) {
-      $output .= "<" . $name . ">" . $value . "</" . $name . ">\n";
+      if ($name == "Additional") {
+        foreach ($value as $add_name => $add_value) {
+          $output .= "<" . $add_name . " type='Additional'>" . $add_value . "</" . $add_name . ">\n";
+        }
+      } else {
+        $output .= "<" . $name . ">" . $value . "</" . $name . ">\n";
+      }
     }
     return $output;
   }
@@ -216,25 +234,6 @@ class AdminContext {
     <div class="error fade" id="message">
       <p><strong><?php echo $message ?></strong></p>
     </div> <?php
-  }
-
-  /**
-   * Removes this plugin's database entries.
-   * @global <type> $wpdb A reference to the WordPress database.
-   */
-  private function uninstall() {
-    global $wpdb;
-
-    $meta_query = "DELETE FROM $wpdb->postmeta WHERE meta_key LIKE '" . LONGTAIL_KEY . "%';";
-    $post_query = "DELETE FROM $wpdb->posts WHERE post_type = 'jw_playlist';";
-
-    $wpdb->query($meta_query);
-    $wpdb->query($post_query);
-
-    delete_option(LONGTAIL_KEY . "default");
-    delete_option(LONGTAIL_KEY . "ootb");
-
-		$this->feedback_message(__('Tables and settings deleted, deactivate the plugin now'));
   }
 
 }

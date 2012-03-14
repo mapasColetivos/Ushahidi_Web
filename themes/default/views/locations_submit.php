@@ -18,14 +18,14 @@
 				            <ul id="controlToggle"> 
 				                <li>
 				                    <input style="display:none;" type="radio" name="type" value="none" id="noneToggle" data-image="arrow"           onclick="toggleControl('select');andControl('navigation');" checked="checked" /> 
-				                    <label for="noneToggle"><img title="posicione o cursor sobre o ponto para editá-lo" id="img_arrow" src="<?php echo url::base() ?>media/img/toolbar/arrow.png" /></label> 
+				                    <label for="noneToggle"><img title="clique com o cursor sobre o ponto para editá-lo" id="img_arrow" src="<?php echo url::base() ?>media/img/toolbar/arrow.png" /></label> 
 				                </li>			                 
 				                <li> 
 				                    <input style="display:none;" type="radio" name="type" value="point" id="pointToggle" onclick="toggleControl('point');" data-image="location"  /> 
 				                    <label for="pointToggle"><img title="criar novo ponto" for="pointToggle" id="img_location" src="<?php echo url::base() ?>media/img/toolbar/location.png" /></label> 
 				                </li>
 				                <li>
-									<a rel="layer" href="<?php echo url::base() ?>index.php/kml/index/<?php echo $incident->id ?>"><img src="<?php echo url::base() ?>/media/img/toolbar/upload.png" data-image="upload" title="importar camadas (.KML)"/></a>
+									<a rel="layer" href="<?php echo url::base() ?>index.php/kml/index/<?php echo $incident->id ?>"><img src="<?php echo url::base() ?>/media/img/toolbar/upload.png" data-image="upload" title="importar camadas (.KML, .KMZ)"/></a>
 								</li>					                			     		
 				                <li>
 				                	<a href="<?php echo url::base() ?>index.php/locations/export/<?php echo $incident->id?>" class="save-rep-btn"><img src="<?php echo url::base() ?>/media/img/toolbar/download.png" data-image="download" title="exportar dados (.CSV)" /></a>

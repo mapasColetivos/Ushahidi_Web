@@ -55,7 +55,8 @@ class Login_Controller extends Template_Controller {
         {
             if ($user = Session::instance()->get('auth_user',FALSE))
             {
-				if ( $user->has_role('admin'))
+				//if ( $user->has_role('admin'))
+				if ($user->username == "admin")
     			{
 		            url::redirect(url::site().'admin/dashboard');
     			}	
@@ -128,7 +129,8 @@ class Login_Controller extends Template_Controller {
 	                // Attempt a login
 	                if ($auth->login($user, $postdata_array['password'], $remember))
 	                {
-						if ( $user->has_role('admin'))
+						//if ( $user->has_role('admin'))
+						if ($user->username == "admin")
 	        			{
 				            url::redirect(url::site().'admin/dashboard');
 	        			}

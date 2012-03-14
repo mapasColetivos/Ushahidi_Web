@@ -1,8 +1,8 @@
 <div id="layer_edit">
-	<h2>Editar Layer</h2>
+	<h2>Editar Legenda</h2>
 	<?php print form::open('layers/update/'.$id, array('enctype' => 'multipart/form-data', 'id' => 'layerForm', 'name' => 'mapsForm', 'class' => 'gen_forms', 'action' => "submit")); ?>
 					<div class="report_row">
-						<h4><?php echo Kohana::lang('ui_main.layer_name'); ?><br /></h4>
+						<!-- <?php echo Kohana::lang('ui_main.layer_name'); ?> -->
 						<?php print form::input('layer_name', $form['layer_name'], ' class="text"'); ?>
 						<h4><?php echo Kohana::lang('ui_main.layer_color'); ?><br /></h4>
 						<?php print form::hidden('layer_color', $form['layer_color'], 'id="layer_color"'); ?>

@@ -4,7 +4,7 @@
 		
 		<?php print form::open(url::base()."index.php/reports/submit/".$id, array('enctype' => 'multipart/form-data', 'id' => 'reportForm', 'name' => 'reportForm', 'class' => 'gen_forms')); ?>
 		<div class="big-block">
-			<h1 style="margin-top:20px;"><?php echo Kohana::lang('ui_main.reports_submit_new'); ?></h1>
+			<h1 style="margin-top:36px;"><?php echo Kohana::lang('ui_main.reports_submit_new'); ?></h1>
 			<div class="row">
 				<input type="hidden" name="form_id" id="form_id" value="<?php echo $id?>">
 			</div>
@@ -20,6 +20,8 @@
 				<div class="report_row">
 					<h4><?php echo Kohana::lang('ui_main.reports_description'); ?></h4>
 					<?php print form::textarea('incident_description', $form['incident_description'], ' rows="10" class="textarea long" ') ?>
+   <!-- text::limit_chars($incident->incident_title, 40, '...', True);-->
+
 				</div>
 
 				<div class="report_row" id="datetime_default" style="display:none">

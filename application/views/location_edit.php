@@ -13,7 +13,7 @@
 
 				<!-- News Fields -->
 				<div id="divNews" class="report_row">
-					<h4><?php echo Kohana::lang('ui_main.reports_news'); ?> <span class="box_edit_span">link http:// </span></h4>
+					<h4><?php echo Kohana::lang('ui_main.reports_news'); ?> <span class="box_edit_span">link http://www.url.com </span></h4>
 					<?php
 						$this_div = "divNews";
 						$this_field = "incident_news";
@@ -87,7 +87,7 @@
 
 				<!-- Photo Fields -->
 				<div id="divPhoto" class="report_row">
-					<h4><?php echo Kohana::lang('ui_main.reports_photos'); ?> <span class="box_edit_span">extensões permitidas: jpg, png, gif, tiff</span></h4>
+					<h4><?php echo Kohana::lang('ui_main.reports_photos'); ?> <span class="box_edit_span">extensões permitidas: .jpg,.png,.gif || max 2MB</span></h4>
 					<?php
 						$this_div = "divPhoto";
 						$this_field = "incident_photo";
@@ -127,9 +127,8 @@
 				
 				
 				<div id="location_table_of_contents">
-				<h4 id="legend"><?php echo Kohana::lang('ui_main.location_layers'); ?><a id="new_layer" >(<?php echo Kohana::lang('ui_main.add_location_layer'); ?>)</a>
-			  </h4>
-				<span class="box_edit_span">agrupe seus pontos por tipo de informação</span>
+				<h4 id="legend"><?php echo Kohana::lang('ui_main.location_layers'); ?> <a id="new_layer" >  [adicionar legenda] </a>  </h4>    
+				<span class="box_edit_span"> agrupe seus pontos por tipo de informação </span>
 				<div class="pad"></div>
 				<?php
 					$selected = false; 
@@ -143,7 +142,7 @@
 					?>
 					<div class="<?php echo $class ?>" id="layer<?php echo $layer->id ?>" data-id=<?php echo $layer->id ?> >
 						<span class="layer_color" style="background:#<?php echo $layer->layer_color ?>">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-						<a class="select_layer" ><?php echo $layer->layer_name; ?></a> <a class="edit_layer" rel="layer" href='<?php echo url::base() ?>index.php/layers/edit/<?php echo $layer->id ?>'>(editar)</a> <?php if ($layer->owner_id == $user->id){?><a class="delete_layer">(X)</a></br> <? } ?>
+						<a class="select_layer" ><?php echo $layer->layer_name; ?></a> <a class="edit_layer" rel="layer" href='<?php echo url::base() ?>index.php/layers/edit/<?php echo $layer->id ?>'>  [editar legenda]</a> <?php if ($layer->owner_id == $user->id){?><a class="delete_layer">[apagar]</a></br> <? } ?>
 				</div>
 				<?php } ?>
 				</div>	
@@ -177,7 +176,7 @@
 	  	}
 	  	if (location_description == ""){
 	  		$("#location_description").css("background-color","#FFE0DD");
-	  		$("#location_description").after("<span class='invalid_form'>A Descrição é obrigatória</span>");
+	  		$("#location_description").after("<span class='invalid_form'>A descrição é obrigatória</span>");
 	  		valid = false;
 	  	}
 	  	

@@ -311,18 +311,20 @@ class Incident_Model extends ORM
 	}
 	
 	public function share_url(){
-		return "http://mapascolectivos.com.br/mapa/".$this->id;
+		return "http://www.mapascoletivos.com.br/reports/view/".$this->id;
 	}
 	
 	public function share_mail_to(){
 		$title = "Convite para colaborar com o mapa coletivo ".$this->incident_title;
-		$body = "Compartilhei com você um mapa coletivo chamado".$this->incident_title."%0A%0A";
-		$body .= "Você pode visualizar, colaborar e convidar outras pessoas para colaborar com este mapa em:%0A%0A";
+		$body = "Compartilhei com você um mapa coletivo chamado: ".$this->incident_title."%0A%0A";
+		$body .= "Você pode visualizar, colaborar e convidar outras pessoas para colaborar com este mapa em%0A%0A";
 		$body .= $this->share_url()."%0A%0A%0A";
-		
-		$body .= "<b>obs: para poder colaborar ou criar novos mapas coletivos, você precisa juntar-se à rede mapasColetivos em "+url::base()+"/login%0A</b>";
 		return "?subject=".$title."&body=".$body;
+		
+		//$body .= "obs: para poder colaborar ou criar novos mapas coletivos, você precisa juntar-se à rede mapasColetivos em "+url::base()+"/login";
+		
 	}
+	
 	
 	public function collaborators(){
 		$collaborators = array();

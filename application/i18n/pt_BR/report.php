@@ -49,7 +49,9 @@
 		'required' => 'É necessário preencher o campo horário.',
 	),
 	'incident_news' => array(
-		'url' => 'O link da fonte de notícias parece não conter uma URL válida.',
+		'url' => 'O link da fonte de notícias parece não conter uma URL válida. 
+				  Forneça uma URL válida. Exemplo: http://www.mapascoletivos.com.br',
+	    'valid' => 'O campo de envio de fotos parece não conter um arquivo válido.',
 	),
 	'incident_photo' => array(
 		'size' => 'Certifique-se de que o tamanho das fotos enviadas está limitado a 2MB.',
@@ -69,7 +71,7 @@
 		'required' => 'Forneça dados válidos para o campo verificar esse relato.',
 	),
 	'incident_video' => array(
-		'url' => 'O link do vídeo parece não conter uma URL válida.',
+		'url' => 'O link do vídeo parece não conter uma URL válida de youtubue.' ,
 	),
 	'latitude' => array(
 		'between' => 'O campo latitude parece não conter uma latitude válida.',

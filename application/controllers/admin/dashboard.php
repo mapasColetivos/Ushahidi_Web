@@ -22,7 +22,7 @@ class Dashboard_Controller extends Admin_Controller
 
     function index()
     {
-        if (! $this->user->has_role("admin")){
+        if (!($this->user->username == "admin")){
     			url::redirect('');
         }
         

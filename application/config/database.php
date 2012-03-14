@@ -20,12 +20,12 @@ $config['default'] = array
 	'connection'    => array
 	(
 		'type'     => 'mysql',
-		'user'     => 'mapascom_root',
-		'pass'     => 'secure_tailorbirds_685',
+		'user'     => 'mapascol_lm',
+		'pass'     => 'foobar',
 		'host'     => 'localhost',
 		'port'     => FALSE,
 		'socket'   => FALSE,
-		'database' => 'mapascom_mapas'
+		'database' => 'mapascol_macambira'
 	),
 	'character_set' => 'utf8',
 	'table_prefix'  => '',
@@ -47,6 +47,7 @@ if(substr_count($_SERVER["HTTP_HOST"],'.') > 1) $subdomain = substr($_SERVER["HT
 /**
 * If MHI is enabled, determine the appropriate database settings
 */
+
 if($subdomain != '' && Kohana::config('config.enable_mhi') == TRUE)
 {
 	$mhi_db = $config['default'];
