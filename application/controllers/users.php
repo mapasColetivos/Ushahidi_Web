@@ -36,7 +36,6 @@ class Users_Controller extends Main_Controller {
 			$ii+=1;
 		     }	
 		}
-
 		$this->themes->js->markers = $m;
 
 		$this->template->header->fb_title = $user->name;
