@@ -116,11 +116,19 @@
 	    		}); 			
 	    		
 		        $(".btn_remove").click(function(){
+
+			  /*var feature = find_feature_by_id(id);
+			  $("#location_find").val(find_feature_by_id(id));
+			  $("#find_text").html("<p>YESSSSSS</p>");
+			  for(att in feature){
+				alert(feature[att]);
+			  }*/
+
 		          if(confirm("<?php echo Kohana::lang('ui_main.confirm_remove').' esse ponto?'?>")){	  			
 		          	var feature = find_feature_by_id(id);
 			        vectors.removeFeatures(feature);
 					
-					remove_location_from_server(id);
+				remove_location_from_server(id);
 			      }
 		          
 		          $("#location_box").hide();
