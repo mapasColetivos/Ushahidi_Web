@@ -302,9 +302,12 @@ class Incident_Model extends ORM
 	
 	private function count_asset_by_type($type){
 		$counter = 0;
-		foreach($this->media as $media) {
+		foreach($this->media as $media) {			
 			if ($media->media_type == $type){
-				$counter += 1;
+			      $foo=ORM::factory('location')->where('id',$media->location_id)->find();
+			      if($foo->location_name){
+				    $counter += 1;
+			      }
 			}
 		}
 		return $counter;
