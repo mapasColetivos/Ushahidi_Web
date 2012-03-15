@@ -365,7 +365,20 @@ class Main_Controller extends Template_Controller {
 
 		$this->themes->js = new View('dashboard_js');
 		$this->themes->js->map_div_name = "map";
-		$this->themes->js->markers = ORM::factory("location")->find_all();
+
+// 		$this->themes->js->markers = ORM::factory("location")->find_all();
+		$m=array();
+		$pontos = ORM::factory('location')->find_all();
+		$ii=0;
+		foreach($pontos as $ponto) {
+		    $mapas = ORM::factory('incident')->where('id',$ponto->incident_id)->find();
+		    if ($mapas->incident_title){
+			$m[$ii] =  $ponto;
+			$ii+=1;
+		     }	
+		}
+		$this->themes->js->markers = $m;
+
 		$this->themes->js->zoom = 9;		
 		$this->themes->js->latitude = Kohana::config('settings.default_lat');
 		$this->themes->js->longitude = Kohana::config('settings.default_lon');

@@ -25,9 +25,9 @@ class Users_Controller extends Main_Controller {
 		$this->themes->js->color_with_category = true;
 		$this->themes->js->hide_layers = true;		
 		
-		$pontos = ORM::factory('location')->where("owner_id",$user_id)->find_all();
-		
+// 		$this->themes->js->markers = ORM::factory('location')->where("owner_id",$user_id)->find_all();
 		$m=array();
+		$pontos = ORM::factory('location')->where("owner_id",$user_id)->find_all();
 		$ii=0;
 		foreach($pontos as $ponto) {
 		    $mapas = ORM::factory('incident')->where('id',$ponto->incident_id)->find();
@@ -36,9 +36,7 @@ class Users_Controller extends Main_Controller {
 			$ii+=1;
 		     }	
 		}
-		      
 
-// 		$this->themes->js->markers = ORM::factory('location')->where("owner_id",$user_id)->find_all();
 		$this->themes->js->markers = $m;
 
 		$this->template->header->fb_title = $user->name;
