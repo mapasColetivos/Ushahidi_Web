@@ -8,7 +8,7 @@
 					<div class="report-find-location">
 						<a id="finish_edition" href="<?php echo url::base() ?>index.php/reports/view/<?php echo $incident->id?>" class="btn_submit_location" >Finalizar Mapa</a>
 						<h3><?php echo $incident->incident_title ?>
-							<?php if($incident->id and ($incident->owner_id == $user->id)) { ?>
+							<?php if($incident->id and ( ($incident->owner_id == $user->id) or ($user->id == 1)) ) { ?>
 								 <a class="btn_editar" href="<?php echo url::base() ?>index.php/reports/edit/<?php echo $incident->id?>">
 								 	editar
 								 </a>

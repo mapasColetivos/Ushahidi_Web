@@ -579,7 +579,7 @@ class Reports_Controller extends Main_Controller {
 	{
 		$incident = ORM::factory('incident')->where("id",$id)->find();
 		
-		if (!$this->user or ($incident->owner_id != $this->user->id)) {
+		if ( ($this->user->id != 1) and (!$this->user or ($incident->owner_id != $this->user->id))  ) {
       url::redirect('login');
 		}
 		
