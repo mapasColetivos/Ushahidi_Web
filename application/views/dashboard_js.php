@@ -119,7 +119,7 @@ function onFeatureSelect (feature) {
 	var content = null;
 	var popup = null;
 	// Check for feature id
-	if (typeof(feature.fid) != "undefined") {
+	if (typeof feature.fid != "undefined") {
 		
 		// Get the location id from the feature
 		var id = feature.fid;
@@ -127,7 +127,6 @@ function onFeatureSelect (feature) {
 		// Issue synchronous Ajax request - a blocking call
 		$.ajax({
 			url: baseUrl+"index.php/locations/popup/"+id,
-			async: false,
 			success: function(data) {
 				content = data;
 				
@@ -137,6 +136,10 @@ function onFeatureSelect (feature) {
 					content,
 					null, false, onPopupClose
 				);
+				
+				feature.popup = popup;
+				map.addPopup(popup);
+				after_load_popup();
 			},
 			error: function(data) {
 				// Show error notification
@@ -154,16 +157,16 @@ function onFeatureSelect (feature) {
 		content = content + "</div>\n";
 		content += "</div>";
 		
-        popup = new OpenLayers.Popup.FramedCloud("chicken", 
-                                 feature.geometry.getBounds().getCenterLonLat(),
-                                 new OpenLayers.Size(100,100),
-                                 content,
-                                 null, true, onPopupClose);
+		popup = new OpenLayers.Popup.FramedCloud("chicken",
+			feature.geometry.getBounds().getCenterLonLat(), 
+			new OpenLayers.Size(100,100), content, 
+			null, true, onPopupClose);
+
+		feature.popup = popup;
+		map.addPopup(popup);
+		
 	}
 	
-	feature.popup = popup;
-	map.addPopup(popup);
-	after_load_popup();
 }
 
 function add_marker(lon,lat,fid,cat,color) {
@@ -207,6 +210,7 @@ $(document).ready(function() {
 	<?php echo map::layers_js(FALSE); ?>
 	map.addLayers(<?php echo map::layers_array(FALSE); ?>);
 	
+	map.addControl(new OpenLayers.Control.Navigation());
 	map.addControl(new OpenLayers.Control.PanZoomBar());
 	map.addControl(new OpenLayers.Control.MousePosition(
 	    { div:  document.getElementById('mapMousePosition'), numdigits: 5 
@@ -306,7 +310,7 @@ $(document).ready(function() {
 		onSelect: onFeatureSelect, 
 		onUnselect: onFeatureUnselect,
 		clickout: true, toggle: false,
-		multiple: false, hover: false,
+		multiple: false, hover: true,
 		toggleKey: "ctrlKey", // ctrl key removes from selection
 		multipleKey: "shiftKey", // shift key adds to selection
 		box: true
