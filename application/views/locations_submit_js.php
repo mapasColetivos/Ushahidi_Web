@@ -637,7 +637,7 @@
 					total_area = 350;
 					margin = (total_area - width)/2
 					if (margin < 0){
-					      margin = - margin;
+					      margin = 0;
 					}
 					$("#description").css("margin-left",margin+"px");														
 					$("#description").css("width",(width-10)+"px");
