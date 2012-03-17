@@ -247,10 +247,10 @@ $(document).ready(function() {
 	        // Add to layers array
 	        layersArray.push(kmlOverlay);
 
-	        pixel_size = $("#OpenLayers_Control_MinimizeDiv").css("margin-top");
-	        actual_size = parseInt(pixel_size,10);
-	        actual_size -= 14;
-	        $("#OpenLayers_Control_MinimizeDiv").css("margin-top",actual_size+"px");
+	        // pixel_size = $("#OpenLayers_Control_MinimizeDiv").css("margin-top");
+	        // actual_size = parseInt(pixel_size,10);
+	        // actual_size -= 14;
+	        // $("#OpenLayers_Control_MinimizeDiv").css("margin-top",actual_size+"px");
 
 	  	<?php endforeach; ?>
 	<?php endif; ?>
@@ -258,7 +258,11 @@ $(document).ready(function() {
 	// SelectFeature control
 	selectControl = new OpenLayers.Control.SelectFeature(layersArray, {
 		onSelect: onFeatureSelect, 
-		onUnselect: onFeatureUnselect
+		clickout: true, toggle: false,
+		multiple: false, hover: true,
+		toggleKey: "ctrlKey", // ctrl key removes from selection
+		multipleKey: "shiftKey", // shift key adds to selection
+		box: true
 	});
 
 	map.addControl(selectControl);
@@ -271,11 +275,11 @@ $(document).ready(function() {
 	$("#location_find_main").val("digitar endereÃ§o, SÃ£o Paulo, SP");
 	$("#location_find_main").css("color","#ccc");	
 	$("#location_find_main").blur(function(){
-    $(this).css("color","#ccc");			  
+		$(this).css("color","#ccc");			  
 	});
 	
 	$("#location_find_main").focus(function(){
-	  $("#location_find_main").css("color","black");				  
+		$("#location_find_main").css("color","black");				  
 	});
 	
 	
@@ -310,20 +314,22 @@ $(document).ready(function() {
 	
 	$("#image_arrow_map").attr("src","<?php echo url::base();?>media/img/arrow_down_gray.png");
 	$("#hide_show").click(function (){
-	  $("#layer_list").toggle();
-	  if ($("#layer_list").is(":visible")){
+		$("#layer_list").toggle();
+		if ($("#layer_list").is(":visible")) {
 			$("#image_arrow_map").attr("src","<?php echo url::base();?>media/img/arrow_up_gray.png");
-	  } else {
+		} else {
 			$("#image_arrow_map").attr("src","<?php echo url::base(); ?>media/img/arrow_down_gray.png");
-	  }
+		}
 	});
 	
-	function set_filter_off(this_filter,element){
-	  $($(element).children()[0]).attr("src","<?php echo url::base(); ?>media/img/filtro-"+this_filter+"-off.png");
+	function set_filter_off(this_filter,element) {
+		$($(element).children()[0]).attr("src", 
+			"<?php echo url::base(); ?>media/img/filtro-"+this_filter+"-off.png");
 	}
 	
-	function set_filter_on(this_filter,element){
-	  $($(element).children()[0]).attr("src","<?php echo url::base(); ?>media/img/filtro-"+this_filter+"-on.png");
+	function set_filter_on(this_filter,element) {
+		$($(element).children()[0]).attr("src", 
+			"<?php echo url::base(); ?>media/img/filtro-"+this_filter+"-on.png");
 	}
 	
 	function toggle_filter(this_filter,element){
@@ -342,18 +348,17 @@ $(document).ready(function() {
 		toggle_filter($(this).attr("data-filter"),this);
 	});
 	
-	
 	function iframe_link(event){
-	  window.location = baseUrl+"newspage/?target="+event.currentTarget.href.match(/.*\?(.*)/)[1];
-  }
+		window.location = baseUrl+"newspage/?target="+event.currentTarget.href.match(/.*\?(.*)/)[1];
+	}
 		
-  $("#news_iframe").load(function(){
-    $("#news_iframe").contents().find('[href^="http://mapascoletivos.com"]').click(iframe_link);
-    $("#news_iframe").height($("#news_iframe").contents().find("html").height());    
-  });
+	$("#news_iframe").load(function(){
+		$("#news_iframe").contents().find('[href^="http://mapascoletivos.com"]').click(iframe_link);
+		$("#news_iframe").height($("#news_iframe").contents().find("html").height());    
+	});
   
 	function animate_category_selection(catID,element){
-		if(catID == 0){
+		if (catID == 0){
 			show_all_categories();
 		} else {
 			show_category(element);
@@ -363,11 +368,11 @@ $(document).ready(function() {
 	function show_all_categories(){
 		var isAllActive = $("#cat_0").hasClass("active");
 		$("a[id^='cat_']").removeClass("active");
-		if(!isAllActive){
+		if(!isAllActive) {
 			$("#cat_0").addClass("active");
 		}
 	}
-	
+
 	function show_category(element){
 		selected = $(element).hasClass("active");
 		if (selected){
@@ -379,24 +384,16 @@ $(document).ready(function() {
 	}	
 	
 	function apply_category_selection(catID,isActive){	
-		for (layer_id in map.layers){
+		for (layer_id in map.layers) {
 			current_features = map.layers[layer_id].features;
 			for (id in current_features) {
 				feature = current_features[id];
 				
 				if(catID == 0){
-					if (isActive == true){
-						feature.style = "none"; 				
-					} else {
-						feature.style = ""; 				
-					}				
+					feature.style = (isActive == true) ? "none" : "";
 				} else {
-					if (feature.category == catID){
-						if (isActive == true){	
-							feature.style = "none"; 				
-						} else {
-							feature.style = ""; 				
-						}				
+					if (feature.category == catID) {
+						feature.style = (isActive == true)? "none" : "";
 					}
 				}
 			}
@@ -407,6 +404,7 @@ $(document).ready(function() {
 	$(".submit_geocode").live("click",function(){
 		geoCode();    	
     });
+
 });
 
 function selectList(event){
