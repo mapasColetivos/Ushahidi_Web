@@ -131,14 +131,12 @@ function onFeatureSelect (feature) {
 			async: false,
 			success: function(data) {
 				content = data;
-				
 				popup = new OpenLayers.Popup.Anchored("chicken",
 					feature.geometry.getBounds().getCenterLonLat(), 
 					new OpenLayers.Size(372, 310),
 					content, 
 					null, false, onPopupClose);
 			},
-			
 			error: function(data) {
 				// Show error notification
 				alert("Oops! An error occurred while fetching content from the server");
@@ -155,9 +153,9 @@ function onFeatureSelect (feature) {
 		content = content + "</div>\n";
 		content += "</div>";
 		
-		popup = new OpenLayers.Popup.FramedCloud("chicken",
+		popup = new OpenLayers.Popup.Anchored("chicken",
 			feature.geometry.getBounds().getCenterLonLat(), 
-			new OpenLayers.Size(100, 100),
+			new OpenLayers.Size(100, 200),
 			content, 
 			null, true, onPopupClose);
 	}
@@ -292,11 +290,8 @@ $(document).ready(function() {
 	selectControl = new OpenLayers.Control.SelectFeature(layersArray, {
 		onSelect: onFeatureSelect, 
 		onUnselect: onFeatureUnselect,
-		clickout: true, toggle: false,
-		multiple: false, hover: true,
-		toggleKey: "ctrlKey", // ctrl key removes from selection
-		multipleKey: "shiftKey", // shift key adds to selection
-		box: true
+		clickout: false, toggle: true,
+		multiple: false, hover: true
 	});
 
 	map.addControl(selectControl);
