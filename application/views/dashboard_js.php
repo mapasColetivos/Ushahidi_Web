@@ -116,8 +116,10 @@ function onFeatureSelect (feature) {
 	lat = zoom_point.lat;
 	
 	// Variable to hold the popup content
-	var content = null;
-	var popup = null;
+	var content, popup;
+	
+	var size = new OpenLayers.Size(372, 310);
+	var closeButton = false;
 	
 	// Check for feature id
 	if (typeof feature.fid != "undefined" && feature.fid != null) {
@@ -144,13 +146,16 @@ function onFeatureSelect (feature) {
 		content = content + "<div class=\"infowindow_list\">"+feature.attributes.name + "</div>\n";
 		content = content + "</div>\n";
 		content += "</div>";
+		
+		size = new OpenLayers.Size(210, 120);
+		closeButton = true;
 	}
 
 	popup = new OpenLayers.Popup.Anchored("chicken",
 		feature.geometry.getBounds().getCenterLonLat(), 
-		new OpenLayers.Size(372, 310),
+		size,
 		content, 
-		null, false, onPopupClose);
+		null, closeButton, onPopupClose);
 		
 	feature.popup = popup;
 	map.addPopup(popup);
@@ -282,10 +287,10 @@ $(document).ready(function() {
 	selectControl = new OpenLayers.Control.SelectFeature(layersArray, {
 		onSelect: onFeatureSelect, 
 		onUnselect: onFeatureUnselect,
-		clickout: false,
+		clickout: true,
 		toggle: true,
 		multiple: false,
-		hover: false
+		hover: true
 	});
 
 	map.addControl(selectControl);
