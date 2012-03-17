@@ -17,7 +17,7 @@ echo "<h2 style='float:up;margin-top:-20px;margin-bottom:15px;font-size:smaller'
 
 	<h3><a href="<?php echo url::base().'/reports/view/'.$incident->id ?>"><?php echo $incident->incident_title; ?></a></h3>
 	<div class="asset_area hooverable">
-		<div id="description" style="display:none;">
+		<div id="description" style="display:none;margin-left:10px;">
 			<?php echo $location->location_description; ?>	
 		</div>
 		<?php 
