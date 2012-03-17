@@ -18,14 +18,14 @@ function onPopupClose(evt)
 var asset_count;
 var asset_pointer;
 
-function display_message(){
+function display_message() {
 	var message = (asset_pointer + 1) +" de "+asset_count;
 	$("#asset_count").text(message);
 	asset_id = $("#asset"+asset_pointer).attr("data-id");
 }
 
-function link_tag(){
-  url = baseUrl+"/users/index/"+$("#asset"+asset_pointer).attr("data-owner-id");
+function link_tag() {
+	url = baseUrl+"/users/index/"+$("#asset"+asset_pointer).attr("data-owner-id");
 	link_tag_value = "<a href='"+url+"'>"+$("#asset"+asset_pointer).attr("data-owner")+"</a>";
 	return link_tag_value;
 }
@@ -35,7 +35,7 @@ function after_load_popup(){
 	asset_count = $(".assets").size();
 	asset_pointer = 0;
 	
-	if (asset_count > 0){
+	if (asset_count > 0) {
 		$("#remove_asset").hide();				
 		$("#asset"+asset_pointer).show();
 		$("#owner").html(link_tag());				
@@ -65,11 +65,10 @@ function after_load_popup(){
 			width = $(".delimiter").filter(":visible").width();
 			total_area = 350;
 			margin = (total_area - width)/2;
-			if (margin < 0){
+			if (margin < 0) {
 			      margin = 0;
 			      twidth = -30;
-			}
-			else {
+			} else {
 			      twidth=width-10;
 			}   
 			$("#description").css("margin-left",margin+"px");														
@@ -100,8 +99,7 @@ function after_load_popup(){
 /*
 Display popup when feature selected
 */
-function onFeatureSelect(location)
-{
+function onFeatureSelect(location) {
 	if (!(location.fid === undefined)){
 		onPopupClose(null);
         selectedFeature = location.event;
@@ -125,7 +123,7 @@ function onFeatureSelect(location)
 	}
 }
 
-function add_marker(lon,lat,fid,cat,color){
+function add_marker(lon,lat,fid,cat,color) {
 	var geometry = new OpenLayers.Geometry.Point(lon,lat);
 	geometry = geometry.transform(proj_4326, map.getProjectionObject())
 	var feature = new OpenLayers.Feature.Vector(geometry);
@@ -136,10 +134,8 @@ function add_marker(lon,lat,fid,cat,color){
 	return feature;
 }
 
-function fill_map_with_markers(){
-	<?php
-		foreach ($markers as $location){
-	?>
+function fill_map_with_markers() {
+	<?php foreach ($markers as $location): ?>
 		lat = <?php echo $location->latitude ?>;
 		lon = <?php echo $location->longitude ?>;
 		fid = <?php echo $location->id ?>;
@@ -148,7 +144,7 @@ function fill_map_with_markers(){
 	
 		add_marker(lon,lat,fid,cat,"#"+color)
 	
-	<?php } ?>
+	<?php endforeach; ?>
 }
         
 $(document).ready(function() {
@@ -197,15 +193,15 @@ $(document).ready(function() {
 		fillColor: "${getColor}", // using context.getColor(feature)
 		strokeWidth: 1
 	};
+
 	var default_style = new OpenLayers.Style(template, {context: context});
-	
+
+	// Create the vector layer - to render the report
 	vectors = new OpenLayers.Layer.Vector("Pontos", {
 	    styleMap: new OpenLayers.StyleMap({"default":default_style}),
 	    renderers: OpenLayers.Layer.Vector.prototype.renderers
 	});
-	
-	map.addLayers([vectors]);
-	
+
 	map.addControl(new OpenLayers.Control.MousePosition());
 	map.events.register("click", map, function(e) {
 	  onPopupClose(e);
@@ -215,70 +211,64 @@ $(document).ready(function() {
 	  }
 	});
 
+	// Add markers to the vector layer
 	fill_map_with_markers();
-      
-	map.setCenter(myPoint, <?php echo $zoom; ?>);
-	selectControl = new OpenLayers.Control.SelectFeature(
-            vectors,
-            {
-              "onSelect": onFeatureSelect,
-                clickout: true, toggle: false,
-                multiple: false, hover: true,
-                toggleKey: "ctrlKey", // ctrl key removes from selection
-                multipleKey: "shiftKey", // shift key adds to selection
-                box: true
-            }
-        )			
-	map.addControl(selectControl);
-	selectControl.activate();
-	navigation = new OpenLayers.Control.Navigation(vectors,{'zoomWheelEnabled': false})
+	map.setCenter(myPoint, <?php echo $szoom; ?>);
+
+	// Storage for all layers
+	var layersArray = [vectors];
+
+
+	navigation = new OpenLayers.Control.Navigation(vectors, {'zoomWheelEnabled': false});
 	map.addControl(navigation);
 	navigation.disableZoomWheel();
 	
-	<?php if(isset($layers)) {?>
-      <?php foreach($layers as $kml) {?>
-        $.ajax({
-            url: '<?php echo $kml->embed(); ?>',
-            type:'HEAD',
-            error:
-              function(){
-                $("#layer_kml"+'<?php echo $kml->id; ?>').append("<span class='kml_failure'>(falha)</span>");
-            	  <?php if(isset($hide_layers)) {?>
-                  $("[id*='_input_'][type*='checkbox']").attr("checked",false);              	    
-                <?php } ?>                
-              },
-            success:
-                function(){
-                  layer = new OpenLayers.Layer.GML('<?php echo $kml->layer_name; ?>', '<?php echo $kml->embed(); ?>', {
-              		   format: OpenLayers.Format.KML,
-              		   projection: proj_4326,		   
-              		   formatOptions: {
-              				extractStyles: true,
-              				extractAttributes: true
-              			}
-              		});
-              	  <?php if(isset($hide_layers)) {?>
-              	    layer.display(false);              	    
-                    $("[id*='_input_'][type*='checkbox']").attr("checked",false);              	    
-                  <?php } ?>  
-              		
-            	    map.addLayer(layer);
-              	  
-              	  pixel_size = $("#OpenLayers_Control_MinimizeDiv").css("margin-top");
-              	  actual_size = parseInt(pixel_size,10);
-              	  actual_size -= 14;
-              	  $("#OpenLayers_Control_MinimizeDiv").css("margin-top",actual_size+"px");            	  
-                }
-        });
-  	<?php }?>	  
-	<?php } else { ?>
-	<?php } ?>
+	// Add all available KML layers to the map
+	<?php if (isset($layers)): ?>
+		<?php foreach ($layers as $kml): ?>
+
+	      	// Create GML object for each KML entry
+	      	kmlOverlay = new OpenLayers.Layer.GML('<?php echo $kml->layer_name; ?>', 
+	      		'<?php echo $kml->embed(); ?>', {
+	      			format: OpenLayers.Format.KML,
+	      			projection: proj_4326,
+	      			formatOptions: {
+	      				extractStyles: true,
+	      				extractAttributes: true
+	      			}
+	      		}
+	      	);
+
+	      	<?php if (isset($hide_layers)): ?>
+	      		kmlOverlay.display(false);              	    
+	      		$("[id*='_input_'][type*='checkbox']").attr("checked",false);              	    
+	      	<?php endif; ?>  
+	              		
+	        // Add to layers array
+	        layersArray.push(kmlOverlay);
+
+	        pixel_size = $("#OpenLayers_Control_MinimizeDiv").css("margin-top");
+	        actual_size = parseInt(pixel_size,10);
+	        actual_size -= 14;
+	        $("#OpenLayers_Control_MinimizeDiv").css("margin-top",actual_size+"px");
+
+	  	<?php endforeach; ?>
+	<?php endif; ?>
+
+	// SelectFeature control
+	selectControl = new OpenLayers.Control.SelectFeature(layersArray, {
+		onSelect: onFeatureSelect, 
+		onUnselect: onFeatureUnselect
+	});
+
+	map.addControl(selectControl);
+	selectControl.activate();
 
 	
 	$(".dataLbl").html("<b>Camadas</b>")
 	$(".baseLbl").html("<b>Mapa Base</b>")
 	
-	$("#location_find_main").val("digitar endereço, São Paulo, SP");
+	$("#location_find_main").val("digitar endereÃ§o, SÃ£o Paulo, SP");
 	$("#location_find_main").css("color","#ccc");	
 	$("#location_find_main").blur(function(){
     $(this).css("color","#ccc");			  
@@ -471,5 +461,3 @@ function geoCode()
     }, "json");
   return false;
 }
-
-
