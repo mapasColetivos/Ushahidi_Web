@@ -120,7 +120,7 @@ onFeatureSelect = function(feature) {
 		
 		// Issue synchronous Ajax request - a blocking call
 		$.ajax({
-			url: (baseUrl+"index.php/locations/popup/"+id,
+			url: baseUrl+"index.php/locations/popup/"+id,
 			async: false,
 			success: function(data) {
 				content = data;
@@ -318,23 +318,24 @@ $(document).ready(function() {
 		$("#location_find_main").css("color","black");				  
 	});
 	
-	
-	$("#OpenLayers\\.Control\\.LayerSwitcher_38").css("margin-top","350px");
-	$("#OpenLayers_Control_MinimizeDiv").css("margin-top","-126px");
-	$("#OpenLayers_Control_MaximizeDiv").css("margin-top","-27px");					
-	
-	$("#OpenLayers_Control_MinimizeDiv").click(function(){	
-		$("#OpenLayers\\.Control\\.LayerSwitcher_38").children().hide()
-		$("#OpenLayers_Control_MinimizeDiv").hide();
-		$("#OpenLayers_Control_MaximizeDiv").show();				
-	});
-	
-	$("#OpenLayers_Control_MaximizeDiv").click(function(){			
-		$("#OpenLayers_Control_MaximizeDiv").css("margin-top","-18px");		
-		$("#OpenLayers\\.Control\\.LayerSwitcher_38").children().show()
-		$("#OpenLayers_Control_MinimizeDiv").show();
-		$("#OpenLayers_Control_MaximizeDiv").hide();								
-	});
+
+	// <ekala> - Commenting this out; Leave the OpenLayers controls as is
+	// $("#OpenLayers\\.Control\\.LayerSwitcher_38").css("margin-top","350px");
+	// $("#OpenLayers_Control_MinimizeDiv").css("margin-top","-126px");
+	// $("#OpenLayers_Control_MaximizeDiv").css("margin-top","-27px");					
+	// 
+	// $("#OpenLayers_Control_MinimizeDiv").click(function(){	
+	// 	$("#OpenLayers\\.Control\\.LayerSwitcher_38").children().hide()
+	// 	$("#OpenLayers_Control_MinimizeDiv").hide();
+	// 	$("#OpenLayers_Control_MaximizeDiv").show();				
+	// });
+	// 
+	// $("#OpenLayers_Control_MaximizeDiv").click(function(){			
+	// 	$("#OpenLayers_Control_MaximizeDiv").css("margin-top","-18px");		
+	// 	$("#OpenLayers\\.Control\\.LayerSwitcher_38").children().show()
+	// 	$("#OpenLayers_Control_MinimizeDiv").show();
+	// 	$("#OpenLayers_Control_MaximizeDiv").hide();								
+	// });
 		
 	$("a[id^='cat_']").click(function(event){		
 		var catID = this.id.substring(4);
