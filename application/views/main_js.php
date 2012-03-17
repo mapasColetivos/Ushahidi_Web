@@ -197,6 +197,9 @@
 					width = $(".delimiter").filter(":visible").width();
 					total_area = 350;
 					margin = (total_area - width)/2
+					if (margin < 0){
+					      margin = - margin;
+					}
 					$("#description").css("margin-left",margin+"px");														
 					$("#description").css("width",(width-10)+"px");
 					$("#description").css("height","208px");													
