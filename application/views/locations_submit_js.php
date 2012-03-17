@@ -638,9 +638,13 @@
 					margin = (total_area - width)/2
 					if (margin < 0){
 					      margin = 0;
+					      twidth = -30;
 					}
+					else {
+					      twidth=width-10;
+					}   
 					$("#description").css("margin-left",margin+"px");														
-					$("#description").css("width",(width-20)+"px");
+					$("#description").css("width",(twidth)+"px");
 					$("#description").css("height","208px");													
 					if ($("iframe").filter(":visible").size() == 1){
 						$("#description").css("height","180px");
