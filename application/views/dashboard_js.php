@@ -109,15 +109,17 @@ function onFeatureSelect(location) {
 		lat = zoom_point.lat;
 		
 		id = location.fid;
-		$.get(baseUrl+"index.php/locations/popup/"+id,function(data){
+		$.get(baseUrl+"index.php/locations/popup/"+id, function(data) {
 			content = data;
-            var popup = new OpenLayers.Popup.Anchored("chicken",location.geometry.getBounds().getCenterLonLat(),
+			var popup = new OpenLayers.Popup.Anchored("chicken", 
+				location.geometry.getBounds().getCenterLonLat(),
 				new OpenLayers.Size(372,310),
 				content,
-				null, false, onPopupClose);
-	        location.popup = popup;
-			onPopupClose(null);				    	        
-            map.addPopup(popup);
+				null, false, onPopupClose
+			);
+			location.popup = popup;
+			onPopupClose(null);
+			map.addPopup(popup);
 			after_load_popup();
 		});
 	}
@@ -247,22 +249,22 @@ $(document).ready(function() {
 	        // Add to layers array
 	        layersArray.push(kmlOverlay);
 
-	        // pixel_size = $("#OpenLayers_Control_MinimizeDiv").css("margin-top");
-	        // actual_size = parseInt(pixel_size,10);
-	        // actual_size -= 14;
-	        // $("#OpenLayers_Control_MinimizeDiv").css("margin-top",actual_size+"px");
+	        pixel_size = $("#OpenLayers_Control_MinimizeDiv").css("margin-top");
+	        actual_size = parseInt(pixel_size,10);
+	        actual_size -= 14;
+	        $("#OpenLayers_Control_MinimizeDiv").css("margin-top",actual_size+"px");
 
 	  	<?php endforeach; ?>
 	<?php endif; ?>
 
 	// Add the layers to the map
 	map.addLayers(layersArray);
-	
+
 	// SelectFeature control
 	selectControl = new OpenLayers.Control.SelectFeature(layersArray, {
 		onSelect: onFeatureSelect, 
 		clickout: true, toggle: false,
-		multiple: false, hover: true,
+		multiple: false, hover: false,
 		toggleKey: "ctrlKey", // ctrl key removes from selection
 		multipleKey: "shiftKey", // shift key adds to selection
 		box: true
