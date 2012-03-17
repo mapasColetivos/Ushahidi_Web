@@ -119,7 +119,7 @@ function onFeatureSelect (feature) {
 	var content = null;
 	var popup = null;
 	// Check for feature id
-	if (typeof feature.fid != "undefined") {
+	if (typeof feature.fid != "undefined" && feature.fid != null) {
 		
 		// Get the location id from the feature
 		var id = feature.fid;
