@@ -118,6 +118,7 @@ function onFeatureSelect (feature) {
 	// Variable to hold the popup content
 	var content = null;
 	var popup = null;
+	var size = new OpenLayers.Size(372, 310);
 	// Check for feature id
 	if (typeof feature.fid != "undefined" && feature.fid != null) {
 		
@@ -146,13 +147,15 @@ function onFeatureSelect (feature) {
 		content = content + "<a href='javascript:zoomToSelectedFeature("+ lon + ","+ lat +", -1)'>Zoom&nbsp;Out</a>\n";
 		content = content + "</div>\n";
 		content += "</div>";
+		
+		size = new OpenLayers.Size(100, 100);
 	}
 	
 	popup = new OpenLayers.Popup.Anchored("chicken",
 		feature.geometry.getBounds().getCenterLonLat(), 
-		new OpenLayers.Size(372, 310),
+		size,
 		content, 
-		null, false, onPopupClose);
+		null, true, onPopupClose);
 
 	feature.popup = popup;
 	map.addPopup(popup);
@@ -242,14 +245,6 @@ $(document).ready(function() {
 	    renderers: OpenLayers.Layer.Vector.prototype.renderers
 	});
 
-	map.events.register("click", map, function(e) {
-	  onPopupClose(e);
-	  if ($("#location_box").is(":visible")){
-	    $("#location_box").hide();
-		hideSettings();
-	  }
-	});
-
 	// Add markers to the vector layer
 	fill_map_with_markers();
 	map.setCenter(myPoint, <?php echo $zoom; ?>);
@@ -281,11 +276,6 @@ $(document).ready(function() {
 	              		
 	        // Add to layers array
 	        layersArray.push(kmlOverlay);
-
-	        // pixel_size = $("#OpenLayers_Control_MinimizeDiv").css("margin-top");
-	        // actual_size = parseInt(pixel_size,10);
-	        // actual_size -= 14;
-	        // $("#OpenLayers_Control_MinimizeDiv").css("margin-top",actual_size+"px");
 
 	  	<?php endforeach; ?>
 	<?php endif; ?>
