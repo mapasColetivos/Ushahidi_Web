@@ -91,17 +91,23 @@ function after_load_popup(){
 /**
  * Destroys the popup window
  */
-onPopupClose = function(evt) {
+function onPopupClose (evt) {
     // selectControl.unselect(selectedFeature);
 	for (var i=0; i<map.popups.length; ++i) {
 		map.removePopup(map.popups[i]);
 	}
 }
 
+function onFeatureUnselect(feature) {
+    map.removePopup(feature.popup);
+    feature.popup.destroy();
+    feature.popup = null;
+}
+
 /** 
  * Display popup when feature selected
  */
-onFeatureSelect = function(feature) {
+function onFeatureSelect (feature) {
 	onPopupClose(null);
 	selectedFeature = feature.event;
 
@@ -111,9 +117,9 @@ onFeatureSelect = function(feature) {
 	
 	// Variable to hold the popup content
 	var content = null;
-	
+	var popup = null;
 	// Check for feature id
-	if (typeof(feature.fid) != undefined) {
+	if (typeof(feature.fid) != "undefined") {
 		
 		// Get the location id from the feature
 		var id = feature.fid;
@@ -124,6 +130,13 @@ onFeatureSelect = function(feature) {
 			async: false,
 			success: function(data) {
 				content = data;
+				
+				popup = new OpenLayers.Popup.Anchored("chicken", 
+					feature.geometry.getBounds().getCenterLonLat(),
+					new OpenLayers.Size(372,310),
+					content,
+					null, false, onPopupClose
+				);
 			},
 			error: function(data) {
 				// Show error notification
@@ -140,18 +153,15 @@ onFeatureSelect = function(feature) {
 		content = content + "<a href='javascript:zoomToSelectedFeature("+ lon + ","+ lat +", -1)'>Zoom&nbsp;Out</a>\n";
 		content = content + "</div>\n";
 		content += "</div>";
+		
+        popup = new OpenLayers.Popup.FramedCloud("chicken", 
+                                 feature.geometry.getBounds().getCenterLonLat(),
+                                 new OpenLayers.Size(100,100),
+                                 content,
+                                 null, true, onPopupClose);
 	}
 	
-	// Build and show the popup
-	var popup = new OpenLayers.Popup.Anchored("chicken", 
-		feature.geometry.getBounds().getCenterLonLat(),
-		new OpenLayers.Size(372,310),
-		content,
-		null, false, onPopupClose
-	);
-	
 	feature.popup = popup;
-	onPopupClose(null);
 	map.addPopup(popup);
 	after_load_popup();
 }
@@ -294,6 +304,7 @@ $(document).ready(function() {
 	// SelectFeature control
 	selectControl = new OpenLayers.Control.SelectFeature(layersArray, {
 		onSelect: onFeatureSelect, 
+		onUnselect: onFeatureUnselect,
 		clickout: true, toggle: false,
 		multiple: false, hover: false,
 		toggleKey: "ctrlKey", // ctrl key removes from selection
@@ -318,16 +329,11 @@ $(document).ready(function() {
 		$("#location_find_main").css("color","black");				  
 	});
 	
+
 	$("#OpenLayers\\.Control\\.LayerSwitcher_38").css("position","relative");
 	$("#OpenLayers\\.Control\\.LayerSwitcher_38").css("right","30px");
 	$("#OpenLayers\\.Control\\.LayerSwitcher_38").css("float","right");
-
-
-	// <ekala> - Commenting this out; Leave the OpenLayers controls as is
-	// $("#OpenLayers\\.Control\\.LayerSwitcher_38").css("margin-top","350px");
-	// $("#OpenLayers_Control_MinimizeDiv").css("margin-top","-126px");
-	// $("#OpenLayers_Control_MaximizeDiv").css("margin-top","-27px");					
-	// 
+	
 	// $("#OpenLayers_Control_MinimizeDiv").click(function(){	
 	// 	$("#OpenLayers\\.Control\\.LayerSwitcher_38").children().hide()
 	// 	$("#OpenLayers_Control_MinimizeDiv").hide();
