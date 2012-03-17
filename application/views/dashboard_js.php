@@ -127,19 +127,9 @@ function onFeatureSelect (feature) {
 		// Issue synchronous Ajax request - a blocking call
 		$.ajax({
 			url: baseUrl+"index.php/locations/popup/"+id,
+			async: false,
 			success: function(data) {
 				content = data;
-				
-				popup = new OpenLayers.Popup.Anchored("chicken", 
-					feature.geometry.getBounds().getCenterLonLat(),
-					new OpenLayers.Size(372,310),
-					content,
-					null, false, onPopupClose
-				);
-				
-				feature.popup = popup;
-				map.addPopup(popup);
-				after_load_popup();
 			},
 			error: function(data) {
 				// Show error notification
@@ -156,16 +146,17 @@ function onFeatureSelect (feature) {
 		content = content + "<a href='javascript:zoomToSelectedFeature("+ lon + ","+ lat +", -1)'>Zoom&nbsp;Out</a>\n";
 		content = content + "</div>\n";
 		content += "</div>";
-		
-		popup = new OpenLayers.Popup.FramedCloud("chicken",
-			feature.geometry.getBounds().getCenterLonLat(), 
-			new OpenLayers.Size(100,100), content, 
-			null, true, onPopupClose);
-
-		feature.popup = popup;
-		map.addPopup(popup);
-		
 	}
+	
+	popup = new OpenLayers.Popup.Anchored("chicken",
+		feature.geometry.getBounds().getCenterLonLat(), 
+		new OpenLayers.Size(100,100),
+		content, 
+		null, false, onPopupClose);
+
+	feature.popup = popup;
+	map.addPopup(popup);
+	after_load_popup();
 	
 }
 
@@ -188,7 +179,7 @@ function fill_map_with_markers() {
 		cat = <?php echo $location->category_id() ?>;
 		color = "<?php if($color_with_category) {echo $location->category_color();} else {echo $location->layer_color();} ?>";
 	
-		add_marker(lon,lat,fid,cat,"#"+color)
+		add_marker(lon,lat,fid,cat,"#"+color);
 	
 	<?php endforeach; ?>
 }
@@ -196,10 +187,10 @@ function fill_map_with_markers() {
 $(document).ready(function() {
 
 	var options = {
-		units: "m"
-		, numZoomLevels: 50
-		, minZoomLevel: 2
-		, controls:[],
+		units: "m", 
+		numZoomLevels: 50, 
+		minZoomLevel: 2, 
+		controls:[],
 		projection: proj_900913,
 		'displayProjection': proj_4326
 	};
@@ -212,8 +203,9 @@ $(document).ready(function() {
 	
 	map.addControl(new OpenLayers.Control.Navigation());
 	map.addControl(new OpenLayers.Control.PanZoomBar());
-	map.addControl(new OpenLayers.Control.MousePosition(
-	    { div:  document.getElementById('mapMousePosition'), numdigits: 5 
+	map.addControl(new OpenLayers.Control.MousePosition({
+		div: document.getElementById('mapMousePosition'), 
+		numdigits: 5 
 	}));    
 	map.addControl(new OpenLayers.Control.Scale("mapScale"));
 	map.addControl(new OpenLayers.Control.ScaleLine());
@@ -226,15 +218,17 @@ $(document).ready(function() {
 	renderer = (renderer) ? [renderer] : OpenLayers.Layer.Vector.prototype.renderers;
 	
 	var context = {
-	    getColor: function(feature) {
-	    	if (feature.color)
+		getColor: function(feature) {
+			if (feature.color)
 				return feature.color; 
+			
 			return "#ffffff";
-	    },
+		},
 		getSize: function(feature) {
-	        return 5;
-	   }
+			return 5;
+		}
 	};
+	
 	var template = {
 		pointRadius: "${getSize}", // using context.getSize(feature)
 		fillColor: "${getColor}", // using context.getColor(feature)
@@ -265,10 +259,6 @@ $(document).ready(function() {
 	// Storage for all layers
 	var layersArray = [vectors];
 
-
-	navigation = new OpenLayers.Control.Navigation(vectors, {'zoomWheelEnabled': false});
-	map.addControl(navigation);
-	navigation.disableZoomWheel();
 	
 	// Add all available KML layers to the map
 	<?php if (isset($layers)): ?>
