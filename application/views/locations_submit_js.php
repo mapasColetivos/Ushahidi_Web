@@ -95,7 +95,7 @@
       function get_location_from_server(id){
                 console.log("AA");
                 $('#location_box').show();
-		//$('#location_box').html('<img src="<?php echo url::base() . "media/img/loading_g.gif"; ?>">');		
+		$('#location_box').html('<img src="<?php echo url::base() . "media/img/loading_g.gif"; ?>">');		
 		map_id = $("#incident_id").val();
 		if (id <= 0){
 			$("#location_box").html(empty_location_form);
@@ -110,30 +110,31 @@
 		    $("#location_lon").val($("#longitude").val());
 		} else {
 			$("#location_box").load("<?php echo url::base() ?>index.php/locations/show/"+id+"/"+map_id, function (){	
-				$(".btn_cancel").click(function(){
+			 
+			      $(".btn_cancel").click(function(){
 		   			$("#location_box").hide();
 					hideSettings();          
-	    		}); 			
-	    		
-		        $(".btn_remove").click(function(){
+			      }); 			
+			      
+			      $(".btn_remove").click(function(){
 
-			  /*var feature = find_feature_by_id(id);
-			  $("#location_find").val(find_feature_by_id(id));
-			  $("#find_text").html("<p>YESSSSSS</p>");
-			  for(att in feature){
-				alert(feature[att]);
-			  }*/
+				/*var feature = find_feature_by_id(id);
+				$("#location_find").val(find_feature_by_id(id));
+				$("#find_text").html("<p>YESSSSSS</p>");
+				for(att in feature){
+				      alert(feature[att]);
+				}*/
 
-		          if(confirm("<?php echo Kohana::lang('ui_main.confirm_remove').' esse ponto?'?>")){	  			
-		          	var feature = find_feature_by_id(id);
-			        vectors.removeFeatures(feature);
-					
-				remove_location_from_server(id);
-			      }
-		          
-		          $("#location_box").hide();
-				  hideSettings();
-		        });
+				if(confirm("<?php echo Kohana::lang('ui_main.confirm_remove').' esse ponto?'?>")){	  			
+				      var feature = find_feature_by_id(id);
+				      vectors.removeFeatures(feature);
+					      
+				      remove_location_from_server(id);
+				    }
+				
+				$("#location_box").hide();
+					hideSettings();
+			      });
 			});
 		}
 		
@@ -635,7 +636,7 @@
 				$(".hooverable").mouseover(function(){
 					width = $(".delimiter").filter(":visible").width();
 					total_area = 350;
-					margin = (total_area - width)/2
+					margin = (total_area - width)/2;
 					if (margin < 0){
 					      margin = 0;
 					      twidth = -30;

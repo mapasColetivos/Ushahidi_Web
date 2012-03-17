@@ -182,7 +182,8 @@ class Locations_Controller extends Main_Controller {
 		$this->template->header->header_block = $this->themes->header_block();
 
 		$location = ORM::factory('location')->where('id',$id)->find();
-		
+
+
 		$this->template->content->location = $location;
 		$form = array
 		(
@@ -201,12 +202,14 @@ class Locations_Controller extends Main_Controller {
 		);
 		
 		$this->template->content->form = $form;
+// 		echo 'banana';
 		$this->template->content->incident_id = $incident_id;		
 		$this->template->content->layers = ORM::factory('location_layer')->where('incident_id',$incident_id)->find_all();
 		$this->template->content->layer = $location->layer();
 		$this->template->content->photos = $location->incident_photo;
 		$this->template->content->videos = $location->incident_videos;
 		$this->template->content->user = $this->user;		
+// 		echo 'banana';
 	}
 	
 	public function add_location(){

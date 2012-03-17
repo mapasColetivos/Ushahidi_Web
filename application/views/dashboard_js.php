@@ -64,7 +64,7 @@ function after_load_popup(){
 			
 			width = $(".delimiter").filter(":visible").width();
 			total_area = 350;
-			margin = (total_area - width)/2
+			margin = (total_area - width)/2;
 			if (margin < 0){
 			      margin = 0;
 			      twidth = -30;

@@ -148,10 +148,11 @@
 				</div>	
 			<input type="hidden" id="layer_id" name="layer_id" value="<?php echo $location->layer_id; ?>"/></input>
 				<div class="location_buttons">
-					<a href="#" class="btn_cancel" ><?php echo Kohana::lang('ui_main.reports_btn_cancel'); ?>
-					</a>
+					<?php if ($location->owner_id) { ?>
+						<a href="#" class="btn_cancel" ><?php echo Kohana::lang('ui_main.reports_btn_cancel'); ?></a>
+					<? } ?>
 					<?php if ($location->owner_id == $user->id) { ?>
-						<a href="#" class="btn_remove" ><?php echo Kohana::lang('ui_main.reports_btn_remove'); ?> </a>
+						<a href="#" class="btn_remove" ><?php echo Kohana::lang('ui_main.reports_btn_remove'); ?></a>
 					<? } ?>
 					<input type='submit' class="btn_submit_location" value='<?php echo Kohana::lang('ui_main.reports_btn_submit'); ?>'/>
 					<span id="save_loading" class="report-find-loading"></span>
