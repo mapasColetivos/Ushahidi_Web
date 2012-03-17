@@ -5,15 +5,6 @@ var markers;
 var vectors;
 var baseUrl = "<?php echo url::base(); ?>";
 var activeFilters = ["0","1","2","3","4"];
-
-function onPopupClose(evt)
-{
-    // selectControl.unselect(selectedFeature);
-	for (var i=0; i<map.popups.length; ++i)
-	{
-		map.removePopup(map.popups[i]);
-	}
-}
         
 var asset_count;
 var asset_pointer;
@@ -96,33 +87,73 @@ function after_load_popup(){
 	});	
 }
 
-/*
-Display popup when feature selected
-*/
-function onFeatureSelect(location) {
-	if (!(location.fid === undefined)){
-		onPopupClose(null);
-        selectedFeature = location.event;
 
-		zoom_point = location.geometry.getBounds().getCenterLonLat();
-		lon = zoom_point.lon;
-		lat = zoom_point.lat;
-		
-		id = location.fid;
-		$.get(baseUrl+"index.php/locations/popup/"+id, function(data) {
-			content = data;
-			var popup = new OpenLayers.Popup.Anchored("chicken", 
-				location.geometry.getBounds().getCenterLonLat(),
-				new OpenLayers.Size(372,310),
-				content,
-				null, false, onPopupClose
-			);
-			location.popup = popup;
-			onPopupClose(null);
-			map.addPopup(popup);
-			after_load_popup();
-		});
+/**
+ * Destroys the popup window
+ */
+onPopupClose = function(evt) {
+    // selectControl.unselect(selectedFeature);
+	for (var i=0; i<map.popups.length; ++i) {
+		map.removePopup(map.popups[i]);
 	}
+}
+
+/** 
+ * Display popup when feature selected
+ */
+onFeatureSelect = function(feature) {
+	onPopupClose(null);
+	selectedFeature = feature.event;
+
+	zoom_point = feature.geometry.getBounds().getCenterLonLat();
+	lon = zoom_point.lon;
+	lat = zoom_point.lat;
+	
+	// Variable to hold the popup content
+	var content = null;
+	
+	// Check for feature id
+	if (typeof(feature.fid) != undefined) {
+		
+		// Get the location id from the feature
+		var id = feature.fid;
+		
+		// Issue synchronous Ajax request - a blocking call
+		$.ajax({
+			url: (baseUrl+"index.php/locations/popup/"+id,
+			async: false,
+			success: function(data) {
+				content = data;
+			},
+			error: function(data) {
+				// Show error notification
+				alert("Oops! An error occurred while fetching content from the server");
+			}
+		});
+		
+	} else {
+		// Build a string to hold the content
+        content = "<div class=\"infowindow\"><div class=\"infowindow_list\">"+feature.attributes.name + "</div>\n";
+		content = content + "<div class=\"infowindow_meta\">\n";
+		content = content + "<a href='javascript:zoomToSelectedFeature("+ lon + ","+ lat +", 1)'>Zoom&nbsp;In</a>\n";
+		content = content + "&nbsp;&nbsp;|&nbsp;&nbsp;";
+		content = content + "<a href='javascript:zoomToSelectedFeature("+ lon + ","+ lat +", -1)'>Zoom&nbsp;Out</a>\n";
+		content = content + "</div>\n";
+		content += "</div>";
+	}
+	
+	// Build and show the popup
+	var popup = new OpenLayers.Popup.Anchored("chicken", 
+		location.geometry.getBounds().getCenterLonLat(),
+		new OpenLayers.Size(372,310),
+		content,
+		null, false, onPopupClose
+	);
+	
+	feature.popup = popup;
+	onPopupClose(null);
+	map.addPopup(popup);
+	after_load_popup();
 }
 
 function add_marker(lon,lat,fid,cat,color) {
@@ -249,10 +280,10 @@ $(document).ready(function() {
 	        // Add to layers array
 	        layersArray.push(kmlOverlay);
 
-	        pixel_size = $("#OpenLayers_Control_MinimizeDiv").css("margin-top");
-	        actual_size = parseInt(pixel_size,10);
-	        actual_size -= 14;
-	        $("#OpenLayers_Control_MinimizeDiv").css("margin-top",actual_size+"px");
+	        // pixel_size = $("#OpenLayers_Control_MinimizeDiv").css("margin-top");
+	        // actual_size = parseInt(pixel_size,10);
+	        // actual_size -= 14;
+	        // $("#OpenLayers_Control_MinimizeDiv").css("margin-top",actual_size+"px");
 
 	  	<?php endforeach; ?>
 	<?php endif; ?>
@@ -447,20 +478,28 @@ function switchImage(img, layer){
 	$('#'+layer).toggle();	
 }
 	
-function geoCode()
-{
-  $('#find_loading').html('<img src="<?php echo url::base() . "index.php/media/img/loading_g.gif"; ?>">');
-  address = $("#location_find_main").val();
-  $.post("<?php echo url::site() . 'reports/geocode/' ?>", { address: address },
-    function(data){
-      if (data.status == 'success'){
-		var lonlat = new OpenLayers.LonLat(data.message[1], data.message[0]);
-        lonlat.transform(proj_4326,proj_900913);
-        map.setCenter(lonlat, 13);
-      } else {
-        alert(address + " not found!\n\n***************************\nEnter more details like city, town, country\nor find a city or town close by and zoom in\nto find your precise location");
-      }
-      $('#find_loading').html('');
-    }, "json");
-  return false;
+function geoCode() {
+	$('#find_loading').html('<img src="<?php echo url::base() . "index.php/media/img/loading_g.gif"; ?>">');
+	address = $("#location_find_main").val();
+	
+	$.post("<?php echo url::site() . 'reports/geocode/' ?>", {address: address}, 
+		function (data) {
+			if (data.status == 'success') {
+				var lonlat = new OpenLayers.LonLat(data.message[1], data.message[0]);
+				lonlat.transform(proj_4326,proj_900913);
+				map.setCenter(lonlat, 13);
+			} else {
+				// Build the alert message
+				var alertMessage = "not found!\n\n***************************\nEnter more details like city, ";
+				alertMessage = alertMessage + "town, country\nor find a city or town close by and zoom in\n";
+				alertMessage = alertMessage + "to find your precise location";
+				
+				alert(address + alertMessage);
+			}
+			$('#find_loading').html('');
+		}, 
+		"json"
+	);
+	
+	return false;
 }
