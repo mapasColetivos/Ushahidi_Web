@@ -118,7 +118,7 @@ function onFeatureSelect (feature) {
 	// Variable to hold the popup content
 	var content = null;
 	var popup = null;
-	var size = new OpenLayers.Size(372, 310);
+	
 	// Check for feature id
 	if (typeof feature.fid != "undefined" && feature.fid != null) {
 		
@@ -131,7 +131,14 @@ function onFeatureSelect (feature) {
 			async: false,
 			success: function(data) {
 				content = data;
+				
+				popup = new OpenLayers.Popup.Anchored("chicken",
+					feature.geometry.getBounds().getCenterLonLat(), 
+					new OpenLayers.Size(372, 310),
+					content, 
+					null, false, onPopupClose);
 			},
+			
 			error: function(data) {
 				// Show error notification
 				alert("Oops! An error occurred while fetching content from the server");
@@ -140,7 +147,7 @@ function onFeatureSelect (feature) {
 		
 	} else {
 		// Build a string to hold the content
-        content = "<div class=\"infowindow\"><div class=\"infowindow_list\">"+feature.attributes.name + "</div>\n";
+		content = "<div class=\"infowindow\"><div class=\"infowindow_list\">"+feature.attributes.name + "</div>\n";
 		content = content + "<div class=\"infowindow_meta\">\n";
 		content = content + "<a href='javascript:zoomToSelectedFeature("+ lon + ","+ lat +", 1)'>Zoom&nbsp;In</a>\n";
 		content = content + "&nbsp;&nbsp;|&nbsp;&nbsp;";
@@ -148,14 +155,12 @@ function onFeatureSelect (feature) {
 		content = content + "</div>\n";
 		content += "</div>";
 		
-		size = new OpenLayers.Size(100, 100);
+		popup = new OpenLayers.Popup.FrameCloud("chicken",
+			feature.geometry.getBounds().getCenterLonLat(), 
+			new OpenLayers.Size(100, 100),
+			content, 
+			null, true, onPopupClose);
 	}
-	
-	popup = new OpenLayers.Popup.Anchored("chicken",
-		feature.geometry.getBounds().getCenterLonLat(), 
-		size,
-		content, 
-		null, true, onPopupClose);
 
 	feature.popup = popup;
 	map.addPopup(popup);
