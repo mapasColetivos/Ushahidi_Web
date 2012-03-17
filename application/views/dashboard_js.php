@@ -155,7 +155,7 @@ function onFeatureSelect (feature) {
 		content = content + "</div>\n";
 		content += "</div>";
 		
-		popup = new OpenLayers.Popup.FrameCloud("chicken",
+		popup = new OpenLayers.Popup.FramedCloud("chicken",
 			feature.geometry.getBounds().getCenterLonLat(), 
 			new OpenLayers.Size(100, 100),
 			content, 
