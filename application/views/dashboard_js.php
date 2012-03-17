@@ -255,6 +255,9 @@ $(document).ready(function() {
 	  	<?php endforeach; ?>
 	<?php endif; ?>
 
+	// Add the layers to the map
+	map.addLayers(layersArray);
+	
 	// SelectFeature control
 	selectControl = new OpenLayers.Control.SelectFeature(layersArray, {
 		onSelect: onFeatureSelect, 
