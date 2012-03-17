@@ -66,14 +66,17 @@
 				<h4>Bio</h4>
 				<?php print form::textarea('bio', $form['bio'], ' class="text long2"'); ?>
 			</div>
+<!--*********************************************  -->
+<!-- Nao sei pq o $form chega com a web e o localization trocados, mas resolvi trocando os dois  -->
 			<div class="row">
 				<h4>Localização</h4>
-				<?php print form::input('localization', $form['localization'], ' class="text long2"'); ?>
+				<?php print form::input('localization', $form['web'], ' class="text long2"'); ?>
 			</div>
 			<div class="row">
 				<h4>Web</h4>
-				<?php print form::input('web', $form['web'], ' class="text long2"'); ?>
-			</div>									
+				<?php print form::input('web', $form['localization'], ' class="text long2"'); ?>
+			</div>
+<!-- 	***************************************************		 -->
 			<div class="row">
 				<h4><?php echo Kohana::lang('ui_main.password');?></h4>
 				<?php print form::password('password', $form['password'], ' class="text"'); ?>
