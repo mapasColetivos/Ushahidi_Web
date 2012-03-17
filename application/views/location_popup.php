@@ -1,6 +1,20 @@
 <div class="popup">
 	<img src="<?php echo url::base(); ?>/media/img/close.png" title="close" class="close_image_popup" />
 	<h1><?php echo $location->location_name; ?></h1>
+
+<?php
+
+// print_r($location);
+// echo 'AA<br />';
+$relation = ORM::factory('user')->where("id",$location->owner_id)->find();
+// echo print_r($location->owner_id);
+echo "<h2 style='float:up;margin-top:-20px;margin-bottom:15px;font-size:smaller'>$relation->name</h2>";
+// echo $relation;
+// $location->owner_id
+
+?>
+
+
 	<h3><a href="<?php echo url::base().'/reports/view/'.$incident->id ?>"><?php echo $incident->incident_title; ?></a></h3>
 	<div class="asset_area hooverable">
 		<div id="description" style="display:none;">
