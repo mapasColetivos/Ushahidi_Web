@@ -150,7 +150,7 @@ function onFeatureSelect (feature) {
 	
 	popup = new OpenLayers.Popup.Anchored("chicken",
 		feature.geometry.getBounds().getCenterLonLat(), 
-		new OpenLayers.Size(100,100),
+		new OpenLayers.Size(372, 310),
 		content, 
 		null, false, onPopupClose);
 
@@ -187,9 +187,8 @@ function fill_map_with_markers() {
 $(document).ready(function() {
 
 	var options = {
-		units: "m", 
-		numZoomLevels: 50, 
-		minZoomLevel: 2, 
+		units: "dd", 
+		numZoomLevels: 18, 
 		controls:[],
 		projection: proj_900913,
 		'displayProjection': proj_4326
@@ -243,7 +242,6 @@ $(document).ready(function() {
 	    renderers: OpenLayers.Layer.Vector.prototype.renderers
 	});
 
-	map.addControl(new OpenLayers.Control.MousePosition());
 	map.events.register("click", map, function(e) {
 	  onPopupClose(e);
 	  if ($("#location_box").is(":visible")){
