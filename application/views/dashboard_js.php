@@ -144,7 +144,7 @@ onFeatureSelect = function(feature) {
 	
 	// Build and show the popup
 	var popup = new OpenLayers.Popup.Anchored("chicken", 
-		location.geometry.getBounds().getCenterLonLat(),
+		feature.geometry.getBounds().getCenterLonLat(),
 		new OpenLayers.Size(372,310),
 		content,
 		null, false, onPopupClose
