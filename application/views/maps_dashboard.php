@@ -13,7 +13,7 @@
 			<script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
 		</div>
 	</div>
-		<div id="left_column">
+		<div id="left_column" style="height:100%">
 			<div id="convidar">	
 				<a class="btn_convidar" href="mailto:<?php echo $incident->share_mail_to();?>"> Convidar </a>
 			</div>
