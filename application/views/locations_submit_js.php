@@ -459,7 +459,12 @@
     
     $(".dataLbl").html("<b>Camadas</b>")
   	$(".baseLbl").html("<b>Mapa Base</b>")
-  	$("#OpenLayers\\.Control\\.LayerSwitcher_38").css("margin-top","350px");
+  	//$("#OpenLayers\\.Control\\.LayerSwitcher_38").css("margin-top","350px");
+
+	$("#OpenLayers\\.Control\\.LayerSwitcher_38").css("position","relative");
+	$("#OpenLayers\\.Control\\.LayerSwitcher_38").css("right","30px");
+	$("#OpenLayers\\.Control\\.LayerSwitcher_38").css("float","right");
+
   	$("#OpenLayers_Control_MinimizeDiv").css("margin-top","-140px");
   	$("#OpenLayers_Control_MaximizeDiv").css("margin-top","-27px");					
 
