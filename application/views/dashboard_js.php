@@ -287,9 +287,6 @@ $(document).ready(function() {
 	selectControl = new OpenLayers.Control.SelectFeature(layersArray, {
 		onSelect: onFeatureSelect, 
 		onUnselect: onFeatureUnselect,
-		clickout: true,
-		toggle: true,
-		multiple: false,
 		hover: true
 	});
 
