@@ -99,9 +99,9 @@ function onPopupClose (evt) {
 }
 
 function onFeatureUnselect(feature) {
-    map.removePopup(feature.popup);
-    feature.popup.destroy();
-    feature.popup = null;
+//    map.removePopup(feature.popup);
+//    feature.popup.destroy();
+      foo_feature = null; // Just as a 'pass' in python code TTM
 }
 
 /** 
