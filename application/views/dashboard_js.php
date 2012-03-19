@@ -211,8 +211,25 @@ $(document).ready(function() {
 	}));    
 	map.addControl(new OpenLayers.Control.Scale("mapScale"));
 	map.addControl(new OpenLayers.Control.ScaleLine());
-	map.addControl(new OpenLayers.Control.LayerSwitcher());	
-	
+	var LS = new OpenLayers.Control.LayerSwitcher();
+	map.addControl(LS);	
+
+	var LSid = LS['id'];
+//	var LSid2 = '"' + LSid + '"';
+//	  document.write("<p>This is a paragraph.</p>" + "aaaaaa  " + LSid2 );
+
+
+	LSel=document.getElementById(LSid);
+	LSel.style.position="relative";
+	LSel.style.right="20px";
+	LSel.style.cssFloat="right";
+
+
+//	$("#OpenLayers\\.Control\\.LayerSwitcher_49").css("position","relative");
+//	$("#OpenLayers\\.Control\\.LayerSwitcher_49").css("right","30px");
+//	$("#OpenLayers\\.Control\\.LayerSwitcher_49").css("float","right");
+
+
 	var myPoint = new OpenLayers.LonLat(<?php echo $longitude; ?>, <?php echo $latitude; ?>);
 	myPoint.transform(proj_4326, map.getProjectionObject());
 	
@@ -307,11 +324,6 @@ $(document).ready(function() {
 	$("#location_find_main").focus(function(){
 		$("#location_find_main").css("color","black");				  
 	});
-	
-
-	$("#OpenLayers\\.Control\\.LayerSwitcher_38").css("position","relative");
-	$("#OpenLayers\\.Control\\.LayerSwitcher_38").css("right","30px");
-	$("#OpenLayers\\.Control\\.LayerSwitcher_38").css("float","right");
 	
 	// $("#OpenLayers_Control_MinimizeDiv").click(function(){	
 	// 	$("#OpenLayers\\.Control\\.LayerSwitcher_38").children().hide()
