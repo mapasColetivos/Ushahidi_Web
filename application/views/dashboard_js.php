@@ -214,20 +214,10 @@ $(document).ready(function() {
 	var LS = new OpenLayers.Control.LayerSwitcher();
 	map.addControl(LS);	
 
-	var LSid = LS['id'];
-//	var LSid2 = '"' + LSid + '"';
-//	  document.write("<p>This is a paragraph.</p>" + "aaaaaa  " + LSid2 );
-
-
-	LSel=document.getElementById(LSid);
+	LSel=document.getElementById(LS['id']);
 	LSel.style.position="relative";
 	LSel.style.right="20px";
 	LSel.style.cssFloat="right";
-
-
-//	$("#OpenLayers\\.Control\\.LayerSwitcher_49").css("position","relative");
-//	$("#OpenLayers\\.Control\\.LayerSwitcher_49").css("right","30px");
-//	$("#OpenLayers\\.Control\\.LayerSwitcher_49").css("float","right");
 
 
 	var myPoint = new OpenLayers.LonLat(<?php echo $longitude; ?>, <?php echo $latitude; ?>);
