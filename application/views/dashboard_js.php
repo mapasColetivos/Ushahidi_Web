@@ -254,7 +254,7 @@ $(document).ready(function() {
 
 	// Add markers to the vector layer
 	fill_map_with_markers();
-	map.setCenter(myPoint, <?php echo $zoom; ?>);
+	map.setCenter(myPoint, <?php echo $zoom+2; ?>);
 
 	// Storage for all layers
 	var layersArray = [vectors];
