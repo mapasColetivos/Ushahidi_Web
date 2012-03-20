@@ -42,7 +42,7 @@ if(substr_count($user->web,'http'))
 else 
     $uweb = 'http://'.$user->web;
 ?>
-					web: <?php if ($user->web) {echo "<a href='".$uweb."' >".$uweb."</a>";} else {echo "Não informado";} ?>
+					web: <?php if ($user->web) {echo "<a href='".$uweb."' target='_blank' >".$uweb."</a>";} else {echo "Não informado";} ?>
                     
 				</p>
 				<p>
