@@ -36,7 +36,13 @@
 					localização: <?php if ($user->localization) {echo $user->localization;} else {echo "Não informado";} ?>
 				</p>
 				<p>
-					web: <?php if ($user->web) {echo "<a href='http://".$user->web."' >".$user->web."</a>";} else {echo "Não informado";} ?>
+<?php
+if(substr_count($user->web,'http'))
+    $uweb = $user->web;
+else 
+    $uweb = 'http://'.$user->web;
+?>
+					web: <?php if ($user->web) {echo "<a href='".$uweb."' >".$uweb."</a>";} else {echo "Não informado";} ?>
                     
 				</p>
 				<p>
