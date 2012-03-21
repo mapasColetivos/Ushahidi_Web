@@ -367,7 +367,17 @@
     }));    
     map.addControl(new OpenLayers.Control.Scale('mapScale'));
     map.addControl(new OpenLayers.Control.ScaleLine());
-	  map.addControl(new OpenLayers.Control.LayerSwitcher());	    
+//	  map.addControl(new OpenLayers.Control.LayerSwitcher());	    
+
+	var LS = new OpenLayers.Control.LayerSwitcher();
+	map.addControl(LS);	
+
+	LSel=document.getElementById(LS['id']);
+	LSel.style.position="relative";
+	LSel.style.right="20px";
+	LSel.style.cssFloat="right";
+//	LSel.style.marginTop="0px";
+	LSel.style.zIndex='50000';
 	  
     // Create the markers layer
     markers = new OpenLayers.Layer.Markers("Markers");
@@ -470,14 +480,14 @@
   	$("#OpenLayers_Control_MaximizeDiv").css("margin-top","-27px");					
 
   	$("#OpenLayers_Control_MinimizeDiv").click(function(){	
-  		$("#OpenLayers\\.Control\\.LayerSwitcher_38").children().hide()
+//  		$("#OpenLayers\\.Control\\.LayerSwitcher_38").children().hide()
   		$("#OpenLayers_Control_MinimizeDiv").hide();
   		$("#OpenLayers_Control_MaximizeDiv").show();				
   	});
 
   	$("#OpenLayers_Control_MaximizeDiv").click(function(){			
   		$("#OpenLayers_Control_MaximizeDiv").css("margin-top","-18px");		
-  		$("#OpenLayers\\.Control\\.LayerSwitcher_38").children().show()
+//  		$("#OpenLayers\\.Control\\.LayerSwitcher_38").children().show()
   		$("#OpenLayers_Control_MinimizeDiv").show();
   		$("#OpenLayers_Control_MaximizeDiv").hide();								
   	});          
