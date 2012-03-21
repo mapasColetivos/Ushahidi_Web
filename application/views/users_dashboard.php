@@ -12,7 +12,7 @@
 			</div>
 		
         </div>
-		<div id="left_column_profile">
+		<div id="left_column_profile" style="height:100%">
 			<p id="mapeador">
 				<?php if ($myself and ($myself->id != $user->id)) {
 					if ($myself->follows($user)) {
