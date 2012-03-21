@@ -218,7 +218,7 @@ $(document).ready(function() {
 	LSel.style.position="relative";
 	LSel.style.right="20px";
 	LSel.style.cssFloat="right";
-
+	LSel.style.marginTop="10px";
 
 	var myPoint = new OpenLayers.LonLat(<?php echo $longitude; ?>, <?php echo $latitude; ?>);
 	myPoint.transform(proj_4326, map.getProjectionObject());
