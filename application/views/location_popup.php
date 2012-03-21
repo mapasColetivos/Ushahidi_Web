@@ -35,19 +35,15 @@
 				}
 				echo "</div>";
 			}
-			      echo 'AA';
-      print_r($i);
+					?>
+	</div>
+<?php
 			if($i==0)
 			{
-// 			      print_r($location->media);
-// echo "<div class='assets' data-owner='".ORM::factory("user")->where("id",$media->owner_id)->find()->name."' data-owner-id='".$media->owner_id."'>";
 				$relation = ORM::factory('user')->where("id",$location->owner_id)->find();
-// 				echo "<div class='assets' data-owner='".$relation->name."' data-owner-id='".$location->owner_id.">";
-echo 'BB'.$relation->name;
-// 				echo "<div class='assets' data-owner='". $relation->name ."</h2>";	
+echo "<span style='float:right'>" . $relation->name . "</span>";
 			}
-		?>
-	</div>
+?>
 	<div class="popup_controls">
 		<a id="previous_button"><</a>
 		 
