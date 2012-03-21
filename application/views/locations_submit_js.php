@@ -463,6 +463,7 @@
 
 	$("#OpenLayers\\.Control\\.LayerSwitcher_38").css("position","relative");
 	$("#OpenLayers\\.Control\\.LayerSwitcher_38").css("right","30px");
+	$("#OpenLayers\\.Control\\.LayerSwitcher_38").css("top","30px");
 	$("#OpenLayers\\.Control\\.LayerSwitcher_38").css("float","right");
 
   	$("#OpenLayers_Control_MinimizeDiv").css("margin-top","-140px");
