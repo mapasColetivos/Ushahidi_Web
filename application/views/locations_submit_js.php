@@ -591,7 +591,6 @@
 			$("#remove_asset").click(function(){
         var answer = confirm('Você tem certeza que deseja remover esse anexo ?');
         if (answer){
-alert('Please enter a valid username.');
           window.location = "<?php echo url::base() . 'locations/deleteAsset2/' ?>"+asset_id+"<?php echo '/' . $user_id; ?>";	  
         }
     	});

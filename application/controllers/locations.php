@@ -244,17 +244,31 @@ class Locations_Controller extends Main_Controller {
 		}
 	}
 	
-	public function submit($id = false, $saved = false){
+	public function submit($id = false, $umessage = false){
 		// First, are we allowed to submit new reports?
 		if ( ! Kohana::config('settings.allow_reports') or ! $this->user)
 		{
 				url::redirect('login');
 		}
 
+
 		$this->template->header->this_page = 'reports_submit';
 		$this->template->header->explode_content = TRUE;
 		$this->template->content = new View('locations_submit');
 		$this->template->content->ajax_request = "NO";
+
+// 		$this->template->content->amessage = "UUUUUUUU";
+		if ( $umessage )
+		{
+				$this->template->content->umessage = $umessage;
+		}
+		else
+		{
+				$this->template->content->umessage = false;
+		}
+
+
+
 	    $this->template->content->layers = ORM::factory('location_layer')->where('incident_id',$id)->find_all();
 	    $this->template->content->user = $this->user;
 	    $incident = ORM::factory('location_layer')->where('incident_id',$id)->find();
@@ -403,6 +417,70 @@ class Locations_Controller extends Main_Controller {
         $media->delete();
 		    url::redirect(url::site().'locations/submit/'.$incident_id);
     }
+
+    function deleteAsset2 ( $id, $user_id )
+    {
+    	$media = ORM::factory('media')->where('id',$id)->find();
+    	$incident_id = $media->incident_id;
+    	
+	if($media->owner_id != $user_id)
+	{
+	    // popup para avisar que nao sao os mesmos caras, volta
+
+echo "<script language=javascript>alert('Please enter a valid username.')</script>";
+//somente o dono da mídia pode apagá-la.
+	url::redirect(url::site().'locations/submit/'.$incident_id . '/Somente quem postou a midia pode removê-la. Entre em contato.');
+	}
+	else
+	{
+    	//Special for photos that have physical assets on the system
+	      if ($media->media_type == 1 )
+	      {
+		  $photo = $media;
+		  $photo_large = $photo->media_link;
+		  $photo_thumb = $photo->media_thumb;
+
+		  // Delete Files from Directory
+		  if ( ! empty($photo_large))
+		  {
+		      unlink(Kohana::config('upload.directory', TRUE) . $photo_large);
+		  }
+		  
+		  if ( ! empty($photo_thumb))
+		  {
+		      unlink(Kohana::config('upload.directory', TRUE) . $photo_thumb);
+		  }
+	      }
+	      
+	      $media->delete();
+	}
+	url::redirect(url::site().'locations/submit/'.$incident_id);
+    }
+//	print_r($users);
+//     	print_r($media);
+// 	print_r($_SESSION);
+// 	echo $_SESSION['session_id'];
+    	//Special for photos that have physical assets on the system
+//         if ($media->media_type == 1 )
+//         {
+//             $photo = $media;
+//             $photo_large = $photo->media_link;
+//             $photo_thumb = $photo->media_thumb;
+// 
+//             // Delete Files from Directory
+//             if ( ! empty($photo_large))
+//             {
+//                 unlink(Kohana::config('upload.directory', TRUE) . $photo_large);
+//             }
+//             
+//             if ( ! empty($photo_thumb))
+//             {
+//                 unlink(Kohana::config('upload.directory', TRUE) . $photo_thumb);
+//             }
+//         }
+//         
+//         $media->delete();
+// 		    url::redirect(url::site().'locations/submit/'.$incident_id);
     
     private function _save_new_location($name,$lat,$lon,$layer_id,$incident_id){
 		$location = new Location_Model();
