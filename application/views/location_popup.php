@@ -41,7 +41,7 @@
 			if($i==0)
 			{
 				$relation = ORM::factory('user')->where("id",$location->owner_id)->find();
-echo "<span style='float:right'>" . $relation->name . "</span>";
+echo "<span style='float:right'>" . "<a href='/users/index/". $relation->id . "' >" . $relation->name . "</a></span>";
 			}
 ?>
 	<div class="popup_controls">
