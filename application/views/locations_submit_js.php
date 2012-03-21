@@ -576,7 +576,7 @@
 		function onPopupClose(evt)
 		{
             // selectControl.unselect(selectedFeature);
-			for (var i=0; i<map.popups.length; ++i)
+			for (var i=0; i < map.popups.length; ++i )
 			{
 				map.removePopup(map.popups[i]);
 			}
@@ -585,9 +585,11 @@
         var asset_count;
         var asset_pointer;
         function display_message(){
+
 			var message = (asset_pointer + 1) +" de "+asset_count;
 			$("#asset_count").text(message);
 			asset_id = $("#asset"+asset_pointer).attr("data-id");
+
 			$("#remove_asset").click(function(){
         var answer = confirm('Você tem certeza que deseja remover esse anexo ?');
         if (answer){
