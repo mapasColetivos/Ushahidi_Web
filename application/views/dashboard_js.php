@@ -157,13 +157,13 @@ function onFeatureSelect (feature) {
 		  }
 		  else
 		  {
-		      foo=foo+key+"AA"+feature.attributes[key] + "<br />";
+		      foo=foo + feature.attributes[key] + "<br />";
 		  }
 		}
 
-
-//		content = content + "<div class=\"infowindow_list\">"+feature.attributes.name + feature + "BB" + feature.attributes + "AAA</div>\n";
 		content = content + "<div class=\"infowindow_list\">"+ foo + "</div>\n";
+//		content = content + "<div class=\"infowindow_list\">"+feature.attributes.name + feature + "BB" + feature.attributes + "AAA</div>\n";
+
 		content = content + "</div>\n";
 		content += "</div>";
 		
