@@ -99,9 +99,9 @@ function onPopupClose (evt) {
 }
 
 function onFeatureUnselect(feature) {
-//    map.removePopup(feature.popup);
-//    feature.popup.destroy();
-      foo_feature = null; // Just as a 'pass' in python code TTM
+    map.removePopup(feature.popup);
+    feature.popup.destroy();
+    feature.popup = null;
 }
 
 /** 
@@ -116,10 +116,8 @@ function onFeatureSelect (feature) {
 	lat = zoom_point.lat;
 	
 	// Variable to hold the popup content
-	var content, popup;
-	
-	var size = new OpenLayers.Size(372, 310);
-	var closeButton = false;
+	var content = null;
+	var popup = null;
 	
 	// Check for feature id
 	if (typeof feature.fid != "undefined" && feature.fid != null) {
@@ -146,16 +144,13 @@ function onFeatureSelect (feature) {
 		content = content + "<div class=\"infowindow_list\">"+feature.attributes.name + "</div>\n";
 		content = content + "</div>\n";
 		content += "</div>";
-		
-		size = new OpenLayers.Size(210, 120);
-		closeButton = true;
 	}
 
 	popup = new OpenLayers.Popup.Anchored("chicken",
 		feature.geometry.getBounds().getCenterLonLat(), 
-		size,
+		new OpenLayers.Size(372, 310),
 		content, 
-		null, closeButton, onPopupClose);
+		null, false, onPopupClose);
 		
 	feature.popup = popup;
 	map.addPopup(popup);
@@ -211,15 +206,8 @@ $(document).ready(function() {
 	}));    
 	map.addControl(new OpenLayers.Control.Scale("mapScale"));
 	map.addControl(new OpenLayers.Control.ScaleLine());
-	var LS = new OpenLayers.Control.LayerSwitcher();
-	map.addControl(LS);	
-
-	LSel=document.getElementById(LS['id']);
-	LSel.style.position="relative";
-	LSel.style.right="20px";
-	LSel.style.cssFloat="right";
-	LSel.style.marginTop="10px";
-
+	map.addControl(new OpenLayers.Control.LayerSwitcher());	
+	
 	var myPoint = new OpenLayers.LonLat(<?php echo $longitude; ?>, <?php echo $latitude; ?>);
 	myPoint.transform(proj_4326, map.getProjectionObject());
 	
@@ -254,7 +242,7 @@ $(document).ready(function() {
 
 	// Add markers to the vector layer
 	fill_map_with_markers();
-	map.setCenter(myPoint, <?php echo $zoom+2; ?>);
+	map.setCenter(myPoint, <?php echo $zoom; ?>);
 
 	// Storage for all layers
 	var layersArray = [vectors];
@@ -294,8 +282,10 @@ $(document).ready(function() {
 	selectControl = new OpenLayers.Control.SelectFeature(layersArray, {
 		onSelect: onFeatureSelect, 
 		onUnselect: onFeatureUnselect,
-		hover: true,
-		highlightOnly: (layersArray.length > 1)
+		clickout: false,
+		toggle: true,
+		multiple: false,
+		hover: false
 	});
 
 	map.addControl(selectControl);
@@ -314,6 +304,11 @@ $(document).ready(function() {
 	$("#location_find_main").focus(function(){
 		$("#location_find_main").css("color","black");				  
 	});
+	
+
+	$("#OpenLayers\\.Control\\.LayerSwitcher_38").css("position","relative");
+	$("#OpenLayers\\.Control\\.LayerSwitcher_38").css("right","30px");
+	$("#OpenLayers\\.Control\\.LayerSwitcher_38").css("float","right");
 	
 	// $("#OpenLayers_Control_MinimizeDiv").click(function(){	
 	// 	$("#OpenLayers\\.Control\\.LayerSwitcher_38").children().hide()
