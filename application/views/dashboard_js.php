@@ -196,6 +196,7 @@ function add_marker(lon,lat,fid,cat,color) {
 }
 
 function fill_map_with_markers() {
+
 	<?php foreach ($markers as $location): ?>
 		lat = <?php echo $location->latitude ?>;
 		lon = <?php echo $location->longitude ?>;
@@ -211,11 +212,12 @@ function fill_map_with_markers() {
 $(document).ready(function() {
 
 	var options = {
+		scrollwheel: false,
 		units: "dd", 
 		numZoomLevels: 18, 
 		controls:[],
 		projection: proj_900913,
-		'displayProjection': proj_4326
+		'displayProjection': proj_4326,
 	};
 	map = new OpenLayers.Map('<?php echo $map_div_name; ?>', options);
 	
@@ -277,8 +279,17 @@ $(document).ready(function() {
 	fill_map_with_markers();
 	map.setCenter(myPoint, <?php echo $zoom+2; ?>);
 
+
 	// Storage for all layers
 	var layersArray = [];
+	
+	//map.disableZoomWheel();
+	//map.zoom.scrollwheel="false";
+	//$("#user_map").css("scrollwheel","False")
+	//$("#user_map").css("zoom.scrollwheel","False")
+
+
+
 
 	
 	// Add all available KML layers to the map
@@ -315,13 +326,13 @@ $(document).ready(function() {
 	selectControl = new OpenLayers.Control.SelectFeature(layersArray, {
 		onSelect: onFeatureSelect, 
 		onUnselect: onFeatureUnselect,
-		hover: false
+		hover: true
 	});
 
 	map.addControl(selectControl);
 	selectControl.activate();
 
-
+	//map.disableScrollWheelZoom();
 	
 	$(".dataLbl").html("<b>Camadas</b>")
 	$(".baseLbl").html("<b>Mapa Base</b>")
@@ -452,8 +463,13 @@ $(document).ready(function() {
 	
 	$(".submit_geocode").live("click",function(){
 		geoCode();    	
-    });
+//	map.disableScrollWheelZoom();
+//map.disableZoomWheel();
+//map.zoom.scrollwheel=0;
+//$("#user_map").css("scrollwheel","False")
+//$("#user_map").css("zoom.scrollwheel","False")
 
+    });
 });
 
 function selectList(event){
