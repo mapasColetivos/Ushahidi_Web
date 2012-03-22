@@ -143,11 +143,31 @@ function onFeatureSelect (feature) {
 	} else {
 		// Build a string to hold the content
 		content = "<div class=\"infowindow\">\n";
-		content = content + "<div class=\"infowindow_list\">"+feature.attributes.name + "</div>\n";
+
+		foo="";
+		var i = 0;
+		for (var key in feature.attributes) {
+		  if (i==0)
+		  {
+		      foo=foo+"<h1>"+feature.attributes[key]+"</h1><br />";
+		      i=2;
+		  }
+		  else if (key == "styleUrl")
+		  { //nothing
+		  }
+		  else
+		  {
+		      foo=foo+key+"AA"+feature.attributes[key] + "<br />";
+		  }
+		}
+
+
+//		content = content + "<div class=\"infowindow_list\">"+feature.attributes.name + feature + "BB" + feature.attributes + "AAA</div>\n";
+		content = content + "<div class=\"infowindow_list\">"+ foo + "</div>\n";
 		content = content + "</div>\n";
 		content += "</div>";
 		
-		size = new OpenLayers.Size(210, 120);
+		size = new OpenLayers.Size(410, 170);
 		closeButton = true;
 	}
 
