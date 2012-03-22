@@ -372,11 +372,14 @@ class Main_Controller extends Template_Controller {
 		$ii=0;
 		foreach($pontos as $ponto) {
 		    $mapas = ORM::factory('incident')->where('id',$ponto->incident_id)->find();
-		    if ($mapas->incident_title){
-			$m[$ii] =  $ponto;
-			$ii+=1;
+		    if ($mapas->incident_title){ // Ou seja, nao eh mapa deletado
+			if ($mapas->incident_privacy-1){ // Ou seja, eh mapa publico
+			    $m[$ii] =  $ponto;
+			    $ii+=1;
+			}
 		     }	
 		}
+
 		$this->themes->js->markers = $m;
 
 		$this->themes->js->zoom = 9;		
