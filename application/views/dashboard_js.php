@@ -294,8 +294,7 @@ $(document).ready(function() {
 	selectControl = new OpenLayers.Control.SelectFeature(layersArray, {
 		onSelect: onFeatureSelect, 
 		onUnselect: onFeatureUnselect,
-		hover: true,
-		highlightOnly: (layersArray.length > 1)
+		hover: false
 	});
 
 	map.addControl(selectControl);
