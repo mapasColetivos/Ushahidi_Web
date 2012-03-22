@@ -170,6 +170,7 @@ function add_marker(lon,lat,fid,cat,color) {
 	feature.fid = fid;
 	feature.color = color;
 	feature.category = cat;
+	feature.attributes.zIndex = 74500; 
 	vectors.addFeatures(feature);
 	return feature;
 }
@@ -257,7 +258,7 @@ $(document).ready(function() {
 	map.setCenter(myPoint, <?php echo $zoom+2; ?>);
 
 	// Storage for all layers
-	var layersArray = [vectors];
+	var layersArray = [];
 
 	
 	// Add all available KML layers to the map
@@ -286,7 +287,7 @@ $(document).ready(function() {
 
 	  	<?php endforeach; ?>
 	<?php endif; ?>
-
+	layersArray.push(vectors);
 	// Add the layers to the map
 	map.addLayers(layersArray);
 
@@ -299,6 +300,7 @@ $(document).ready(function() {
 
 	map.addControl(selectControl);
 	selectControl.activate();
+
 
 	
 	$(".dataLbl").html("<b>Camadas</b>")
