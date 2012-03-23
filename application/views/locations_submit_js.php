@@ -458,7 +458,7 @@
     for(var key in controls) {
         map.addControl(controls[key]);
     }
-    navigate.disableZoomWheel();
+//    navigate.disableZoomWheel();
           
     // display the map centered on a latitude and longitude (Google zoom levels)
     map.setCenter(myPoint, <?php echo $zoom; ?>);
