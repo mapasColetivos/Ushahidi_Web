@@ -141,15 +141,13 @@ function onFeatureSelect (feature) {
 		});
 		
 	} else {
-		// Build a string to hold the content
-		content = "<div class=\"infowindow\">\n";
 
 		foo="";
 		var i = 0;
 		for (var key in feature.attributes) {
-		  if (i==0)
+		  if (i == 0)
 		  {
-		      foo=foo+"<h1>"+feature.attributes[key]+"</h1><br />";
+		      foo=foo + "<h1>" +feature.attributes[key]+"</h1><br />";
 		      i=2;
 		  }
 		  else if (key == "styleUrl")
@@ -161,18 +159,54 @@ function onFeatureSelect (feature) {
 		  }
 		}
 
-		content = content + "<div class=\"infowindow_list\">"+ foo + "</div>\n";
-//		content = content + "<div class=\"infowindow_list\">"+feature.attributes.name + feature + "BB" + feature.attributes + "AAA</div>\n";
+		foo+=feature.geometry.getBounds().getCenterLonLat();
+		$.ajax({
+			url: baseUrl+"index.php/locations/popupkml/",
+			async: false,
+			success: function(data) {
+				content = data;
+			},
+			error: function(data) {
+				// Show error notification
+				alert("Oops! An error occurred while fetching content from the server");
+			}
+		});
 
-		content = content + "</div>\n";
-		content += "</div>";
-		
-		size = new OpenLayers.Size(410, 170);
-		closeButton = true;
+		// Build a string to hold the content
+//		content = "<div class=\"infowindow\">\n";
+
+//		foo="";
+//		var i = 0;
+//		for (var key in feature.attributes) {
+//		  if (i==0)
+//		  {
+//		      foo=foo+ "<h1>"+feature.attributes[key]+"</h1><br />";
+//		      i=2;
+//		  }
+//		  else if (key == "styleUrl")
+//		  { //nothing
+//		  }
+//		  else
+//		  {
+//		      foo=foo + feature.attributes[key] + "<br />";
+//		  }
+//		}
+//
+//		content = content + "<div class=\"infowindow_list\">"+ foo + "</div>\n";
+//		content = content + "<div class=\"infowindow_list\">"+feature.attributes.name + feature + "BB" + feature.attributes + "AAA</div>\n";
+//
+//		content = content + "</div>\n";
+//		content += "</div>";
+//		
+//		size = new OpenLayers.Size(410, 170);
+//		closeButton = true
 	}
 
+//	bar=OpenLayers.LonLat();
+	bar=feature.geometry.getBounds().getCenterLonLat();
+
 	popup = new OpenLayers.Popup.Anchored("chicken",
-		feature.geometry.getBounds().getCenterLonLat(), 
+		bar, 
 		size,
 		content, 
 		null, closeButton, onPopupClose);
@@ -180,7 +214,6 @@ function onFeatureSelect (feature) {
 	feature.popup = popup;
 	map.addPopup(popup);
 	after_load_popup();
-	
 }
 
 function add_marker(lon,lat,fid,cat,color) {

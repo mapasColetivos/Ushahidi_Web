@@ -31,7 +31,24 @@ class Locations_Controller extends Main_Controller {
 		$this->template->content->incident = $incident;		
 		$this->template->content->user = $this->user;		
 		$this->template->header->header_block = $this->themes->header_block();
-    }
+	}
+
+	public function popupkml(){
+		$this->template->header = new View('header_clean');
+		$this->template->footer = NULL;	
+		$this->template->content = new View("location_popupkmlBACK");	
+
+//		$this->template->content->render(TRUE);
+
+		
+// 		$location = ORM::factory("location")->where("id",$id)->find();
+// 		$incident = ORM::factory("incident")->join('location','location.incident_id','incident.id')->where("incident_id",$location->incident_id)->find();
+
+// 		$this->template->content->location = $location;
+// 		$this->template->content->incident = $incident;		
+//		$this->template->content->user = $this->user;		
+		$this->template->header->header_block = $this->themes->header_block();
+	}
    
 	public function destroy($id = false){
 		$this->template->header = NULL;
