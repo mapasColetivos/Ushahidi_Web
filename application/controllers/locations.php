@@ -33,10 +33,10 @@ class Locations_Controller extends Main_Controller {
 		$this->template->header->header_block = $this->themes->header_block();
 	}
 
-	public function popupkml(){
+	function popupkml(){
 		$this->template->header = new View('header_clean');
 		$this->template->footer = NULL;	
-		$this->template->content = new View("location_popupkmlBACK");	
+		$this->template->content = new View("location_popupkml");	
 
 //		$this->template->content->render(TRUE);
 
@@ -46,7 +46,7 @@ class Locations_Controller extends Main_Controller {
 
 // 		$this->template->content->location = $location;
 // 		$this->template->content->incident = $incident;		
-//		$this->template->content->user = $this->user;		
+		$this->template->content->user = $this->user;		
 		$this->template->header->header_block = $this->themes->header_block();
 	}
    
