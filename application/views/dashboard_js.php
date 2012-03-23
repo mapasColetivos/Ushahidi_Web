@@ -55,8 +55,8 @@ function after_load_popup(){
 			
 			width = $(".delimiter").filter(":visible").width();
 			total_area = 350;
-			margin = (total_area - width)/2;
-			if (margin < 0) {
+			margin = (total_area - width) /2 ; 
+			 if  ( margin  <   0 )  { 
 			      margin = 0;
 			      twidth = -30;
 			} else {
@@ -123,7 +123,7 @@ function onFeatureSelect (feature) {
 	
 	// Check for feature id
 	if (typeof feature.fid != "undefined" && feature.fid != null) {
-		
+		var mkml = 0; // not a kml feature
 		// Get the location id from the feature
 		var id = feature.fid;
 		
@@ -141,13 +141,14 @@ function onFeatureSelect (feature) {
 		});
 		
 	} else {
-
-		foo="";
+		var mkml = 1; // a kml feature
+		var foo="";
 		var i = 0;
 		for (var key in feature.attributes) {
 		  if (i == 0)
 		  {
-		      foo=foo + "<h1>" +feature.attributes[key]+"</h1><br />";
+		      //foo=foo + "<h1>" +feature.attributes[key]+"</h1><br />";
+			kmlTitle=feature.attributes[key];
 		      i=2;
 		  }
 		  else if (key == "styleUrl")
@@ -155,11 +156,13 @@ function onFeatureSelect (feature) {
 		  }
 		  else
 		  {
-		      foo=foo + feature.attributes[key] + "<br />";
+		      foo=foo + feature.attributes[key] + "\n";
 		  }
 		}
+//		subTitle=feature.layer[name];
 
-		foo+=feature.geometry.getBounds().getCenterLonLat();
+
+//		foo+=feature.geometry.getBounds().getCenterLonLat();
 		$.ajax({
 			url: baseUrl+"index.php/locations/popupkml/",
 			async: false,
@@ -171,13 +174,12 @@ function onFeatureSelect (feature) {
 				alert("Oops! An error occurred while fetching content from the server");
 			}
 		});
-
 		// Build a string to hold the content
 //		content = "<div class=\"infowindow\">\n";
 
 //		foo="";
 //		var i = 0;
-//		for (var key in feature.attributes) {
+//		for (var key in feature) {
 //		  if (i==0)
 //		  {
 //		      foo=foo+ "<h1>"+feature.attributes[key]+"</h1><br />";
@@ -188,7 +190,7 @@ function onFeatureSelect (feature) {
 //		  }
 //		  else
 //		  {
-//		      foo=foo + feature.attributes[key] + "<br />";
+//		      foo=foo +key + "TTT" + feature.attributes[key] + "\n";
 //		  }
 //		}
 //
@@ -214,6 +216,12 @@ function onFeatureSelect (feature) {
 	feature.popup = popup;
 	map.addPopup(popup);
 	after_load_popup();
+	if (mkml == 1)
+	{
+		$("#description").html(foo);
+		$("#kmlhacktitle").text(kmlTitle);
+		$("#kmlSubtitle").text($("#map_title").text());
+	}
 }
 
 function add_marker(lon,lat,fid,cat,color) {

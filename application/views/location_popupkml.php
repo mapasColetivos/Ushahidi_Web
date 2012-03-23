@@ -1,9 +1,9 @@
 <div class="popup">
 	<img src="<?php echo url::base(); ?>/media/img/close.png" title="close" class="close_image_popup" />
-	<h1 id="#kmlhacktitle"></h1>
+	<h1 id="kmlhacktitle"></h1>
 
 
-	<h3>-------------------------</h3>
+	<h3 id="kmlSubtitle">-------------------------</h3>
 	<div class="asset_area hooverable">
 		<div id="description" style="display:none;margin-left:10px;">
 Aqui acessar a descricao
