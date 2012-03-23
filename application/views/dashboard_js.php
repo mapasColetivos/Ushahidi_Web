@@ -218,9 +218,18 @@ function onFeatureSelect (feature) {
 	after_load_popup();
 	if (mkml == 1)
 	{
-		$("#description").html(foo);
+		if(foo)
+		{
+			$("#description").html(foo);
+		}
+		else
+		{
+			$("#description").html("nenhuma descricao para esta localidade");
+		}	
 		$("#kmlhacktitle").text(kmlTitle);
 		$("#kmlSubtitle").text($("#map_title").text());
+//		$("#kmluploader").text("");
+		$("#akmluploader").text("");
 	}
 }
 

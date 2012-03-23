@@ -8,9 +8,9 @@
 		<div id="description" style="display:none;margin-left:10px;">
 Aqui acessar a descricao
 		</div>
-	</div>
+	</div id="kmluploader">
 <?php
-echo "<span style='float:right'>" . "<a href='/users/index/". "ID_SUBIU" . "' >" . "AQUI O NOME DE QUEM SUBIU O KML". "</a></span>";
+echo "<span style='float:right'>" . "<a id='akmluploader' href='/users/index/". "ID_SUBIU" . "' >" . "AQUI O NOME DE QUEM SUBIU O KML". "</a></span>";
 
 ?>
 	<div class="popup_controls">
