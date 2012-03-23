@@ -9,7 +9,7 @@
 	<h3><a href="<?php echo url::base().'/reports/view/'.$incident->id; ?>"><?php echo $incident->incident_title; ?></a></h3>
 	<div class="asset_area hooverable">
 		<div id="description" style="display:none;margin-left:10px;">
-			<?php echo $location->location_description; ?>	
+			<p><?php echo str_replace("\n","<br />",$location->location_description); ?></p>
 		</div>
 		<?php 
 			$i = 0;
@@ -78,4 +78,5 @@ var elem = document.getElementById("remove_asset");
 	</div>
 </div>
 <script type="text/javascript">
+
 </script>
