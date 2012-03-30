@@ -147,16 +147,13 @@
       var open_select_feature = function (location){
 	      current_location = location;	      
 	      get_location_from_server(location.fid);
-	      if (location.fid > 0){
+	      if ( location.fid > 0 ) {
 			    onFeatureSelect(location);
 		    }
       }
       
 	  var points = 0;
       var add_point_to_form = function (location){
-        $('#location_box').show();
-		$('#location_box').html('<img src="<?php echo url::base() . "index.php/media/img/loading_g.gif"; ?>">');		
-
 	      location.seq = points;
 	      points++;
 	      
