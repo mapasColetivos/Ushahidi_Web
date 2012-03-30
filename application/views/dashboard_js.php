@@ -264,7 +264,8 @@ $(document).ready(function() {
 	var options = {
 		scrollwheel: false,
 		units: "dd", 
-		numZoomLevels: 18, 
+        numZoomLevels: 50,
+        minZoomLevel: 2, 
 		controls:[],
 		projection: proj_900913,
 		'displayProjection': proj_4326,
@@ -276,7 +277,9 @@ $(document).ready(function() {
 	<?php echo map::layers_js(FALSE); ?>
 	map.addLayers(<?php echo map::layers_array(FALSE); ?>);
 	
-	map.addControl(new OpenLayers.Control.Navigation());
+	//map.addControl(new OpenLayers.Control.Navigation());
+    navigation = new OpenLayers.Control.Navigation(vectors,{'zoomWheelEnabled': false})
+    map.addControl(navigation);
 	map.addControl(new OpenLayers.Control.PanZoomBar());
 	map.addControl(new OpenLayers.Control.MousePosition({
 		div: document.getElementById('mapMousePosition'), 
@@ -327,7 +330,7 @@ $(document).ready(function() {
 
 	// Add markers to the vector layer
 	fill_map_with_markers();
-	map.setCenter(myPoint, <?php echo $zoom+2; ?>);
+	map.setCenter(myPoint, <?php echo $zoom; ?>);
 
 
 	// Storage for all layers
