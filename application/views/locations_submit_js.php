@@ -170,6 +170,8 @@
 	      location.fid = 0;
 		  //open_select_feature(location);		  
 		  $("#noneToggle").click(); 
+
+          get_location_from_server(location.fid);
        }
        
       function addFormField(div, field, hidden_id, field_type) {
