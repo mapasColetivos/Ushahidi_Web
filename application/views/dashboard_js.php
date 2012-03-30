@@ -382,6 +382,14 @@ $(document).ready(function() {
 		hover: true
 	});
 
+    map.events.register("click", map, function(e) {
+	  onPopupClose(e);
+      if ($("#location_box").is(":visible")){
+        $("#location_box").hide();
+		    hideSettings();
+      }
+    });
+
 	map.addControl(selectControl);
 	selectControl.activate();
 
