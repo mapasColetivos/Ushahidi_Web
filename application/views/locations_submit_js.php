@@ -154,7 +154,8 @@
       
 	  var points = 0;
       var add_point_to_form = function (location){
-		$('#location_box').html('<img src="<?php echo url::base() . "media/img/loading_g.gif"; ?>">');		
+        $('#location_box').show();
+		$('#location_box').html('<img src="<?php echo url::base() . "index.php/media/img/loading_g.gif"; ?>">');		
 
 	      location.seq = points;
 	      points++;
