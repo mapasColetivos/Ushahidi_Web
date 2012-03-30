@@ -97,7 +97,7 @@
                 $('#location_box').show();
 		$('#location_box').html('<img src="<?php echo url::base() . "media/img/loading_g.gif"; ?>">');		
 		map_id = $("#incident_id").val();
-		if (id <= 0){
+		if (id <= 0) {
 			$("#location_box").html(empty_location_form);
 			
 			$(".btn_remove").hide();
@@ -154,6 +154,8 @@
       
 	  var points = 0;
       var add_point_to_form = function (location){
+		$('#location_box').html('<img src="<?php echo url::base() . "media/img/loading_g.gif"; ?>">');		
+
 	      location.seq = points;
 	      points++;
 	      
