@@ -9,7 +9,7 @@
  * http://www.gnu.org/copyleft/lesser.html
  * @author	   Ushahidi Team <team@ushahidi.com>
  * @package	   Ushahidi - http://source.ushahididev.com
- * @module	   Admin Reports Controller
+ * @subpackage Members
  * @copyright  Ushahidi - http://www.ushahidi.com
  * @license	   http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL)
  */
@@ -87,6 +87,7 @@ class Reports_Controller extends Members_Controller {
 		
 		if ($_POST)
 		{
+			// Setup validation
 			$post = Validation::factory($_POST);
 
 			 //	 Add some filters
@@ -133,7 +134,8 @@ class Reports_Controller extends Members_Controller {
 
 							// Delete relationship to SMS message
 							$updatemessage = ORM::factory('message')->where('incident_id',$incident_id)->find();
-							if ($updatemessage->loaded == true) {
+							if ($updatemessage->loaded)
+							{
 								$updatemessage->incident_id = 0;
 								$updatemessage->save();
 							}
@@ -175,6 +177,7 @@ class Reports_Controller extends Members_Controller {
 			->find_all((int) Kohana::config('settings.items_per_page_admin'), $pagination->sql_offset);
 
 		$location_ids = array();
+		$country_ids = array();
 		foreach ($incidents as $incident)
 		{
 			$location_ids[] = $incident->location_id;
@@ -188,6 +191,7 @@ class Reports_Controller extends Members_Controller {
 			foreach ($locations_result as $loc)
 			{
 				$locations[$loc->id] = $loc->location_name;
+				$country_ids[$loc->id]['country_id'] = $loc->country_id;
 			}
 		}
 		else
@@ -196,6 +200,7 @@ class Reports_Controller extends Members_Controller {
 		}
 
 		$this->template->content->locations = $locations;
+		$this->template->content->country_ids = $country_ids;
 
 		//GET countries
 		$countries = array();
@@ -233,7 +238,7 @@ class Reports_Controller extends Members_Controller {
 	* @param bool|int $id The id no. of the report
 	* @param bool|string $saved
 	*/
-	function edit( $id = false, $saved = false )
+	public function edit($id = FALSE, $saved = FALSE)
 	{
 		$db = new Database();
 
@@ -241,22 +246,22 @@ class Reports_Controller extends Members_Controller {
 		$this->template->content->title = Kohana::lang('ui_admin.create_report');
 
 		// setup and initialize form field names
-		$form = array
-		(
-			'location_id'	   => '',
-			'form_id'	   => '',
-			'locale'		   => '',
-			'incident_title'	  => '',
-			'incident_description'	  => '',
-			'incident_date'	 => '',
-			'incident_hour'		 => '',
-			'incident_minute'	   => '',
+		$form = array(
+			'location_id' => '',
+			'form_id' => '',
+			'locale' => '',
+			'incident_title' => '',
+			'incident_description' => '',
+			'incident_date' => '',
+			'incident_hour' => '',
+			'incident_minute' => '',
 			'incident_ampm' => '',
 			'latitude' => '',
 			'longitude' => '',
 			'geometry' => array(),
 			'location_name' => '',
 			'country_id' => '',
+			'country_name' => '',
 			'incident_category' => array(),
 			'incident_news' => array(),
 			'incident_video' => array(),
@@ -265,22 +270,15 @@ class Reports_Controller extends Members_Controller {
 			'person_last' => '',
 			'person_email' => '',
 			'custom_field' => array(),
-			'incident_source' => '',
-			'incident_information' => '',
-			'incident_zoom' => ''
+			'incident_zoom' => '',
+			'incident_source'=> '',
+			'incident_information' => ''
 		);
 
 		//	copy the form as errors, so the errors will be stored with keys corresponding to the form field names
 		$errors = $form;
 		$form_error = FALSE;
-		if ($saved == 'saved')
-		{
-			$form_saved = TRUE;
-		}
-		else
-		{
-			$form_saved = FALSE;
-		}
+		$form_saved = ($saved == 'saved');
 
 		// Initialize Default Values
 		$form['locale'] = Kohana::config('locale.language');
@@ -292,14 +290,13 @@ class Reports_Controller extends Members_Controller {
 		$form['incident_minute'] = date('i');
 		$form['incident_ampm'] = date('a');
 		// initialize custom field array
-		$form['custom_field'] = $this->_get_custom_form_fields($id,'',true);
-
+		$form['custom_field'] = customforms::get_custom_form_fields($id, '', TRUE);
 
 		// Locale (Language) Array
 		$this->template->content->locale_array = Kohana::config('locale.all_languages');
 
 		// Create Categories
-		$this->template->content->categories = $this->_get_categories();
+		$this->template->content->categories =Category_Model::get_categories();
 
 		// Time formatting
 		$this->template->content->hour_array = $this->_hour_array();
@@ -321,6 +318,9 @@ class Reports_Controller extends Members_Controller {
 			$countries[$country->id] = $this_country;
 		}
 		$this->template->content->countries = $countries;
+		
+		// Initialize Default Value for Hidden Field Country Name, just incase Reverse Geo coding yields no result
+		$form['country_name'] = $countries[$form['country_id']];
 
 		//GET custom forms
 		$forms = array();
@@ -337,7 +337,7 @@ class Reports_Controller extends Members_Controller {
 		
 		
 		// Are we creating this report from a Checkin?
-		if ( isset($_GET['cid']) && !empty($_GET['cid']) ) {
+		if (isset($_GET['cid']) AND !empty($_GET['cid']) ) {
 
 			$checkin_id = (int) $_GET['cid'];
 			$checkin = ORM::factory('checkin', $checkin_id);
@@ -376,314 +376,35 @@ class Reports_Controller extends Members_Controller {
 		if ($_POST)
 		{
 			// Instantiate Validation, use $post, so we don't overwrite $_POST fields with our own things
-			$post = Validation::factory(array_merge($_POST,$_FILES));
-
-			 //	 Add some filters
-			$post->pre_filter('trim', TRUE);
-
-			// Add some rules, the input field, followed by a list of checks, carried out in order
-			// $post->add_rules('locale','required','alpha_dash','length[5]');
-			$post->add_rules('location_id','numeric');
-			$post->add_rules('message_id','numeric');
-			$post->add_rules('incident_title','required', 'length[3,200]');
-			$post->add_rules('incident_description','required');
-			$post->add_rules('incident_date','required','date_mmddyyyy');
-			$post->add_rules('incident_hour','required','between[1,12]');
-			$post->add_rules('incident_minute','required','between[0,59]');
+			$post = array_merge($_POST,$_FILES);
 			
-			if ($_POST['incident_ampm'] != "am" && $_POST['incident_ampm'] != "pm")
+			if (reports::validate($post))
 			{
-				$post->add_error('incident_ampm','values');
-			}
-			
-			$post->add_rules('latitude','required','between[-90,90]');		// Validate for maximum and minimum latitude values
-			$post->add_rules('longitude','required','between[-180,180]');	// Validate for maximum and minimum longitude values
-			$post->add_rules('location_name','required', 'length[3,200]');
-
-			//XXX: Hack to validate for no checkboxes checked
-			if (!isset($_POST['incident_category'])) {
-				$post->incident_category = "";
-				$post->add_error('incident_category','required');
-			}
-			else
-			{
-				$post->add_rules('incident_category.*','required','numeric');
-			}
-
-			// Validate only the fields that are filled in
-			if (!empty($_POST['incident_news']))
-			{
-				foreach ($_POST['incident_news'] as $key => $url) {
-					if (!empty($url) AND !(bool) filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED))
-					{
-						$post->add_error('incident_news','url');
-					}
-				}
-			}
-
-			// Validate only the fields that are filled in
-			if (!empty($_POST['incident_video']))
-			{
-				foreach ($_POST['incident_video'] as $key => $url) {
-					if (!empty($url) AND !(bool) filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED))
-					{
-						$post->add_error('incident_video','url');
-					}
-				}
-			}
-
-			// Validate photo uploads
-			$post->add_rules('incident_photo', 'upload::valid', 'upload::type[gif,jpg,png]', 'upload::size[2M]');
-
-
-			// Validate Personal Information
-			if (!empty($_POST['person_first']))
-			{
-				$post->add_rules('person_first', 'length[3,100]');
-			}
-
-			if (!empty($_POST['person_last']))
-			{
-				$post->add_rules('person_last', 'length[3,100]');
-			}
-
-			if (!empty($_POST['person_email']))
-			{
-				$post->add_rules('person_email', 'email', 'length[3,100]');
-			}
-
-			// Validate Custom Fields
-			if (isset($post->custom_field) && !$this->_validate_custom_form_fields($post->custom_field))
-			{
-				$post->add_error('custom_field', 'values');
-			}
-
-			$post->add_rules('incident_source','numeric', 'length[1,1]');
-			$post->add_rules('incident_information','numeric', 'length[1,1]');
-
-			// Test to see if things passed the rule checks
-			if ($post->validate())
-			{
-				// Yes! everything is valid
-				$location_id = $post->location_id;
-				// STEP 1a: SAVE LOCATION
-				$location = new Location_Model($location_id);
-				$location->location_name = $post->location_name;
-				$location->latitude = $post->latitude;
-				$location->longitude = $post->longitude;
-				$location->location_date = date("Y-m-d H:i:s",time());
-				$location->save();
+				// STEP 1: SAVE LOCATION
+				$location = new Location_Model();
+				reports::save_location($post, $location);
 
 				// STEP 2: SAVE INCIDENT
-				$incident = new Incident_Model($id);
-				$incident->location_id = $location->id;
-				//$incident->locale = $post->locale;
-				$incident->form_id = $post->form_id;
-				$incident->user_id = $this->user->id;
-				$incident->incident_title = $post->incident_title;
-				$incident->incident_description = $post->incident_description;
+				$incident = new Incident_Model();
+				reports::save_report($post, $incident, $location->id);
 
-				$incident_date=explode("/",$post->incident_date);
-				// where the $_POST['date'] is a value posted by form in mm/dd/yyyy format
-				$incident_date=$incident_date[2]."-".$incident_date[0]."-".$incident_date[1];
-
-				$incident_time = $post->incident_hour . ":" . $post->incident_minute . ":00 " . $post->incident_ampm;
-				$incident->incident_date = date( "Y-m-d H:i:s", strtotime($incident_date . " " . $incident_time) );
-				
-				// Is this new or edit?
-				if ($id)	// edit
-				{
-					$incident->incident_datemodify = date("Y-m-d H:i:s",time());
-				}
-				else		// new
-				{
-					$incident->incident_dateadd = date("Y-m-d H:i:s",time());
-				}
-
-				// Is this an Email, SMS, Twitter submitted report?
-				//XXX: We may get rid of incident_mode altogether... ???
-				//$_POST
-				if(!empty($service_id))
-				{
-					if ($service_id == 1)
-					{ // SMS
-						$incident->incident_mode = 2;
-					}
-					elseif ($service_id == 2)
-					{ // Email
-						$incident->incident_mode = 3;
-					}
-					elseif ($service_id == 3)
-					{ // Twitter
-						$incident->incident_mode = 4;
-					}
-				}
-				// Incident Evaluation Info
-				$incident->incident_source = $post->incident_source;
-				$incident->incident_information = $post->incident_information;
-				$incident->incident_zoom = (int) $post->incident_zoom;
-				//Save
-				$incident->save();
-				
-				// Record Approval/Verification Action
-				$verify = new Verify_Model();
-				$verify->incident_id = $incident->id;
-				$verify->user_id = $this->user->id;			// Record 'Verified By' Action
-				$verify->verified_date = date("Y-m-d H:i:s",time());
-				$verify->verified_status = '0';
-				$verify->save();
-				
 				// STEP 2b: SAVE INCIDENT GEOMETRIES
-				ORM::factory('geometry')->where('incident_id',$incident->id)->delete_all();
-				if (isset($post->geometry)) 
-				{
-					foreach($post->geometry as $item)
-					{
-						if(!empty($item))
-						{
-							//Decode JSON
-							$item = json_decode($item);
-							//++ TODO - validate geometry
-							$geometry = (isset($item->geometry)) ? mysql_escape_string($item->geometry) : "";
-							$label = (isset($item->label)) ? mysql_escape_string(substr($item->label, 0, 150)) : "";
-							$comment = (isset($item->comment)) ? mysql_escape_string(substr($item->comment, 0, 255)) : "";
-							$color = (isset($item->color)) ? mysql_escape_string(substr($item->color, 0, 6)) : "";
-							$strokewidth = (isset($item->strokewidth) AND (float) $item->strokewidth) ? (float) $item->strokewidth : "2.5";
-							if ($geometry)
-							{
-								//++ Can't Use ORM for this
-								$sql = "INSERT INTO ".Kohana::config('database.default.table_prefix')."geometry (
-									incident_id, geometry, geometry_label, geometry_comment, geometry_color, geometry_strokewidth ) 
-									VALUES( ".$incident->id.",
-									GeomFromText( '".$geometry."' ),'".$label."','".$comment."','".$color."','".$strokewidth."')";
-								$db->query($sql);
-							}
-						}
-					}
-				}
-
+				reports::save_report_geometry($post, $incident);
+				
 				// STEP 3: SAVE CATEGORIES
-				ORM::factory('Incident_Category')->where('incident_id',$incident->id)->delete_all();		// Delete Previous Entries
-				foreach($post->incident_category as $item)
-				{
-					$incident_category = new Incident_Category_Model();
-					$incident_category->incident_id = $incident->id;
-					$incident_category->category_id = $item;
-					$incident_category->save();
-				}
-
+				reports::save_category($post, $incident);
 
 				// STEP 4: SAVE MEDIA
-				ORM::factory('Media')->where('incident_id',$incident->id)->where('media_type <> 1')->delete_all();		// Delete Previous Entries
-				// a. News
-				foreach($post->incident_news as $item)
-				{
-					if(!empty($item))
-					{
-						$news = new Media_Model();
-						$news->location_id = $location->id;
-						$news->incident_id = $incident->id;
-						$news->media_type = 4;		// News
-						$news->media_link = $item;
-						$news->media_date = date("Y-m-d H:i:s",time());
-						$news->save();
-					}
-				}
+				reports::save_media($post, $incident);
 
-				// b. Video
-				foreach($post->incident_video as $item)
-				{
-					if(!empty($item))
-					{
-						$video = new Media_Model();
-						$video->location_id = $location->id;
-						$video->incident_id = $incident->id;
-						$video->media_type = 2;		// Video
-						$video->media_link = $item;
-						$video->media_date = date("Y-m-d H:i:s",time());
-						$video->save();
-					}
-				}
+				// STEP 5: SAVE CUSTOM FORM FIELDS
+				reports::save_custom_fields($post, $incident);
 
-				// c. Photos
-				$filenames = upload::save('incident_photo');
-				$i = 1;
-				foreach ($filenames as $filename) {
-					$new_filename = $incident->id . "_" . $i . "_" . time();
-
-					$file_type = strrev(substr(strrev($filename),0,4));
-					
-					// IMAGE SIZES: 800X600, 400X300, 89X59
-					
-					// Large size
-					Image::factory($filename)->resize(800,600,Image::AUTO)
-						->save(Kohana::config('upload.directory', TRUE).$new_filename.$file_type);
-
-					// Medium size
-					Image::factory($filename)->resize(400,300,Image::HEIGHT)
-						->save(Kohana::config('upload.directory', TRUE).$new_filename."_m".$file_type);
-					
-					// Thumbnail
-					Image::factory($filename)->resize(89,59,Image::HEIGHT)
-						->save(Kohana::config('upload.directory', TRUE).$new_filename."_t".$file_type);
-
-					// Remove the temporary file
-					unlink($filename);
-
-					// Save to DB
-					$photo = new Media_Model();
-					$photo->location_id = $location->id;
-					$photo->incident_id = $incident->id;
-					$photo->media_type = 1; // Images
-					$photo->media_link = $new_filename.$file_type;
-					$photo->media_medium = $new_filename."_m".$file_type;
-					$photo->media_thumb = $new_filename."_t".$file_type;
-					$photo->media_date = date("Y-m-d H:i:s",time());
-					$photo->save();
-					$i++;
-				}
-
-
-				// STEP 5: SAVE PERSONAL INFORMATION
-				ORM::factory('Incident_Person')->where('incident_id',$incident->id)->delete_all();		// Delete Previous Entries
-				$person = new Incident_Person_Model();
-				$person->location_id = $location->id;
-				$person->incident_id = $incident->id;
-				$person->person_first = $post->person_first;
-				$person->person_last = $post->person_last;
-				$person->person_email = $post->person_email;
-				$person->person_date = date("Y-m-d H:i:s",time());
-				$person->save();
-
-				// STEP 6: SAVE CUSTOM FORM FIELDS
-				if(isset($post->custom_field))
-				{
-					foreach($post->custom_field as $key => $value)
-					{
-						$form_response = ORM::factory('form_response')
-													 ->where('form_field_id', $key)
-													 ->where('incident_id', $incident->id)
-													 ->find();
-													 
-						if ($form_response->loaded == true)
-						{
-							$form_response->form_field_id = $key;
-							$form_response->form_response = $value;
-							$form_response->save();
-						}
-						else
-						{
-							$form_response = new Form_Response_Model();
-							$form_response->form_field_id = $key;
-							$form_response->incident_id = $incident->id;
-							$form_response->form_response = $value;
-							$form_response->save();
-						}
-					}
-				}
+				// STEP 6: SAVE PERSONAL INFORMATION
+				reports::save_personal_info($post, $incident);
 				
 				// If creating a report from a checkin
-				if(isset($checkin_id) AND $checkin_id != "")
+				if (isset($checkin_id) AND $checkin_id != "")
 				{
 					$checkin = ORM::factory('checkin', $checkin_id);
 					if ($checkin->loaded)
@@ -700,17 +421,21 @@ class Reports_Controller extends Members_Controller {
 					}
 				}
 
-				// Action::report_add - Added a New Report
-				Event::run('ushahidi_action.report_add', $incident);
+				// Action::report_add / report_submit_members - Added a New Report
+				//++ Do we need two events for this? Or will one suffice?
+				//Event::run('ushahidi_action.report_add', $incident);
+				Event::run('ushahidi_action.report_submit_members', $post);
 
 
 				// SAVE AND CLOSE?
-				if ($post->save == 1)		// Save but don't close
+				if ($post->save == 1)
 				{
+					// Save but don't close
 					url::redirect('members/reports/edit/'. $incident->id .'/saved');
 				}
-				else						// Save and close
+				else
 				{
+					// Save and close
 					url::redirect('members/reports/');
 				}
 			}
@@ -728,7 +453,7 @@ class Reports_Controller extends Members_Controller {
 		}
 		else
 		{
-			if ( $id )
+			if ($id)
 			{
 				// Retrieve Current Incident
 				$incident = ORM::factory('incident')
@@ -771,12 +496,18 @@ class Reports_Controller extends Members_Controller {
 					$query = $db->query($sql);
 					foreach ( $query as $item )
 					{
-						$form['geometry'][] = $item;
+						$geometry = array(
+							"geometry" => $item->geometry,
+							"label" => $item->geometry_label,
+							"comment" => $item->geometry_comment,
+							"color" => $item->geometry_color,
+							"strokewidth" => $item->geometry_strokewidth
+						);
+						$form['geometry'][] = json_encode($geometry);
 					}
 					
 					// Combine Everything
-					$incident_arr = array
-					(
+					$incident_arr = array(
 						'location_id' => $incident->location->id,
 						'form_id' => $incident->form_id,
 						'locale' => $incident->locale,
@@ -797,9 +528,9 @@ class Reports_Controller extends Members_Controller {
 						'person_first' => $incident->incident_person->person_first,
 						'person_last' => $incident->incident_person->person_last,
 						'person_email' => $incident->incident_person->person_email,
-						'custom_field' => $this->_get_custom_form_fields($id,$incident->form_id,true),
-						'incident_source' => $incident->incident_source,
-						'incident_information' => $incident->incident_information,
+						'incident_source' => '',
+						'incident_information' => '',
+						'custom_field' => customforms::get_custom_form_fields($id, $incident->form_id, TRUE),
 						'incident_zoom' => $incident->incident_zoom
 					);
 
@@ -822,7 +553,7 @@ class Reports_Controller extends Members_Controller {
 		$this->template->content->form_saved = $form_saved;
 
 		// Retrieve Custom Form Fields Structure
-		$disp_custom_fields = $this->_get_custom_form_fields($id,$form['form_id'],false);
+		$disp_custom_fields = customforms::get_custom_form_fields($id, $form['form_id'], FALSE);
 		$this->template->content->disp_custom_fields = $disp_custom_fields;
 
 		// Retrieve Previous & Next Records
@@ -843,11 +574,12 @@ class Reports_Controller extends Members_Controller {
 		$this->template->treeview_enabled = TRUE;
 		$this->template->json2_enabled = TRUE;
 		
-		$this->template->js = new View('admin/reports_edit_js');
+		$this->template->js = new View('reports_submit_edit_js');
+		$this->template->js->edit_mode = FALSE;
 		$this->template->js->default_map = Kohana::config('settings.default_map');
 		$this->template->js->default_zoom = Kohana::config('settings.default_zoom');
 
-		if (!$form['latitude'] || !$form['latitude'])
+		if ( ! $form['latitude'] OR !$form['latitude'])
 		{
 			$this->template->js->latitude = Kohana::config('settings.default_lat');
 			$this->template->js->longitude = Kohana::config('settings.default_lon');
@@ -866,7 +598,7 @@ class Reports_Controller extends Members_Controller {
 		$this->template->content->color_picker_js = $this->_color_picker_js();
 		
 		// Pack Javascript
-		$myPacker = new javascriptpacker($this->template->js , 'Normal', false, false);
+		$myPacker = new javascriptpacker($this->template->js , 'Normal', FALSE, FALSE);
 		$this->template->js = $myPacker->pack();
 	}
 	
@@ -918,17 +650,6 @@ class Reports_Controller extends Members_Controller {
 
 		}
 		return "0";
-	}
-
-	private function _get_categories()
-	{
-		$categories = ORM::factory('category')
-			//->where('category_visible', '1')
-			->where('parent_id', '0')
-			->orderby('category_title', 'ASC')
-			->find_all();
-
-		return $categories;
 	}
 
 	// Time functions
@@ -1013,88 +734,6 @@ class Reports_Controller extends Members_Controller {
 				});
 				});
 			</script>";
-	}
-
-
-	/**
-	 * Retrieve Custom Form Fields
-	 * @param bool|int $incident_id The unique incident_id of the original report
-	 * @param int $form_id The unique form_id. Uses default form (1), if none selected
-	 * @param bool $field_names_only Whether or not to include just fields names, or field names + data
-	 * @param bool $data_only Whether or not to include just data
-	 */
-	private function _get_custom_form_fields($incident_id = false, $form_id = 1, $data_only = false)
-	{
-		$fields_array = array();
-
-		if (!$form_id)
-		{
-			$form_id = 1;
-		}
-		$custom_form = ORM::factory('form', $form_id)->orderby('field_position','asc');
-		foreach ($custom_form->form_field as $custom_formfield)
-		{
-			if ($data_only)
-			{ // Return Data Only
-				$fields_array[$custom_formfield->id] = '';
-
-				foreach ($custom_formfield->form_response as $form_response)
-				{
-					if ($form_response->incident_id == $incident_id)
-					{
-						$fields_array[$custom_formfield->id] = $form_response->form_response;
-					}
-				}
-			}
-			else
-			{ // Return Field Structure
-				$fields_array[$custom_formfield->id] = array(
-					'field_id' => $custom_formfield->id,
-					'field_name' => $custom_formfield->field_name,
-					'field_type' => $custom_formfield->field_type,
-					'field_required' => $custom_formfield->field_required,
-					'field_maxlength' => $custom_formfield->field_maxlength,
-					'field_height' => $custom_formfield->field_height,
-					'field_width' => $custom_formfield->field_width,
-					'field_isdate' => $custom_formfield->field_isdate,
-					'field_response' => ''
-					);
-			}
-		}
-
-		return $fields_array;
-	}
-
-
-	/**
-	 * Validate Custom Form Fields
-	 * @param array $custom_fields Array
-	 */
-	private function _validate_custom_form_fields($custom_fields = array())
-	{
-		$custom_fields_error = "";
-
-		foreach ($custom_fields as $field_id => $field_response)
-		{
-			// Get the parameters for this field
-			$field_param = ORM::factory('form_field', $field_id);
-			if ($field_param->loaded == true)
-			{
-				// Validate for required
-				if ($field_param->field_required == 1 && $field_response == "")
-				{
-					return false;
-				}
-
-				// Validate for date
-				if ($field_param->field_isdate == 1 && $field_response != "")
-				{
-					$myvalid = new Valid();
-					return $myvalid->date_mmddyyyy($field_response);
-				}
-			}
-		}
-		return true;
 	}
 
 

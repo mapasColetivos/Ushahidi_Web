@@ -196,7 +196,7 @@ class Checkin_Api_Object extends Api_Object_Core {
 		$users_names = array();
 		$i = 0;
 		foreach($checkins as $checkin)
-		{	
+		{
 			$data["checkins"][$i] = array(
 				"id" => $checkin->id,
 				"user" => $checkin->user_id,
@@ -207,7 +207,7 @@ class Checkin_Api_Object extends Api_Object_Core {
 				"lon" => $checkin->location->longitude
 			);
 			
-			$users_names[(int)$checkin->user_id] = array("id"=>$checkin->user_id,"name"=>$checkin->user->name,"color"=>$checkin->user->color);
+			$users_names[(int)$checkin->user_id] = array("id"=>$checkin->user_id,"name"=>$checkin->user->name,"color"=>$checkin->user->color,"username"=>$checkin->user->username);
 			
 			$j = 0;
 			foreach ($checkin->media as $media)
@@ -215,9 +215,37 @@ class Checkin_Api_Object extends Api_Object_Core {
 			    $data["checkins"][$i]['media'][(int)$j] = array(
 			    	"id" => $media->id,
 			    	"type" => $media->media_type,
-			    	"link" => $this->abs_upload_url.$media->media_link,
-			    	"medium" => $this->abs_upload_url.$media->media_medium,
-			    	"thumb" => $this->abs_upload_url.$media->media_thumb
+			    	"link" => url::convert_uploaded_to_abs($media->media_link),
+			    	"medium" => url::convert_uploaded_to_abs($media->media_medium),
+			    	"thumb" => url::convert_uploaded_to_abs($media->media_thumb)
+			    );
+			    $j++;
+			}
+			
+			$j = 0;
+			foreach ($checkin->comment as $comment)
+			{
+				
+				if ( $comment->user_id != 0 )
+				{
+					$author = $comment->user->name;
+					$email = $comment->user->email;
+					$username = $comment->user->username;
+				}else{
+					$author = $comment->comment_author;
+					$email = $comment->comment_email;
+					$username = '';
+				}
+				
+			    $data["checkins"][$i]['comments'][(int)$j] = array(
+			    	"id" => $comment->id,
+			    	"user_id" => $comment->user_id,
+			    	"author" => $author,
+			    	"email" => $email,
+			    	"username" => $username,
+			    	"description" => $comment->comment_description,
+			    	"rating" => $comment->comment_rating,
+			    	"date" => $comment->comment_date
 			    );
 			    $j++;
 			}
@@ -438,7 +466,28 @@ class Checkin_Api_Object extends Api_Object_Core {
 
 			// Thumbnail
 			Image::factory($filename)->resize(89,59,Image::HEIGHT)
-				->save(Kohana::config('upload.directory', TRUE).$new_filename."_t".$file_type);	
+				->save(Kohana::config('upload.directory', TRUE).$new_filename."_t".$file_type);
+			
+			// Name the files for the DB
+			$media_link = $new_filename.$file_type;
+			$media_medium = $new_filename.'_m'.$file_type;
+			$media_thumb = $new_filename.'_t'.$file_type;
+			
+			// Okay, now we have these three different files on the server, now check to see
+			//   if we should be dropping them on the CDN
+			
+			if (Kohana::config("cdn.cdn_store_dynamic_content"))
+			{
+				$media_link = cdn::upload($media_link);
+				$media_medium = cdn::upload($media_medium);
+				$media_thumb = cdn::upload($media_thumb);
+				
+				// We no longer need the files we created on the server. Remove them.
+				$local_directory = rtrim(Kohana::config('upload.directory', TRUE), '/').'/';
+				unlink($local_directory.$new_filename.$file_type);
+				unlink($local_directory.$new_filename.'_m'.$file_type);
+				unlink($local_directory.$new_filename.'_t'.$file_type);
+			}
 
 			// Remove the temporary file
 			unlink($filename);
@@ -448,14 +497,19 @@ class Checkin_Api_Object extends Api_Object_Core {
 			$media_photo->location_id = $location_id;
 			$media_photo->checkin_id = $checkin_id;
 			$media_photo->media_type = 1; // Images
-			$media_photo->media_link = $new_filename.$file_type;
-			$media_photo->media_medium = $new_filename."_m".$file_type;
-			$media_photo->media_thumb = $new_filename."_t".$file_type;
+			$media_photo->media_link = $media_link;
+			$media_photo->media_medium = $media_medium;
+			$media_photo->media_thumb = $media_thumb;
 			$media_photo->media_date = date("Y-m-d H:i:s",time());
 			$media_photo->save();
 		}
 		
-		return array("checkin_id" => $checkin_id->id, "user_id" => $user_id);
+		$return = array("checkin_id" => $checkin_id->id, "user_id" => $user_id);
+		
+		// Hook on successful checkin
+		Event::run('ushahidi_action.checkin_recorded', $checkin);
+		
+		return $return;
 		
 	}
 	

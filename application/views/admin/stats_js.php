@@ -20,14 +20,39 @@ jQuery(document).ready(function() {
 	jQuery("#dp1").datepicker({ 
 	    showOn: "both",
 		dateFormat: "yy-mm-dd",
-	    buttonImage: "<?php echo url::base() ?>media/img/icon-calendar.gif", 
+	    buttonImage: "<?php echo url::file_loc('img'); ?>media/img/icon-calendar.gif", 
 	    buttonImageOnly: true 
 	});
 	
 	jQuery("#dp2").datepicker({ 
 	    showOn: "both",
 		dateFormat: "yy-mm-dd",
-	    buttonImage: "<?php echo url::base() ?>media/img/icon-calendar.gif", 
+	    buttonImage: "<?php echo url::file_loc('img'); ?>media/img/icon-calendar.gif", 
 	    buttonImageOnly: true 
 	});
+	
+	
+<?php
+	// Prevent an HTTP call if auto upgrading isn't enabled and
+	//   make sure we are looking at the dashboard
+	if (Kohana::config('config.enable_auto_upgrader') == TRUE
+		AND Router::$controller == 'dashboard'){
+?>
+
+// Check for a new version of the Ushahidi Software
+jQuery(document).ready(function() {
+	// Check if we need to upgrade this deployment of Ushahidi
+	//   if we're on the dashboard, check for a new version
+	jQuery.get("<?php echo url::base().'admin/upgrade/check_current_version' ?>", function(data){
+			jQuery('#need_to_upgrade').html(data);
+			jQuery('#need_to_upgrade').removeAttr("style");
+		});
+		
+});
+
+<?php
+	}
+?>
+	
+	
 });

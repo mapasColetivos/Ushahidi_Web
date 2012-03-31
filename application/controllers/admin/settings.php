@@ -8,7 +8,7 @@
  * http://www.gnu.org/copyleft/lesser.html
  * @author	   Ushahidi Team <team@ushahidi.com>
  * @package	   Ushahidi - http://source.ushahididev.com
- * @module	   Admin Settings Controller
+ * @subpackage Admin
  * @copyright  Ushahidi - http://www.ushahidi.com
  * @license	   http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL)
  */
@@ -38,22 +38,27 @@ class Settings_Controller extends Admin_Controller
 	{
 		$this->template->content = new View('admin/site');
 		$this->template->content->title = Kohana::lang('ui_admin.settings');
+		$this->template->js = new View('admin/site_js');
 
 		// setup and initialize form field names
 		$form = array
 		(
 			'site_name' => '',
 			'site_tagline' => '',
+			'banner_image' => '',
+			'delete_banner_image' => '',
 			'site_email' => '',
 			'alerts_email' =>  '',
 			'site_language' => '',
 			'site_timezone' => '',
 			'site_message' => '',
 			'site_copyright_statement' => '',
+			'site_submit_report_message' => '',
 			'site_contact_page' => '',
 			'items_per_page' => '',
 			'items_per_page_admin' => '',
 			'blocks_per_row' => '',
+			'allow_alerts' => '',
 			'allow_reports' => '',
 			'allow_comments' => '',
 			'allow_feed' => '',
@@ -62,6 +67,8 @@ class Settings_Controller extends Admin_Controller
 			'cache_pages' => '',
 			'cache_pages_lifetime' => '',
 			'private_deployment' => '',
+			'manually_approve_users' => '',
+			'require_email_confirmation' => '',
 			'checkins' => '',
 			'default_map_all' => '',
 			'google_analytics' => '',
@@ -74,9 +81,13 @@ class Settings_Controller extends Admin_Controller
 		$form_error = FALSE;
 		$form_saved = FALSE;
 
+		// Retrieve Current Settings
+		$settings = ORM::factory('settings', 1);
+
 		// check, has the form been submitted, if so, setup validation
 		if ($_POST)
 		{
+			//print_r($_POST);exit;
 			// Instantiate Validation, use $post, so we don't overwrite $_POST
 			// fields with our own things
 			$post = new Validation($_POST);
@@ -86,34 +97,41 @@ class Settings_Controller extends Admin_Controller
 
 			// Add some rules, the input field, followed by a list of checks, carried out in order
 
-			$post->add_rules('site_name', 'required', 'length[3,50]');
-			$post->add_rules('site_tagline', 'length[3,100]');
+			$post->add_rules('site_name', 'required', 'length[3,250]');
+			$post->add_rules('site_tagline', 'length[3,250]');
 			$post->add_rules('site_email', 'email', 'length[4,100]');
-			$post->add_rules('alerts_email', 'email', 'length[4,100]');
+			//$post->add_rules('alerts_email','required', 'email', 'length[4,100]');
 			//$post->add_rules('site_message', 'standard_text');
 			$post->add_rules('site_copyright_statement', 'length[4,600]');
 			$post->add_rules('site_language','required', 'length[5, 5]');
 			//$post->add_rules('site_timezone','required', 'between[10,50]');
 			$post->add_rules('site_contact_page','required','between[0,1]');
-			$post->add_rules('items_per_page','required','between[10,50]');
-			$post->add_rules('items_per_page_admin','required','between[10,50]');
+			$post->add_rules('items_per_page','required','between[5,50]');
+			$post->add_rules('items_per_page_admin','required','between[5,50]');
 			$post->add_rules('blocks_per_row','required','numeric');
+			$post->add_rules('allow_alerts','required','between[0,1]');
 			$post->add_rules('allow_reports','required','between[0,1]');
 			$post->add_rules('allow_comments','required','between[0,2]');
 			$post->add_rules('allow_feed','required','between[0,1]');
 			$post->add_rules('allow_stat_sharing','required','between[0,1]');
 			$post->add_rules('allow_clustering','required','between[0,1]');
 			$post->add_rules('cache_pages','required','between[0,1]');
-			$post->add_rules('cache_pages_lifetime','required','in_array[300,600,900,1800]');
+			$post->add_rules('cache_pages_lifetime','required','in_array[60,300,600,900,1800]');
 			$post->add_rules('private_deployment','required','between[0,1]');
+			$post->add_rules('manually_approve_users','required','between[0,1]');
+			$post->add_rules('require_email_confirmation','required','between[0,1]');
 			$post->add_rules('checkins','required','between[0,1]');
 			$post->add_rules('default_map_all','required', 'alpha_numeric', 'length[6,6]');
 			$post->add_rules('google_analytics','length[0,20]');
 			$post->add_rules('twitter_hashtags','length[0,500]');
 			$post->add_rules('api_akismet','length[0,100]', 'alpha_numeric');
 
+			// Add rules for file upload
+			$files = Validation::factory($_FILES);
+			$files->add_rules('banner_image', 'upload::valid', 'upload::type[gif,jpg,png]', 'upload::size[250K]');
+
 			// Test to see if things passed the rule checks
-			if ($post->validate())
+			if ($post->validate() AND $files->validate())
 			{
 				// Yes! everything is valid
 				$settings = new Settings_Model(1);
@@ -123,6 +141,7 @@ class Settings_Controller extends Admin_Controller
 				$settings->alerts_email = $post->alerts_email;
 				$settings->site_message = $post->site_message;
 				$settings->site_copyright_statement = $post->site_copyright_statement;
+				$settings->site_submit_report_message = $post->site_submit_report_message;
 				$settings->site_language = $post->site_language;
 				$settings->site_timezone = $post->site_timezone;
 				if($settings->site_timezone == "0")
@@ -134,6 +153,7 @@ class Settings_Controller extends Admin_Controller
 				$settings->items_per_page = $post->items_per_page;
 				$settings->items_per_page_admin = $post->items_per_page_admin;
 				$settings->blocks_per_row = $post->blocks_per_row;
+				$settings->allow_alerts = $post->allow_alerts;
 				$settings->allow_reports = $post->allow_reports;
 				$settings->allow_comments = $post->allow_comments;
 				$settings->allow_feed = $post->allow_feed;
@@ -142,6 +162,8 @@ class Settings_Controller extends Admin_Controller
 				$settings->cache_pages = $post->cache_pages;
 				$settings->cache_pages_lifetime = $post->cache_pages_lifetime;
 				$settings->private_deployment = $post->private_deployment;
+				$settings->manually_approve_users = $post->manually_approve_users;
+				$settings->require_email_confirmation = $post->require_email_confirmation;
 				$settings->checkins = $post->checkins;
 				$settings->default_map_all = $post->default_map_all;
 				$settings->google_analytics = $post->google_analytics;
@@ -150,6 +172,80 @@ class Settings_Controller extends Admin_Controller
 				$settings->date_modify = date("Y-m-d H:i:s",time());
 				$settings->save();
 
+				// Deal with banner image now
+
+				// Check if deleting or updating a new image (or doing nothing)
+				if( isset($post->delete_banner_image) AND $post->delete_banner_image == 1)
+				{
+					// Delete old badge image
+					ORM::factory('media')->delete($settings->site_banner_id);
+
+					// Remove from DB table
+					$settings = new Settings_Model(1);
+					$settings->site_banner_id = NULL;
+					$settings->save();
+
+				}else{
+					// We aren't deleting, so try to upload if we are uploading an image
+					$filename = upload::save('banner_image');
+					if ($filename)
+					{
+						$new_filename = "banner_".time();
+						$file_type = strrev(substr(strrev($filename),0,4));
+
+						// Large size
+						$l_name = $new_filename.$file_type;
+						Image::factory($filename)->save(Kohana::config('upload.directory', TRUE).$l_name);
+
+						// Medium size
+						$m_name = $new_filename."_m".$file_type;
+						Image::factory($filename)->resize(80,80,Image::HEIGHT)
+							->save(Kohana::config('upload.directory', TRUE).$m_name);
+
+						// Thumbnail
+						$t_name = $new_filename."_t".$file_type;
+						Image::factory($filename)->resize(60,60,Image::HEIGHT)
+							->save(Kohana::config('upload.directory', TRUE).$t_name);
+
+						// Name the files for the DB
+						$media_link = $l_name;
+						$media_medium = $m_name;
+						$media_thumb = $t_name;
+
+						// Okay, now we have these three different files on the server, now check to see
+						//   if we should be dropping them on the CDN
+
+						if (Kohana::config("cdn.cdn_store_dynamic_content"))
+						{
+							$media_link = cdn::upload($media_link);
+							$media_medium = cdn::upload($media_medium);
+							$media_thumb = cdn::upload($media_thumb);
+
+							// We no longer need the files we created on the server. Remove them.
+							$local_directory = rtrim(Kohana::config('upload.directory', TRUE), '/').'/';
+							unlink($local_directory.$l_name);
+							unlink($local_directory.$m_name);
+							unlink($local_directory.$t_name);
+						}
+
+						// Remove the temporary file
+						unlink($filename);
+
+						// Save banner image in the media table
+						$media = new Media_Model();
+						$media->media_type = 1; // Image
+						$media->media_link = $media_link;
+						$media->media_medium = $media_medium;
+						$media->media_thumb = $media_thumb;
+						$media->media_date = date("Y-m-d H:i:s",time());
+						$media->save();
+
+						// Save new banner image in settings
+						$settings = new Settings_Model(1);
+						$settings->site_banner_id = $media->id;
+						$settings->save();
+					}
+				}
 
 				// Delete Settings Cache
 				$this->cache->delete('settings');
@@ -157,6 +253,9 @@ class Settings_Controller extends Admin_Controller
 
 				// Everything is A-Okay!
 				$form_saved = TRUE;
+
+				// Action::site_settings_modified - Site settings have changed
+				Event::run('ushahidi_action.site_settings_modified');
 
 				// repopulate the form fields
 				$form = arr::overwrite($form, $post->as_array());
@@ -171,29 +270,36 @@ class Settings_Controller extends Admin_Controller
 				$form = arr::overwrite($form, $post->as_array());
 
 				// populate the error fields, if any
-				$errors = arr::overwrite($errors, $post->errors('settings'));
+				if(is_array($files->errors()) AND count($files->errors()) > 0){
+					// Error with file upload
+					$errors = arr::overwrite($errors, $files->errors('settings'));
+				}else{
+					// Error with other form filed
+					$errors = arr::overwrite($errors, $post->errors('settings'));
+				}
+
 				$form_error = TRUE;
 			}
 		}
 		else
 		{
-			// Retrieve Current Settings
-			$settings = ORM::factory('settings', 1);
-
 			$form = array
 			(
 				'site_name' => $settings->site_name,
 				'site_tagline' => $settings->site_tagline,
+				'site_banner_id' => $settings->site_banner_id,
 				'site_email' => $settings->site_email,
 				'alerts_email' => $settings->alerts_email,
 				'site_message' => $settings->site_message,
 				'site_copyright_statement' => $settings->site_copyright_statement,
+				'site_submit_report_message' => $settings->site_submit_report_message,
 				'site_language' => $settings->site_language,
 				'site_timezone' => $settings->site_timezone,
 				'site_contact_page' => $settings->site_contact_page,
 				'items_per_page' => $settings->items_per_page,
 				'items_per_page_admin' => $settings->items_per_page_admin,
 				'blocks_per_row' => $settings->blocks_per_row,
+				'allow_alerts' => $settings->allow_alerts,
 				'allow_reports' => $settings->allow_reports,
 				'allow_comments' => $settings->allow_comments,
 				'allow_feed' => $settings->allow_feed,
@@ -202,6 +308,8 @@ class Settings_Controller extends Admin_Controller
 				'cache_pages' => $settings->cache_pages,
 				'cache_pages_lifetime' => $settings->cache_pages_lifetime,
 				'private_deployment' => $settings->private_deployment,
+				'manually_approve_users' => $settings->manually_approve_users,
+				'require_email_confirmation' => $settings->require_email_confirmation,
 				'checkins' => $settings->checkins,
 				'default_map_all' => $settings->default_map_all,
 				'google_analytics' => $settings->google_analytics,
@@ -210,14 +318,25 @@ class Settings_Controller extends Admin_Controller
 			);
 		}
 
-		
+		// Get banner image
+		if($settings->site_banner_id != NULL){
+			$banner = ORM::factory('media')->find($settings->site_banner_id);
+			$this->template->content->banner = url::convert_uploaded_to_abs($banner->media_link);
+			$this->template->content->banner_m = url::convert_uploaded_to_abs($banner->media_medium);
+			$this->template->content->banner_t = url::convert_uploaded_to_abs($banner->media_thumb);
+		}else{
+			$this->template->content->banner = NULL;
+			$this->template->content->banner_m = NULL;
+			$this->template->content->banner_t = NULL;
+		}
+
 
 		$this->template->colorpicker_enabled = TRUE;
 		$this->template->content->form = $form;
 		$this->template->content->errors = $errors;
 		$this->template->content->form_error = $form_error;
 		$this->template->content->form_saved = $form_saved;
-		$this->template->content->items_per_page_array = array('10'=>'10 Items','20'=>'20 Items','30'=>'30 Items','50'=>'50 Items');
+		$this->template->content->items_per_page_array = array('5'=>'5 Items','10'=>'10 Items','20'=>'20 Items','30'=>'30 Items','50'=>'50 Items');
 		$blocks_per_row_array = array();
 		for ($i=1; $i <= 21; $i++)
 		{
@@ -227,13 +346,14 @@ class Settings_Controller extends Admin_Controller
 		$this->template->content->yesno_array = array(
 			'1'=>strtoupper(Kohana::lang('ui_main.yes')),
 			'0'=>strtoupper(Kohana::lang('ui_main.no')));
-		   
+
 		$this->template->content->comments_array = array(
 			'1'=>strtoupper(Kohana::lang('ui_main.yes')." - ".Kohana::lang('ui_admin.approve_auto')),
 			'2'=>strtoupper(Kohana::lang('ui_main.yes')." - ".Kohana::lang('ui_admin.approve_manual')),
 			'0'=>strtoupper(Kohana::lang('ui_main.no')));
-		
+
 		$this->template->content->cache_pages_lifetime_array = array(
+			'60'=>'1 '.Kohana::lang('ui_admin.minute'),
 			'300'=>'5 '.Kohana::lang('ui_admin.minutes'),
 			'600'=>'10 '.Kohana::lang('ui_admin.minutes'),
 			'900'=>'15 '.Kohana::lang('ui_admin.minutes'),
@@ -247,8 +367,8 @@ class Settings_Controller extends Admin_Controller
 			$site_timezone_array[$timezone] = $timezone;
 		}
 		$this->template->content->site_timezone_array = $site_timezone_array;
-	
-	
+
+
 		// Generate Available Locales
 		$locales = locale::get_i18n();
 		$this->template->content->locales_array = $locales;
@@ -270,11 +390,9 @@ class Settings_Controller extends Admin_Controller
 		$this->template->content->title = Kohana::lang('ui_admin.settings');
 
 		// setup and initialize form field names
-		$form = array
-		(
+		$form = array(
 			'default_map' => '',
 			'api_google' => '',
-			'api_yahoo' => '',
 			'default_country' => '',
 			'multi_country' => '',
 			'default_lat' => '',
@@ -285,14 +403,7 @@ class Settings_Controller extends Admin_Controller
 		//	corresponding to the form field names
 		$errors = $form;
 		$form_error = FALSE;
-		if ($saved == 'saved')
-		{
-			$form_saved = TRUE;
-		}
-		else
-		{
-			$form_saved = FALSE;
-		}
+		$form_saved = ($saved == 'saved');
 
 		// check, has the form been submitted, if so, setup validation
 		if ($_POST)
@@ -310,7 +421,6 @@ class Settings_Controller extends Admin_Controller
 			$post->add_rules('multi_country', 'numeric', 'length[1,1]');
 			$post->add_rules('default_map', 'required', 'length[0,100]');
 			$post->add_rules('api_google','required', 'length[0,200]');
-			$post->add_rules('api_yahoo','required', 'length[0,200]');
 			$post->add_rules('default_zoom','required','between[0,21]');		// Validate for maximum and minimum zoom values
 			$post->add_rules('default_lat','required','between[-85,85]');		// Validate for maximum and minimum latitude values
 			$post->add_rules('default_lon','required','between[-180,180]');		// Validate for maximum and minimum longitude values
@@ -324,7 +434,6 @@ class Settings_Controller extends Admin_Controller
 				$settings->multi_country = $post->multi_country;
 				$settings->default_map = $post->default_map;
 				$settings->api_google = $post->api_google;
-				$settings->api_yahoo = $post->api_yahoo;
 				$settings->default_zoom = $post->default_zoom;
 				$settings->default_lat = $post->default_lat;
 				$settings->default_lon = $post->default_lon;
@@ -337,6 +446,9 @@ class Settings_Controller extends Admin_Controller
 
 				// Everything is A-Okay!
 				$form_saved = TRUE;
+
+				// Action::map_settings_modified - Map settings have changed
+				Event::run('ushahidi_action.map_settings_modified');
 
 				// Redirect to reload everything over again
 				url::redirect('admin/settings/index/saved');
@@ -360,11 +472,9 @@ class Settings_Controller extends Admin_Controller
 			// Retrieve Current Settings
 			$settings = ORM::factory('settings', 1);
 
-			$form = array
-			(
+			$form = array(
 				'default_map' => $settings->default_map,
 				'api_google' => $settings->api_google,
-				'api_yahoo' => $settings->api_yahoo,
 				'default_country' => $settings->default_country,
 				'multi_country' => $settings->multi_country,
 				'default_lat' => $settings->default_lat,
@@ -510,12 +620,12 @@ class Settings_Controller extends Admin_Controller
 				'sms_no3' => $settings->sms_no3
 			);
 		}
-		
+
 		$this->template->content->form = $form;
 		$this->template->content->errors = $errors;
 		$this->template->content->form_error = $form_error;
 		$this->template->content->form_saved = $form_saved;
-		
+
 		$this->template->content->sms_provider_array = array_merge(
 			array("" => "-- Select One --"),
 			plugin::get_sms_providers()
@@ -852,6 +962,7 @@ class Settings_Controller extends Admin_Controller
 			curl_setopt ($ch, CURLOPT_URL, $geonames_url);
 			curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+			curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, false);
 			$xmlstr = curl_exec($ch);
 			$err = curl_errno( $ch );
 			curl_close($ch);
@@ -964,6 +1075,7 @@ class Settings_Controller extends Admin_Controller
 
 		curl_setopt($curl_handle, CURLOPT_URL, $url);
 		curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, true );
+		curl_setopt($curl_handle, CURLOPT_SSL_VERIFYPEER, false);
 		curl_exec($curl_handle);
 
 		$return_code = curl_getinfo($curl_handle,CURLINFO_HTTP_CODE);
@@ -985,13 +1097,13 @@ class Settings_Controller extends Admin_Controller
 		if(is_array($config_file) )
 		{
 			foreach ($config_file as $line_number => $line)
-			{				
+			{
 				if ($yes_or_no == 1)
 				{
 					if( strpos(" ".$line,"\$config['index_page'] = 'index.php';") != 0 )
 					{
 						fwrite($handle, str_replace("index.php","",$line ));
-						
+
 						// Set the 'index_page' property in the configuration
 						Kohana::config_set('core.index_page', '');
 					}
@@ -1006,7 +1118,7 @@ class Settings_Controller extends Admin_Controller
 					if( strpos(" ".$line,"\$config['index_page'] = '';") != 0 )
 					{
 						fwrite($handle, str_replace("''","'index.php'",$line ));
-						
+
 						// Set the 'index_page' property in the configuration
 						Kohana::config_set('core.index_page', 'index.php');
 					}
@@ -1034,7 +1146,7 @@ class Settings_Controller extends Admin_Controller
 	{
 		$map_layers = array();
 		$layers = map::base();
-		
+
 		foreach ($layers as $layer)
 		{
 			$map_layers[$layer->name] = array();
@@ -1052,7 +1164,7 @@ class Settings_Controller extends Admin_Controller
 
 		return json_encode($map_layers);
 	}
-	
+
 	/**
 	 * Check if SSL is currently enabled on the instance
 	 */
@@ -1064,7 +1176,7 @@ class Settings_Controller extends Admin_Controller
 			? FALSE
 			: TRUE;
 	}
-	
+
 	/**
 	 * Check if the Webserver is HTTPS capable
 	 */
@@ -1072,39 +1184,42 @@ class Settings_Controller extends Admin_Controller
 	{
 		// Get the current site protocol
 		$protocol = Kohana::config('core.site_protocol');
-		
+
 		// Build an SSL URL
 		$url = ($protocol == 'https')? url::base() : str_replace('http://', 'https://', url::base());
-		
+
 		$url .= 'index.php';
-		
+
 		// Initialize cURL
 		$ch = curl_init();
-		
+
 		// Set cURL options
 		curl_setopt($ch, CURLOPT_URL, $url);
-		
+
 		// Disable following any "Location:" sent as part of the HTTP header
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, FALSE);
-		
+
 		// Return the output of curl_exec() as a string instead of outputting it directly
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-		
+
 		// Suppress header information from the output
 		curl_setopt($ch, CURLOPT_HEADER, FALSE);
 
+		// Allow connection to HTTPS
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+
 		// Perform cURL session
 		curl_exec($ch);
-		
+
 		// Get the cURL error number
 		$error_no = curl_errno($ch);
-		
+
 		// Get the return code
 		$http_return_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		
+
 		// Close the cURL handle
 		curl_close($ch);
-		
+
 		// Check if the cURL session succeeded
 		return (($error_no > 0 AND $error_no != 60) OR $http_return_code == 404)
 			? FALSE
@@ -1124,13 +1239,13 @@ class Settings_Controller extends Admin_Controller
 		if(is_array($config_file) AND $handle)
 		{
 			foreach ($config_file as $line_number => $line)
-			{				
+			{
 				if ($yes_or_no == 1)
 				{
 					if( strpos(" ".$line,"\$config['site_protocol'] = 'http';") != 0 )
 					{
 						fwrite($handle, str_replace("http", "https", $line ));
-						
+
 						// Enable HTTPS on the config
 						Kohana::config_set('core.site_protocol', 'https');
 					}
@@ -1144,7 +1259,7 @@ class Settings_Controller extends Admin_Controller
 					if( strpos(" ".$line,"\$config['site_protocol'] = 'https';") != 0 )
 					{
 						fwrite($handle, str_replace("https", "http", $line ));
-						
+
 						// Enable HTTP on the config
 						Kohana::config_set('core.site_protocol', 'http');
 					}
@@ -1155,6 +1270,6 @@ class Settings_Controller extends Admin_Controller
 				}
 			}
 		}
-		
+
 	}
 }

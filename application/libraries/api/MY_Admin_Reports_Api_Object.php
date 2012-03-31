@@ -34,41 +34,49 @@ class Admin_Reports_Api_Object extends Api_Object_Core {
             return;
         }
 
-        if ( ! $this->api_service->verify_array_index($this->request, 'by'))
-        {
-            $this->set_error_message(array(
-                "error" => $this->api_service->get_error_msg(001, 'by')
-            ));
-            
-            return;
-        }
-        else
+        // by request
+        if($this->api_service->verify_array_index($this->request, 'by') )
         {
             $this->by = $this->request['by'];
+
+            switch ($this->by)
+            {
+                case "approved":
+                    $this->response_data = $this->_get_approved_reports();
+                break;
+            
+                case "unapproved":
+                    $this->response_data = $this->_get_unapproved_reports();
+                break;
+            
+                case "verified":
+                    $this->response_data = $this->_get_verified_reports();
+                break;
+            
+                case "unverified":
+                    $this->response_data = $this->_get_unverified_reports();
+                break;
+            
+                default:
+                    $this->set_error_message(array(
+                        "error" => $this->api_service->get_error_msg(002)
+                    ));
+            }
+            return;
         }
-        
-        switch ($this->by)
+
+        //action request
+        else if($this->api_service->verify_array_index($this->request, 'action'))
         {
-            case "approved":
-                $this->response_data = $this->_get_approved_reports();
-            break;
-            
-            case "unapproved":
-                $this->response_data = $this->_get_unapproved_reports();
-            break;
-            
-            case "verified":
-                $this->response_data = $this->_get_verified_reports();
-            break;
-            
-            case "unverified":
-                $this->response_data = $this->_get_unverified_reports();
-            break;
-            
-            default:
-                $this->set_error_message(array(
-                    "error" => $this->api_service->get_error_msg(002)
-                ));
+            $this->report_action();
+            return;
+        }
+        else 
+        {
+             $this->set_error_message(array(
+                "error" => $this->api_service->get_error_msg(001, 'by or action')
+            ));
+             return;
         }
     }
     
@@ -101,40 +109,28 @@ class Admin_Reports_Api_Object extends Api_Object_Core {
             $action = $this->request['action'];
         }
         
-        // Check if the incident id has been specified
-        if ( ! $this->api_service->verify_array_index($this->request, 'id'))
-        {
-            $this->set_error_message(array(
-                "error" => $this->api_service->get_error_msg(001, 'id')
-            ));
-            return;
-        }
-        else
-        {
-            $incident_id = $this->request['id'];
-        }
-        
+                
         // Route report actions to their various handlers
         switch ($action)
         {
             // Delete report
-            case "del":
-                $this->_delete_report($incident_id); 
+            case "delete":
+                $this->_delete_report(); 
             break;
             
             // Approve report
             case "approve":
-                $this->_approve_report($incident_id);
+                $this->_approve_report();
             break;
             
             // Verify report
             case "verify":
-                $this->_verify_report($incident_id);
+                $this->_verify_report();
             break;
             
             // Edit report
             case "edit":
-                $this->_edit_report($incident_id);
+                $this->_edit_report();
             break;
             
             default:
@@ -465,7 +461,7 @@ class Admin_Reports_Api_Object extends Api_Object_Core {
      */
     public function _edit_report()
     {
-        return $this->_submit_report();
+        print $this->_submit_report();
         
     }
 
@@ -474,7 +470,7 @@ class Admin_Reports_Api_Object extends Api_Object_Core {
      *
      * @param int incident_id - the id of the report to be deleted.
      */
-    private function _delete_report($incident_id)
+    private function _delete_report()
     {
         $form = array
         (
@@ -487,15 +483,18 @@ class Admin_Reports_Api_Object extends Api_Object_Core {
 
         if ($_POST)
         {
-            //  Add some filters
-            $post->pre_filter('trim', TRUE);
+            $post = Validation::factory($_POST);
 
-            // Add some rules, the input field, followed by a list of
-            //checks, carried out in order.
-            $post->add_rules('incident_id.*','required','numeric');
+             //  Add some filters
+            $post->pre_filter('trim', TRUE);
+            
+            // Add some rules, the input field, followed by a list 
+            // of checks, carried out in order
+            $post->add_rules('incident_id','required','numeric');
 
             if ($post->validate())
             {
+                $incident_id = $post->incident_id;
                 $update = new Incident_Model($incident_id);
                 
                 if ($update->loaded == true) 
@@ -550,7 +549,7 @@ class Admin_Reports_Api_Object extends Api_Object_Core {
             else
             {
                 //TODO i18nize the string
-                $this->error_messages .= "Report ID is required.";
+                $this->error_messages .= "Incident ID is required.";
                 $ret_value = 1;
             }
         }
@@ -571,12 +570,11 @@ class Admin_Reports_Api_Object extends Api_Object_Core {
      *
      * @return
      */
-    private function _approve_report($report_id)
+    private function _approve_report()
     {
         $form = array
         (
-            'action' => '',
-            'report_id' => '',
+            'incident_id' => '',
         );
         
         $errors = $form;
@@ -589,15 +587,14 @@ class Admin_Reports_Api_Object extends Api_Object_Core {
 
              //  Add some filters
             $post->pre_filter('trim', TRUE);
-
+            
             // Add some rules, the input field, followed by a list 
             // of checks, carried out in order
-            $post->add_rules('action','required', 'alpha', 'length[1,1]');
-            $post->add_rules('report_id','required','numeric');
+            $post->add_rules('incident_id','required','numeric');
 
             if ($post->validate())
             {
-                $incident_id = $post->report_id;
+                $incident_id = $post->incident_id;
                 $update = new Incident_Model($incident_id);
 
                 if ($update->loaded == true) 
@@ -631,7 +628,10 @@ class Admin_Reports_Api_Object extends Api_Object_Core {
                 else
                 {
                     //TODO i18nize the string
-                    $this->error_messages .= "Report ID is required.";
+                    //couldin't approve the report
+                    $this->error_messages .= 
+                        "Couldn't approve the report id ".
+                        $post->incident_id;
                     $ret_value = 1;
                 }
 
@@ -639,7 +639,7 @@ class Admin_Reports_Api_Object extends Api_Object_Core {
             else
             {
                 //TODO i18nize the string
-                $this->error_messages .= "Report ID is required.";
+                $this->error_messages .= "Incident ID is required.";
                 $ret_value = 1;
             }
 
@@ -659,8 +659,13 @@ class Admin_Reports_Api_Object extends Api_Object_Core {
      * @param int report_id - the id of the report to be verified 
      * unverified.
      */
-    private function _verify_report($report_id)
+    private function _verify_report()
     {
+        $form = array
+        (
+            'incident_id' => '',
+        );
+
         $ret_value = 0; // Will hold the return value; start off with a "no error" value
         
         if ($_POST)
@@ -672,12 +677,11 @@ class Admin_Reports_Api_Object extends Api_Object_Core {
 
             // Add some rules, the input field, followed by a list of
             //checks, carried out in order
-            $post->add_rules('action','required', 'alpha', 'length[1,1]');
-            $post->add_rules('report_id','required','numeric');
+            $post->add_rules('incident_id','required','numeric');
 
             if ($post->validate())
             {
-                $incident_id = $post->report_id;
+                $incident_id = $post->incident_id;
                 $update = new Incident_Model($incident_id);
 
                 if ($update->loaded == true) 
@@ -693,7 +697,8 @@ class Admin_Reports_Api_Object extends Api_Object_Core {
                         $verify->verified_status = '2';
                     }
                     $update->save();
-
+                    
+                    $verify = new Verify_Model();
                     $verify->incident_id = $incident_id;
                     $verify->user_id = $_SESSION['auth_user']->id;          // Record 'Verified By' Action
                     $verify->verified_date = date("Y-m-d H:i:s",time());
@@ -703,7 +708,7 @@ class Admin_Reports_Api_Object extends Api_Object_Core {
                 else
                 {
                     //TODO i18nize the string
-                    $this->error_messages .= "Incident ID is required.";
+                    $this->error_messages .= "Could not verify this report ".$post->incident_id;
                     $ret_value = 1;
                 }
 
@@ -756,9 +761,7 @@ class Admin_Reports_Api_Object extends Api_Object_Core {
             'person_last' => '',
             'person_email' => '',
             'incident_active ' => '',
-            'incident_verified' => '',
-            'incident_source' => '',
-            'incident_information' => ''
+            'incident_verified' => ''
         );
         
         $errors = $form;
@@ -815,8 +818,6 @@ class Admin_Reports_Api_Object extends Api_Object_Core {
 
             $post->add_rules('incident_active','required', 'between[0,1]');
             $post->add_rules('incident_verified','required', 'length[0,1]');
-            $post->add_rules('incident_source','numeric', 'length[1,1]');
-            $post->add_rules('incident_information','numeric', 'length[1,1]');
 
 
             // Test to see if things passed the rule checks
@@ -853,12 +854,9 @@ class Admin_Reports_Api_Object extends Api_Object_Core {
                 $incident_time = $post->incident_hour . ":" . $post->incident_minute . ":00 " . $post->incident_ampm;
                 $incident->incident_date = date( "Y-m-d H:i:s", strtotime($incident_date . " " . $incident_time) ); 
                 $incident->incident_datemodify = date("Y-m-d H:i:s",time());
-                
                 // Incident Evaluation Info
                 $incident->incident_active = $post->incident_active;
                 $incident->incident_verified = $post->incident_verified;
-                $incident->incident_source = $post->incident_source;
-                $incident->incident_information = $post->incident_information;
 
                 $incident->save();
 
@@ -1020,7 +1018,7 @@ class Admin_Reports_Api_Object extends Api_Object_Core {
                     $person->save();
                 }
 
-                return 0; //success
+                return $this->response(0); //success
 
             } 
             else 

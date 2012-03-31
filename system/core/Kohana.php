@@ -231,8 +231,14 @@ final class Kohana {
 			// Run system.pre_controller
 			Event::run('system.pre_controller');
 
+			// Begin benchmark for the controller
+			Benchmark::f_start(ucfirst(Router::$controller).'_Controller');
+
 			// Create a new controller instance
 			$controller = $class->newInstance();
+
+			// End benchmark for the controller
+			Benchmark::f_stop(ucfirst(Router::$controller).'_Controller');
 
 			// Controller constructor has been executed
 			Event::run('system.post_controller_constructor');
@@ -867,7 +873,7 @@ final class Kohana {
 			if ( ! headers_sent())
 			{
 				// Send the 500 header
-				header('HTTP/1.1 500 Internal Server Error');
+				header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error');
 			}
 		}
 		else
@@ -1659,7 +1665,7 @@ class Kohana_Exception extends Exception {
 	public function sendHeaders()
 	{
 		// Send the 500 header
-		header('HTTP/1.1 500 Internal Server Error');
+		header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error');
 	}
 
 } // End Kohana Exception
@@ -1724,7 +1730,7 @@ class Kohana_404_Exception extends Kohana_Exception {
 	public function sendHeaders()
 	{
 		// Send the 404 header
-		header('HTTP/1.1 404 File Not Found');
+		header($_SERVER['SERVER_PROTOCOL'] . ' 404 File Not Found');
 	}
 
 } // End Kohana 404 Exception

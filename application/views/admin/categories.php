@@ -93,7 +93,7 @@
 							<?php print form::input('category_description', $form['category_description'], ' class="text"'); ?>
 						</div>
 						<div class="tab_form_item">
-							<strong>Color:</strong><br />
+							<strong><?php echo Kohana::lang('ui_admin.color');?>:</strong><br />
 							<?php print form::input('category_color', $form['category_color'], ' class="text"'); ?>
 							<script type="text/javascript" charset="utf-8">
 								$(document).ready(function() {
@@ -130,7 +130,7 @@
 						<div style="clear:both"></div>
 						<div class="tab_form_item">
 							&nbsp;<br />
-							<input type="image" src="<?php echo url::base() ?>media/img/admin/btn-save.gif" class="save-rep-btn" />
+							<input type="image" src="<?php echo url::file_loc('img'); ?>media/img/admin/btn-save.gif" class="save-rep-btn" />
 						</div>
 						<?php print form::close(); ?>			
 					</div>
@@ -178,7 +178,7 @@
 										$category_title = $category->category_title;
 										$category_description = substr($category->category_description, 0, 150);
 										$category_color = $category->category_color;
-										$category_image = $category->category_image;
+										$category_image = ($category->category_image != NULL) ? url::convert_uploaded_to_abs($category->category_image) : NULL;
 										$category_visible = $category->category_visible;
 										$category_trusted = $category->category_trusted;
 										$category_locals = array();
@@ -197,7 +197,7 @@
 											<td class="col-3">
 											<?php if (!empty($category_image))
 											{
-												echo "<img src=\"".url::base().Kohana::config('upload.relative_directory')."/".$category_image."\">";
+												echo "<img src=\"".$category_image."\">";
 												echo "&nbsp;[<a href=\"javascript:catAction('i','DELETE ICON','".rawurlencode($category_id)."')\">".Kohana::lang('ui_main.delete')."</a>]";
 											}
 											else
@@ -218,13 +218,17 @@
 														}
 													}
 													?>)"><?php echo Kohana::lang('ui_main.edit');?></a></li>
-													<li class="none-separator"><a href="javascript:catAction('v','SHOW/HIDE','<?php echo(rawurlencode($category_id)); ?>')"<?php if ($category_visible) echo " class=\"status_yes\"" ?>><?php echo Kohana::lang('ui_main.visible');?></a></li>
+													<li class="none-separator"><a class="status_yes" href="javascript:catAction('v','SHOW/HIDE','<?php echo(rawurlencode($category_id)); ?>')"><?php if ($category_visible) { echo Kohana::lang('ui_main.visible'); } else { echo Kohana::lang('ui_main.hidden'); }?></a></li>
 <li><a href="javascript:catAction('d','DELETE','<?php echo(rawurlencode($category_id)); ?>')" class="del"><?php echo Kohana::lang('ui_main.delete');?></a></li>
 												</ul>
 												
 												<?php if($category_trusted == 1) { ?>
 												<div class="right">
+													<?php if($category_title == 'Trusted Reports') { ?>
 													<a href="#" class="tooltip" title="<?php echo htmlentities(Kohana::lang('ui_admin.special_category_explanation'),ENT_QUOTES);?>"><strong><?php echo Kohana::lang('ui_admin.special_category');?></strong></a>
+													<?php } else {?>
+														<a href="#" class="tooltip" title="<?php echo htmlentities(Kohana::lang('ui_admin.orphaned_category_explanation'),ENT_QUOTES); ?>"><strong><?php echo Kohana::lang('ui_admin.special_category');?></strong></a>
+													<?php } ?>
 												</div>
 												<?php } ?>
 												
@@ -233,14 +237,14 @@
 										<?php
 										
 										// Get All Category Children
-										foreach ( $category->orderby('category_position', 'asc')->children as $child)
+										foreach ( $category->children as $child)
 										{
 											$category_id = $child->id;
 											$parent_id = $child->parent_id;
 											$category_title = $child->category_title;
 											$category_description = substr($child->category_description, 0, 150);
 											$category_color = $child->category_color;
-											$category_image = $child->category_image;
+											$category_image = ($child->category_image != NULL) ? url::convert_uploaded_to_abs($child->category_image) : NULL;
 											$category_visible = $child->category_visible;
 
 											$child_category_locals = array();
@@ -260,7 +264,7 @@
 												<td class="col-3">
 												<?php if (!empty($category_image))
 												{
-													echo "<img src=\"".url::base().Kohana::config('upload.relative_directory')."/".$category_image."\">";
+													echo "<img src=\"".$category_image."\">";
 													echo "&nbsp;[<a href=\"javascript:catAction('i','DELETE ICON','".rawurlencode($category_id)."')\">delete</a>]";
 												}
 												else
@@ -281,7 +285,7 @@
 														}
 													}
 													?>)"><?php echo Kohana::lang('ui_main.edit');?></a></li>
-														<li class="none-separator"><a href="javascript:catAction('v','SHOW/HIDE','<?php echo(rawurlencode($category_id)); ?>')"<?php if ($category_visible) echo " class=\"status_yes\"" ?>><?php echo Kohana::lang('ui_main.visible');?></a></li>
+														<li class="none-separator"><a class="status_yes" href="javascript:catAction('v','SHOW/HIDE','<?php echo(rawurlencode($category_id)); ?>')"><?php if ($category_visible) { echo Kohana::lang('ui_main.visible'); } else { echo Kohana::lang('ui_main.hidden'); }?></a></li>
 	<li><a href="javascript:catAction('d','DELETE','<?php echo(rawurlencode($category_id)); ?>')" class="del"><?php echo Kohana::lang('ui_main.delete');?></a></li>
 													</ul>
 												</td>

@@ -90,6 +90,14 @@
 					$("#default_lon").attr("value", lonlat.lon);
 				});
 				
+				// When we change the zoom level on the map control itself, also change the slider
+				//  which is where the value is actually being passed from when we save the map position
+				map.events.on({
+					zoomend: function(e) {
+						$('select#default_zoom').val(map.getZoom());
+						$('select#default_zoom').trigger('click');
+					}
+				});
 
 				// zoom slider detection
 				$('select#default_zoom').selectToUISlider({
@@ -173,14 +181,6 @@
 						{
 							$("#api_div_google").hide();
 						}
-						
-						if (all_maps[i].openlayers == 'Yahoo') {
-							$("#api_div_yahoo").show();
-						}
-						else
-						{
-							$("#api_div_yahoo").hide();
-						}
 					}
 					else
 					{
@@ -217,14 +217,6 @@
 								{
 									$("#api_div_google").hide();
 								}
-								
-								if (all_maps[i].openlayers == 'Yahoo') {
-									$("#api_div_yahoo").show();
-								}
-								else
-								{
-									$("#api_div_yahoo").hide();
-								}
 							}
 						}
 						else
@@ -251,7 +243,7 @@
 			}
 			else
 			{
-				$('#cities_loading').html('<img src="<?php echo url::base() . "media/img/loading_g.gif"; ?>">');
+				$('#cities_loading').html('<img src="<?php echo url::file_loc('img')."media/img/loading_g.gif"; ?>">');
 				$.getJSON("<?php echo url::site() . 'admin/settings/updateCities/' ?>" + country,
 					function(data){
 						if (data.status == 'success'){

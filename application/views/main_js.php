@@ -15,6 +15,7 @@
  * @license    http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL) 
  */
 ?>
+    <?php @require_once(APPPATH.'views/map_common_js.php'); ?>
 		// Map JS
 		
 		// Map Object
@@ -41,7 +42,7 @@
 		// Global list for current KML overlays in display
 		var kmlOverlays = [];
 		
-		var baseUrl = "<?php echo url::base(); ?>";
+		var baseUrl = "<?php echo url::site(); ?>";
 		var longitude = <?php echo $longitude; ?>;
 		var latitude = <?php echo $latitude; ?>;
 		var defaultZoom = <?php echo $default_zoom; ?>;
@@ -127,84 +128,6 @@
 			if ($("#OpenLayers\\.Control\\.LoadingPanel_4"))
 			{
 				$("#OpenLayers\\.Control\\.LoadingPanel_4").hide();
-			}
-		}
-
-		/**
-		 * Close Popup
-		 */
-		function onPopupClose(event)
-		{
-			selectControl.unselect(selectedFeature);
-			selectedFeature = null;
-		}
-
-		/**
-		 * Display popup when feature selected
-		 */
-		function onFeatureSelect(event)
-		{
-			selectedFeature = event.feature;
-			zoom_point = event.feature.geometry.getBounds().getCenterLonLat();
-			lon = zoom_point.lon;
-			lat = zoom_point.lat;
-			
-			var thumb = "";
-			if ( typeof(event.feature.attributes.thumb) != 'undefined' && 
-				event.feature.attributes.thumb != '')
-			{
-				thumb = "<div class=\"infowindow_image\"><a href='"+event.feature.attributes.link+"'>";
-				thumb += "<img src=\""+event.feature.attributes.thumb+"\" height=\"59\" width=\"89\" /></a></div>";
-			}
-
-			var content = "<div class=\"infowindow\">" + thumb;
-			content += "<div class=\"infowindow_content\"><div class=\"infowindow_list\">"+event.feature.attributes.name+"</div>";
-			content += "\n<div class=\"infowindow_meta\">";
-			if ( typeof(event.feature.attributes.link) != 'undefined' &&
-				event.feature.attributes.link != '')
-			{
-				content += "<a href='"+event.feature.attributes.link+"'><?php echo Kohana::lang('ui_main.more_information');?></a><br/>";
-			}
-			
-			content += "<a href='javascript:zoomToSelectedFeature("+ lon + ","+ lat +",1)'>";
-			content += "<?php echo Kohana::lang('ui_main.zoom_in');?></a>";
-			content += "&nbsp;&nbsp;|&nbsp;&nbsp;";
-			content += "<a href='javascript:zoomToSelectedFeature("+ lon + ","+ lat +",-1)'>";
-			content += "<?php echo Kohana::lang('ui_main.zoom_out');?></a></div>";
-			content += "</div><div style=\"clear:both;\"></div></div>";		
-
-			if (content.search("<?php echo '<'; ?>script") != -1)
-			{
-				content = "Content contained Javascript! Escaped content below.<br />" + content.replace(/<?php echo '<'; ?>/g, "&lt;");
-			}
-            
-			// Destroy existing popups before opening a new one
-			if (event.feature.popup != null)
-			{
-				map.removePopup(event.feature.popup);
-			}
-			
-			popup = new OpenLayers.Popup.FramedCloud("chicken", 
-				event.feature.geometry.getBounds().getCenterLonLat(),
-				new OpenLayers.Size(100,100),
-				content,
-				null, true, onPopupClose);
-
-			event.feature.popup = popup;
-			map.addPopup(popup);
-		}
-
-		/**
-		 * Destroy Popup Layer
-		 */
-		function onFeatureUnselect(event)
-		{
-			// Safety check
-			if (event.feature.popup != null)
-			{
-				map.removePopup(event.feature.popup);
-				event.feature.popup.destroy();
-				event.feature.popup = null;
 			}
 		}
 
@@ -362,8 +285,7 @@
 						strokeColor: "${strokecolor}",
 						fillOpacity: "${fillopacity}",
 						strokeOpacity: 0.75,
-						strokeWidth: 1.5,
-						graphicZIndex: 1
+						strokeWidth: 1.5
 					})
 				});
 
@@ -378,7 +300,7 @@
 				map.addControl(highlightCtrl);
 				highlightCtrl.activate();
 				
-				selectControl = new OpenLayers.Control.SelectFeature(checkinLayer);
+				selectControl = new OpenLayers.Control.SelectFeature([checkinLayer,markers]);
 				map.addControl(selectControl);
 				selectControl.activate();
 				checkinLayer.events.on({
@@ -508,26 +430,6 @@
 			});
 		}
 
-		/**
-		 * Zoom to Selected Feature from within Popup
-		 */
-		function zoomToSelectedFeature(lon, lat, zoomfactor)
-		{
-			var lonlat = new OpenLayers.LonLat(lon,lat);
-
-			// Get Current Zoom
-			currZoom = map.getZoom();
-			// New Zoom
-			newZoom = currZoom + zoomfactor;
-			// Center and Zoom
-			map.setCenter(lonlat, newZoom);
-			// Remove Popups
-			for (var i=0; i<?php echo '<'; ?>map.popups.length; ++i)
-			{
-				map.removePopup(map.popups[i]);
-			}
-		}
-		
 		/*
 		Zoom to Selected Feature from outside Popup
 		*/
@@ -604,7 +506,7 @@
 
 				// Get Current Center
 				currCenter = map.getCenter();
-
+				
 				// Add New Layer
 				addMarkers('', '', '', currZoom, currCenter, '', layerID, 'layers', layerURL, layerColor);
 			}
@@ -672,7 +574,6 @@
 			
 			<?php echo map::layers_js(FALSE); ?>
 			map.addLayers(<?php echo map::layers_array(FALSE); ?>);
-			
 			
 			// Add Controls
 			map.addControl(new OpenLayers.Control.Navigation());
@@ -832,16 +733,36 @@
 			
 			var startTime = <?php echo $active_startDate ?>;	// Default to most active month
 			var endTime = <?php echo $active_endDate ?>;		// Default to most active month
-					
+			
 			// get the closest existing dates in the selection options
 			options = $('#startDate > optgroup > option').map(function()
 			{
 				return $(this).val(); 
 			});
-			startTime = $.grep(options, function(n,i)
+			//figure out what time is the greatest time, that is less than the startTime
+			var foundStartTime = false;
+			for(i = 1; i < options.length; i++)
 			{
-			  return n >= ('' + startTime) ;
-			})[0];
+				var time = parseInt(options[i]);
+				if(time == startTime)
+				{
+					foundStartTime = true;
+					break;
+				}
+				else if(time > startTime)
+				{
+					startTime = options[i-1];
+					foundStartTime = true;
+					break;
+				}
+				
+			}
+			//if the original start time is after the last option date
+			if(!foundStartTime)
+			{
+				startTime = options[options.length-1];
+			}
+			
 			
 			options = $('#endDate > optgroup > option').map(function()
 			{
@@ -849,8 +770,9 @@
 			});
 			endTime = $.grep(options, function(n,i)
 			{
-			  return n >= ('' + endTime) ;
+			  return parseInt(n) >= endTime ;
 			})[0];
+			
 			
 			gCategoryId = '0';
 			gMediaType = 0;
@@ -927,3 +849,123 @@
 		{ //Each time the viewport is adjusted/resized, execute the function
 			smartColumns();
 		});
+		
+		
+		<?php
+		// START CHECKINS!
+		if ( Kohana::config('settings.checkins') ) {
+		?>
+		
+		function cilisting(sqllimit,sqloffset) {
+			jsonurl = "<?php echo url::site(); ?>api/?task=checkin&action=get_ci&sqllimit="+sqllimit+"&sqloffset="+sqloffset+"&orderby=checkin.checkin_date&sort=DESC";
+			
+			var showncount = 0;
+			$.getJSON(jsonurl, function(data) {
+				
+				if(data.payload.checkins == undefined)
+				{
+					if(sqloffset != 0)
+					{
+						var newoffset = sqloffset - sqllimit;
+						$('div#cilist').html("<div style=\"text-align:center;\"><?php echo Kohana::lang('ui_main.no_checkins'); ?><br/><br/><a href=\"javascript:cilisting("+sqllimit+","+newoffset+");\">&lt;&lt; <?php echo Kohana::lang('ui_main.previous'); ?></a></div>");
+					}else{
+						$('div#cilist').html("<div style=\"text-align:center;\">No checkins to display.</div>");
+					}
+
+					return;
+				}
+				
+				$('div#cilist').html("");
+				
+				var user_colors = new Array();
+				// Get colors
+				$.each(data.payload.users, function(i, payl) {
+					user_colors[payl.id] = payl.color;
+				});
+				
+				$.each(data.payload.checkins, function(i,item){
+					
+					if(i == 0)
+					{
+						$('div#cilist').append("<div class=\"ci_checkin\" class=\"ci_id_"+item.id+"\"style=\"border:none\"><a name=\"ci_id_"+item.id+"\" />");
+					}else{
+						$('div#cilist').append("<div class=\"ci_checkin\" class=\"ci_id_"+item.id+"\" style=\"padding-bottom:5px;margin-bottom:5px;\"><a name=\"ci_id_"+item.id+"\" />");
+					}
+					
+					if(item.media === undefined)
+					{
+						// Tint the color a bit
+						$('div#cilist').append("<div class=\"ci_colorblock ci_shorterblock\" style=\"background-color:#"+user_colors[item.user]+";\"><div class=\"ci_colorfade\"></div></div>");
+					}else{
+						// Show image
+						$('div#cilist').append("<div class=\"ci_colorblock ci_tallerblock\" style=\"background-color:#"+user_colors[item.user]+";\"><div class=\"ci_imgblock\"><a href=\""+item.media[0].link+"\" rel=\"lightbox-group1\" title=\""+item.msg+"\"><img src=\""+item.media[0].thumb+"\" height=\"59\" /></a></div></div>");
+					}
+					
+					$('div#cilist').append("<div style=\"float:right;width:24px;height:24px;margin-right:10px;\"><a class=\"ci_moredetails\" reportid=\""+item.id+"\" href=\"javascript:externalZeroIn("+item.lon+","+item.lat+",16,"+item.id+");\"><img src=\"<?php echo url::file_loc('img'); ?>media/img/pin_trans.png\" width=\"24\" height=\"24\" /></a></div>");
+					
+					$.each(data.payload.users, function(j,useritem){
+						if(useritem.id == item.user){
+							$('div#cilist').append("<div style=\"font-size:14px;width:215px;padding-top:0px;\"><a href=\"<?php echo url::site(); ?>profile/user/"+useritem.username+"\">"+useritem.name+"</a></div>");
+						}
+					});
+					
+					var utcDate = item.date.replace(" ","T")+"Z";
+					
+					if(item.msg == "")
+					{
+						$('div#cilist').append("<div class=\"ci_cimsg\"><small><em>"+$.timeago(utcDate)+"</em></small></div>");
+					}else{
+						$('div#cilist').append("<div class=\"ci_cimsg\">"+item.msg+"<br/><small><em>"+$.timeago(utcDate)+"</em></small></div>");
+					}
+					
+					if(item.comments !== undefined)
+					{
+						var user_link = '';
+						var comment_utcDate = '';
+						$.each(item.comments, function(j,comment){
+							comment_utcDate = comment.date.replace(" ","T")+"Z";
+							if(item.user_id != 0){
+								user_link = '<a href=\"<?php echo url::site(); ?>profile/user/'+comment.username+'\">'+comment.author+'</a>';
+							}else{
+								user_link = ''+comment.author+'';
+							}
+							$('div#cilist').append("<div style=\"clear:both\"></div>"+user_link+": "+comment.description+" <small>(<em>"+$.timeago(comment_utcDate)+"</em>)</small></div>");
+						});
+					}
+					
+					$('div#cilist').append("<div style=\"clear:both\"></div></div>");
+
+					showncount = showncount + 1;
+				});
+				
+				// Show previous link
+				if(sqloffset == 0)
+				{
+					$('div#cilist').append("<div style=\"float:left;\">&lt;&lt; <?php echo Kohana::lang('ui_main.previous'); ?></div>");
+				}else{
+					var newoffset = sqllimit - sqloffset;
+					$('div#cilist').append("<div style=\"float:left;\"><a href=\"javascript:cilisting("+sqllimit+","+newoffset+");\">&lt;&lt; <?php echo Kohana::lang('ui_main.previous'); ?></a></div>");
+				}
+				
+				// Show next link
+				if(showncount != sqllimit)
+				{
+					$('div#cilist').append("<div style=\"float:right;\"><?php echo Kohana::lang('ui_main.next'); ?> &gt;&gt;</div>");
+				}else{
+					var newoffset = sqloffset + sqllimit;
+					$('div#cilist').append("<div style=\"float:right;\"><a href=\"javascript:cilisting("+sqllimit+","+newoffset+");\"><?php echo Kohana::lang('ui_main.next'); ?> &gt;&gt;</a></div>");
+				}
+				
+				$('div#cilist').append("<div style=\"clear:both\"></div>");
+
+			});
+			
+		}
+		
+		cilisting(3,0);
+		showCheckins();
+		
+		<?php
+		// END CHECKINS!
+		}
+		?>

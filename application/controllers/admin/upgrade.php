@@ -9,7 +9,7 @@
  * http://www.gnu.org/copyleft/lesser.html
  * @author	   Ushahidi Team <team@ushahidi.com>
  * @package	   Ushahidi - http://source .ushahididev.com
- * @module	   Admin Messages Controller
+ * @subpackage Admin
  * @copyright  Ushahidi - http://www.ushahidi.com
  * @license	   http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL)
  */
@@ -35,7 +35,7 @@ class Upgrade_Controller extends Admin_Controller {
 		// Don't show auto-upgrader when disabled.
         if (Kohana::config('config.enable_auto_upgrader') == FALSE)
         {
-            url::redirect('admin/dashboard');
+			die(Kohana::lang('ui_main.disabled'));
         }
 		
 	}
@@ -280,6 +280,28 @@ class Upgrade_Controller extends Admin_Controller {
 				echo $contents;
 			}
 		}
+	}
+	
+	public function check_current_version()
+	{
+		//This is an AJAX call, so none of this fancy templating, just render the data
+		$this->template = "";
+		$this->auto_render = FALSE;
+		$view = View::factory('admin/current_version');
+				
+		
+		$upgrade = new Upgrade;
+		
+		//fetch latest release of ushahidi
+		$this->release = $upgrade->_fetch_core_release();		
+		
+		if(!empty($this->release) )
+        {
+		    $view->version = $this->_get_release_version();
+            $view->critical = $this->release->critical;        
+        }
+     
+        $view->render(TRUE);
 	}
 	
 	/**
@@ -533,6 +555,8 @@ class Upgrade_Controller extends Admin_Controller {
 			return "";
 		}
 	}
+	
+	
 	
 	/**
 	 * Checks version sequence parts

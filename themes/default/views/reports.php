@@ -3,18 +3,17 @@
 		<!-- start reports block -->
 		<div class="big-block">
 			<h1 class="heading">
-				<?php $timeframe_title =  date('M d, Y', $oldest_timestamp).' through '.date('M d, Y', $latest_timestamp); ?>
-				Showing Reports from <span class="time-period">
-					<?php echo $timeframe_title; ?>
-					</span> 
-				<a href="#" class="btn-change-time ic-time">change date range</a>
+				<?php $timeframe_title = date('M d, Y', $oldest_timestamp).' '.Kohana::lang('ui_main.through').' '.date('M d, Y', $latest_timestamp); ?>
+				<?php echo Kohana::lang('ui_main.showing_reports_from'); ?> 
+				<span class="time-period"><?php echo $timeframe_title; ?></span> 
+				<a href="#" class="btn-change-time ic-time"><?php echo Kohana::lang('ui_main.change_date_range'); ?></a>
 			</h1>
 			
 			<div id="tooltip-box">
 				<div class="tt-arrow"></div>
 				<ul class="inline-links">
 					<li>
-						<a title="<?php echo $timeframe_title; ?>" class="btn-date-range active" id="dateRangeAll" href="#">
+						<a title="<?php echo Kohana::lang('ui_main.all_time'); ?>" class="btn-date-range active" id="dateRangeAll" href="#">
 							<?php echo Kohana::lang('ui_main.all_time')?>
 						</a>
 					</li>
@@ -35,7 +34,7 @@
 					</li>
 				</ul>
 				
-				<p class="labeled-divider"><span>Or choose your own date range:</span></p>
+				<p class="labeled-divider"><span><?php echo Kohana::lang('ui_main.choose_date_range'); ?>:</span></p>
 				<form>
 					<table>
 						<tr>
@@ -62,7 +61,7 @@
 				<!-- end #reports-box -->
 				
 				<div id="filters-box">
-					<h2>Filter Reports By</h2>
+					<h2><?php echo Kohana::lang('ui_main.filter_reports_by'); ?></h2>
 					<div id="accordion">
 						
 						<h3>
@@ -82,10 +81,14 @@
 							</ul>
 						</div>
 						
-						<h3><a class="f-title" href="#"><?php echo Kohana::lang('ui_main.location'); ?></a></h3>
+						<h3>	
+							<a href="#" class="small-link-button f-clear reset" onclick="removeParameterKey('radius', 'f-location-box');removeParameterKey('start_loc', 'f-location-box');">
+								<?php echo Kohana::lang('ui_main.clear')?>
+							</a>
+							<a class="f-title" href="#"><?php echo Kohana::lang('ui_main.location'); ?></a></h3>
 						<div class="f-location-box">
 							<?php echo $alert_radius_view; ?>
-							<p><a class="reset" href="#">Reset</a></p>
+							<p></p>
 						</div>
 						
 						<h3>
@@ -158,13 +161,13 @@
 						<div class="f-verification-box">
 							<ul class="filter-list fl-verification">
 								<li>
-									<a href="#" id="filter_verification_link_1">
+									<a href="#" id="filter_link_verification_1">
 										<span class="item-icon ic-verified">&nbsp;</span>
 										<span class="item-title"><?php echo Kohana::lang('ui_main.verified'); ?></span>
 									</a>
 								</li>
 								<li>
-									<a href="#" id="filter_verification_link_0">
+									<a href="#" id="filter_link_verification_0">
 										<span class="item-icon ic-unverified">&nbsp;</span>
 										<span class="item-title"><?php echo Kohana::lang('ui_main.unverified'); ?></span>
 									</a>
@@ -172,13 +175,28 @@
 								
 							</ul>
 						</div>
+						<h3>
+							<a href="#" class="small-link-button f-clear reset" onclick="removeParameterKey('cff', 'fl-customFields');">
+								<?php echo Kohana::lang('ui_main.clear'); ?>
+							</a>
+							<a class="f-title" href="#"><?php echo Kohana::lang('ui_main.custom_fields'); ?></a>
+						</h3>
+						<div class="f-customFields-box">
+							<ul class="filter-list fl-customFields">
+								<?php echo $custom_forms_filter; ?>
+							</ul>
+						</div>
+						<?php
+							// Action, allows plugins to add custom filters
+							Event::run('ushahidi_action.report_filters_ui');
+						?>
 					</div>
 					<!-- end #accordion -->
 					
 					<div id="filter-controls">
 						<p>
 							<a href="#" class="small-link-button reset" id="reset_all_filters"><?php echo Kohana::lang('ui_main.reset_all_filters'); ?></a> 
-							<a href="#" id="applyFilters" class="filter-button">Filter Reports</a>
+							<a href="#" id="applyFilters" class="filter-button"><?php echo Kohana::lang('ui_main.filter_reports'); ?></a>
 						</p>
 					</div>          
 				</div>

@@ -9,7 +9,7 @@
  * http://www.gnu.org/copyleft/lesser.html
  * @author     Ushahidi Team <team@ushahidi.com>
  * @package    Ushahidi - http://source.ushahididev.com
- * @module     Category Localization Model
+ * @subpackage Models
  * @copyright  Ushahidi - http://www.ushahidi.com
  * @license    http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL)
  */
@@ -51,10 +51,21 @@ class Category_Lang_Model extends ORM
 			if(isset($cat->category_title) AND $cat->category_title != '')
 			{
 				return $cat->category_title;
-			}else{
-				return FALSE;
 			}
 		}
+		
+		// If we didn't find one, grab the default title
+		$category_title = ORM::factory('category')
+							->where(array('id'=>$category_id))
+							->find_all();
+		foreach($category_title as $cat){
+			if(isset($cat->category_title) AND $cat->category_title != '')
+			{
+				return $cat->category_title;
+			}
+		}
+		
+		return FALSE;
 	}
 
 }

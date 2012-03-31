@@ -9,14 +9,14 @@
  * http://www.gnu.org/copyleft/lesser.html
  * @author     Ushahidi Team <team@ushahidi.com> 
  * @package    Ushahidi - http://source.ushahididev.com
- * @module     Media Model  
+ * @subpackage Models
  * @copyright  Ushahidi - http://www.ushahidi.com
  * @license    http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL) 
  */
 
 class Media_Model extends ORM
 {
-	protected $belongs_to = array('location', 'incident', 'message');
+	protected $belongs_to = array('location', 'incident', 'message', 'badge');
 	
 	// Database table name
 	protected $table_name = 'media';

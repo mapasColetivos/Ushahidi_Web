@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 /**
- * This controller is used to add/ remove categories
+ * This controller is used to add/ remove Custom Forms
  *
  * PHP version 5
  * LICENSE: This source file is subject to LGPL license 
@@ -8,7 +8,7 @@
  * http://www.gnu.org/copyleft/lesser.html
  * @author     Ushahidi Team <team@ushahidi.com> 
  * @package    Ushahidi - http://source.ushahididev.com
- * @module     Admin Forms Controller  
+ * @subpackage Admin
  * @copyright  Ushahidi - http://www.ushahidi.com
  * @license    http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL) 
  */
@@ -254,12 +254,16 @@ class Forms_Controller extends Admin_Controller {
 		{
 			// @todo Manually extract the data to be validated
 			$form_field_data = arr::extract($_POST, 'form_id', 'field_type', 'field_name', 'field_default', 'field_required', 
-				'field_width', 'field_height', 'field_isdate', 'field_ispublic_visible', 'field_is_public_submit');
+				'field_width', 'field_height', 'field_isdate', 'field_ispublic_visible', 'field_ispublic_submit');
+			
+			// Sanitize the default value (if provided)
+			$form_field_data['field_default'] = $this->input->xss_clean($form_field_data['field_default']);
 			
 			// Form_Field_Model instance
-			$form_field = (Form_Field_Model::is_valid_form_field($field_id))
-				? ORM::factory('form_field', $field_id)
+			$form_field = Form_Field_Model::is_valid_form_field($_POST['field_id'])
+				? ORM::factory('form_field', $_POST['field_id'])
 				: new Form_Field_Model();
+
 			
 			// Validate the form field data
 			if ($form_field->validate($form_field_data))
@@ -284,7 +288,7 @@ class Forms_Controller extends Admin_Controller {
 						
 						$option_entry = ($option_exists->loaded == TRUE)
 							? ORM::factory('form_field_option', $option_exists->id)
-							: Form_Field_Option_Model();
+							: new Form_Field_Option_Model();
 						
 						$option_entry->form_field_id = $field_id;
 						$option_entry->option_name = $name;
@@ -293,17 +297,16 @@ class Forms_Controller extends Admin_Controller {
 					}
 				}
 
-				// Assign Position
-				if ($new_field)
+				// If a new field, calculate the field position
+				if (empty($new_field))
 				{
-					$get_position = ORM::factory('form_field')
-						->orderby('field_position','desc')
-						->find();
-						
-					$field_postition = ($get_position->loaded)? $get_position->field_position + 1 : 1;
-						
-					$field_form->field_position = $field_position;
-					$field_form->save($field_id);
+					// Calculate the field position
+					$field_position = ORM::factory('form_field')
+										->where(array('form_id' => $form_field->form_id, 'id != ' => $field_id))
+										->count_all() + 1;
+					
+					$form_field->field_position = $field_position;
+					$form_field->save();
 				}
 
 				$field_add_status = "success";
@@ -322,6 +325,7 @@ class Forms_Controller extends Admin_Controller {
 				$field_add_status = "error";
 				$field_add_response  = "";
 				$field_add_response .= "<ul>";
+				
 				foreach ($errors as $error_item => $error_description)
 				{
 					$field_add_response .= (!$error_description) ? '' : "<li>" . $error_description . "</li>";
@@ -353,7 +357,11 @@ class Forms_Controller extends Admin_Controller {
 		
 		if ($field_id > 0 AND $form_id > 0)
 		{
-			ORM::factory('form_field')->delete($field_id);
+			$form_field = ORM::factory('form_field', $field_id);
+			if ($form_field->loaded)
+			{
+				$form_field->delete();
+			}
 			$return_content = customforms::get_current_fields($form_id,$this->user);
 		}
 		
@@ -387,48 +395,37 @@ class Forms_Controller extends Admin_Controller {
 		
 		if ($field_position == 'u' OR $field_position == 'd')
 		{
-			$total_fields = ORM::factory('form_field')->count_all();
 			
 			// Load This Field
 			$field = ORM::factory('form_field', $field_id);
 			if ($field->loaded == TRUE)
 			{
-				// Get Current Position
-			    $current_position = $field->field_position;
+				// Get the total number of fields for the form
+				$total_fields = ORM::factory('form_field')->where('form_id', $field->form_id)->count_all();
+
+				// Get current position
+				$current_position = $field->field_position;
 				
-				if ($field_position == 'u' AND $current_position != 1)
-				{ // Are we moving UP?
-					$ahead = ORM::factory('form_field')
-						->where('form_id',$form_id)
-						->where('field_position < '.$current_position)
-						->orderby('field_position','desc')
-						->find();
-					if ($ahead->loaded == true)
-					{
-						$ahead_position = $ahead->field_position;
-						$ahead->field_position = $current_position;
-						$ahead->save();
-						
-						$field->field_position = $ahead_position;
-						$field->save();
-					}
+				if ($field_position == 'u' AND $current_position > 1)
+				{
+					// Move down the fields whose position value is greater
+					// than that of the selected field 
+					$sql = "UPDATE %sform_field SET field_position = %d WHERE field_position = %d";
+					$this->db->query(sprintf($sql, $this->table_prefix, $current_position, $current_position-1));
+
+					// Move the selected field upwards
+					$field->field_position = $current_position - 1;
+					$field->save();
 				}
 				elseif ($field_position == 'd' AND $current_position != $total_fields)
-				{ // Are we moving DOWN?
-					$behind = ORM::factory('form_field')
-						->where('form_id',$form_id)
-						->where('field_position >'.$current_position)
-						->orderby('field_position','asc')
-						->find();
-					if ($behind->loaded == true)
-					{
-						$behind_position = $behind->field_position;
-						$behind->field_position = $current_position;
-						$behind->save();
-						
-						$field->field_position = $behind_position;
-						$field->save();
-					}
+				{ 
+					// Move all other form fields upwards
+					$sql = "UPDATE %sform_field SET field_position = %d WHERE field_position = %d";
+					$this->db->query(sprintf($sql, $this->table_prefix,  $current_position, $current_position + 1));
+					
+					// Move the selected field downwards - increase its field position in the database
+					$field->field_position = $current_position + 1;
+					$field->save();
 				}
 			}
 			
@@ -754,7 +751,7 @@ class Forms_Controller extends Admin_Controller {
 		$datatype_options = array(
 			'text' => Kohana::lang('ui_admin.field_datatype_text'),
 			'markup' => Kohana::lang('ui_admin.field_datatype_markup'),
-			'javascript' => Kohana::lang('ui_admin.field_datatype_javascript')
+			// 'javascript' => Kohana::lang('ui_admin.field_datatype_javascript')
 		);
 		$html .="<div class=\"forms_item\">"; 
 		$html .="<strong>" . Kohana::lang('ui_admin.field_datatype') . ":</strong><br />";
@@ -895,22 +892,29 @@ class Forms_Controller extends Admin_Controller {
 			$field_ispublic_submit = "0";
 		}
 		
-		$html = "";
-		$html .="<input type=\"hidden\" name=\"form_id\" id=\"form_id\" value=\"".$form_id."\">";
-		$html .="<input type=\"hidden\" name=\"field_id\" id=\"field_id\" value=\"".$field_id."\">";
-		$html .="<input type=\"hidden\" name=\"field_ispublic_visible\" id=\"field_id\" value=\"0\">";
-		$html .="<input type=\"hidden\" name=\"field_ispublic_submit\" id=\"field_id\" value=\"0\">";
-		$html .="<div id=\"form_result_".$form_id."\" class=\"forms_fields_result\"></div>";
-		$html .="<div class=\"forms_item\">"; 
-		$html .="	<strong>".Kohana::lang('ui_admin.field_name').":</strong><br />"; 
-		$html .= 	form::input('field_name', $field_name, ' class="text"');
-		$html .="</div>"; 
-		$html .="<div class=\"forms_item\">"; 
-		$html .="	<strong>".Kohana::lang('ui_admin.field_default').":</strong><br />"; 
-		$html .= 	form::textarea('field_default', $field_default, ' class="text"');
-		$html .="</div>"; 
-		$html .="<div class=\"forms_item\">"; 
-		$html .="	<strong>".Kohana::lang('ui_admin.required').":</strong><br />"; 
+		// Prompt/label for the values
+		$values_prompt = (intval($type) == 7)? Kohana::lang('ui_admin.dropdown_choices') : Kohana::lang('ui_admin.field_choices');
+		
+		// Tooltip display value
+		$tooltip = (intval($type) == 7)? Kohana::lang('tooltips.dropdown_choices') : Kohana::lang('tooltips.default_value');
+		
+		$html = "<input type=\"hidden\" name=\"form_id\" id=\"form_id\" value=\"".$form_id."\">"
+			. "<input type=\"hidden\" name=\"field_id\" id=\"field_id\" value=\"".$field_id."\">"
+			. "<input type=\"hidden\" name=\"field_ispublic_visible\" id=\"field_id\" value=\"0\">"
+			. "<input type=\"hidden\" name=\"field_ispublic_submit\" id=\"field_id\" value=\"0\">"
+			. "<div id=\"form_result_".$form_id."\" class=\"forms_fields_result\"></div>"
+			. "<div class=\"forms_item\">"
+			. "		<strong>".Kohana::lang('ui_admin.field_name').":</strong><br />" 
+			.		form::input('field_name', $field_name, ' class="text"')
+			. "</div>" 
+			. "<div class=\"forms_item\">" 
+			. "		<strong>".$values_prompt.":<a href=\"#\" class=\"tooltip\""
+			. "		title=\"".$tooltip."\"></a><br />" 
+			.		form::textarea('field_default', $field_default, ' class="text"')
+			. "</div>" 
+			. "<div class=\"forms_item\">" 
+			. "		<strong>".Kohana::lang('ui_admin.required').":</strong><br />"; 
+		
 		if ($field_required != 1)
 		{
 			$html .= 	Kohana::lang('ui_admin.yes')." " . form::radio('field_required', '1', FALSE) . "&nbsp;&nbsp;";
@@ -974,7 +978,7 @@ class Forms_Controller extends Admin_Controller {
 		$html .="        	$('#formadd_".$form_id."').hide(300);";
 		$html .="        	$('#form_fields_".$form_id."').hide();";
 		$html .="        	$('#form_fields_current_".$form_id."').html('');";
-		$html .="        	$('#form_fields_current_".$form_id."').html(unescape(data.response));";
+		$html .="        	$('#form_fields_current_".$form_id."').html(decodeURIComponent(data.response));";
 		$html .="        	$('#form_fields_current_".$form_id."').effect(\"highlight\", {}, 2000);";
 		$html .="        };";
 		$html .="    } ";

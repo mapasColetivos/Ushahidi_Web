@@ -51,8 +51,19 @@ class ReportsImporter {
 		{
 			return false;
 		}
+		
 		// So we can assign category id to incidents, based on category title
 		$this->category_ids = ORM::factory('category')->select_list('category_title','id'); 
+		//Since we capitalize the category names from the CSV file, we should also capitlize the 
+		//category titles here so we get case insensative behavior. For some reason users don't
+		//always captilize the cateogry names as they enter them in
+		$temp_cat = array();
+		foreach($this->category_ids as $key=>$value)
+		{
+			$temp_cat[strtoupper($key)] = $value;
+		}
+		$this->category_ids = $temp_cat;
+		
 		// So we can check if incident already exists in database
 		$this->incident_ids = ORM::factory('incident')->select_list('id','id'); 
 		$this->time = date("Y-m-d H:i:s",time());
@@ -128,8 +139,18 @@ class ReportsImporter {
 		{
 			$location = new Location_Model();
 			$location->location_name = isset($row['LOCATION']) ? $row['LOCATION'] : '';
-			$location->latitude = isset($row['LATITUDE']) ? $row['LATITUDE'] : '';
-			$location->longitude = isset($row['LONGITUDE']) ? $row['LONGITUDE'] : '';
+			// If we have LATITUDE and LONGITUDE use those
+			if ( isset($row['LATITUDE']) AND isset($row['LONGITUDE']) ) {
+				$location->latitude = isset($row['LATITUDE']) ? $row['LATITUDE'] : '';
+				$location->longitude = isset($row['LONGITUDE']) ? $row['LONGITUDE'] : '';
+			// Geocode reports which don't have LATITUDE and LONGITUDE
+			} else {
+				$location_geocoded = Geocoder::geocode_location($location->location_name);
+				if ($location_geocoded) {
+					$location->latitude = $location_geocoded[1];
+					$location->longitude = $location_geocoded[0];
+				}
+			}
 			$location->location_date = $this->time;
 			$location->save();
 			$this->locations_added[] = $location->id;
@@ -149,7 +170,7 @@ class ReportsImporter {
 		$this->incidents_added[] = $incident->id;
 		
 		// STEP 3: SAVE CATEGORIES
-		// If CATEGORIES column exists
+		// If CATEGORY column exists
 		if (isset($row['CATEGORY']))
 		{
 			$categorynames = explode(',',trim($row['CATEGORY']));
@@ -157,9 +178,14 @@ class ReportsImporter {
 			foreach ($categorynames as $categoryname)
 			{
 				// There seems to be an uppercase convention for categories... Don't know why
-				$categoryname = strtoupper(trim($categoryname)); 
-				// Empty categoryname not allowed
-				if ($categoryname != '')
+				$categoryname = strtoupper(trim($categoryname));
+				
+				// For purposes of adding an entry into the incident_category table
+				$incident_category = new Incident_Category_Model();
+				$incident_category->incident_id = $incident->id; 
+				
+				// If category name exists, add entry in incident_category table
+				if ($row['CATEGORY'] != '')
 				{
 					if (!isset($this->category_ids[$categoryname]))
 					{
@@ -178,15 +204,40 @@ class ReportsImporter {
 						// Now category_id is known: This time, and for the rest of the import.
 						$this->category_ids[$categoryname] = $category->id; 
 					}
-					$incident_category = new Incident_Category_Model();
-					$incident_category->incident_id = $incident->id;
 					$incident_category->category_id = $this->category_ids[$categoryname];
 					$incident_category->save();
 					$this->incident_categories_added[] = $incident_category->id;
-				} 
+				}
+				
+				else
+				{
+					// Unapprove the report
+					$incident_update = ORM::factory('incident',$incident->id);
+					$incident_update->incident_active = 0;
+					$incident_update->save();
+
+					// Assign reports to special category for orphaned reports: NONE
+					$incident_category->category_id = '5';
+					$incident_category->save();
+				}	
 			} 
+		}
+		
+		// If CATEGORY column doesn't exist, 
+		else
+		{
+			// Unapprove the report
+			$incident_update = ORM::factory('incident',$incident->id);
+			$incident_update->incident_active = 0;
+			$incident_update->save();
+			
+			// Assign reports to special category for orphaned reports: NONE
+			$incident_category = new Incident_Category_Model();
+			$incident_category->incident_id = $incident->id;
+			$incident_category->category_id = '5';
+			$incident_category->save();
 		} 
-		return true;
+	return true;
 	}
 }
 

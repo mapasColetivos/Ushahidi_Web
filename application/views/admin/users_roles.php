@@ -98,7 +98,7 @@
 					<div style="clear:both;"></div>
 					<div class="tab_form_item">
 						&nbsp;<br />
-						<input type="image" src="<?php echo url::base() ?>media/img/admin/btn-save-settings.gif" class="save-rep-btn" />
+						<input type="image" src="<?php echo url::file_loc('img'); ?>media/img/admin/btn-save-settings.gif" class="save-rep-btn" />
 					</div>
 					<?php print form::close(); ?>			
 				</div>
@@ -171,7 +171,7 @@
 										</td>
 										<td class="col-3">&nbsp;</td>
 										<td class="col-4">
-											<?php if($role_id == 1 OR $role_id == 3) { echo "&nbsp;";
+											<?php if($role_id == 1 OR $role_id == 3 OR $role->name == "member") { echo "&nbsp;";
 											
 											} else {?>
 											<ul>

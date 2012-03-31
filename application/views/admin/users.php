@@ -1,16 +1,16 @@
-<?php 
+<?php
 /**
  * Users view page.
  *
  * PHP version 5
- * LICENSE: This source file is subject to LGPL license 
+ * LICENSE: This source file is subject to LGPL license
  * that is available through the world-wide-web at the following URI:
  * http://www.gnu.org/copyleft/lesser.html
- * @author     Ushahidi Team <team@ushahidi.com> 
+ * @author     Ushahidi Team <team@ushahidi.com>
  * @package    Ushahidi - http://source.ushahididev.com
  * @module     API Controller
  * @copyright  Ushahidi - http://www.ushahidi.com
- * @license    http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL) 
+ * @license    http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL)
  */
 ?>
 			<div class="bg">
@@ -33,6 +33,12 @@
 										<th class="col-2">
 											<?php echo Kohana::lang('ui_admin.header_user'); ?>
 										</th>
+
+										<?php
+											//Add header item to users listing page
+											Event::run('ushahidi_action.users_listing_header');
+										?>
+
 										<th class="col-2">
 											<?php echo Kohana::lang('ui_admin.header_role');?>
 										</th>
@@ -60,7 +66,7 @@
 												</h3>
 											</td>
 										</tr>
-									<?php	
+									<?php
 									}
 									foreach ($users as $user)
 									{
@@ -69,24 +75,31 @@
 										$password = $user->password;
 										$name = $user->name;
 										$email = $user->email;
-										
+
+										// Show the highest role, defaulting to "none"
+										$role = Kohana::lang('ui_main.none');
 										foreach ($user->roles as $user_role) {
 											$role = $user_role->name;
 										}
 										?>
 										<tr>
-											
+
 											<td class="col-1">
 												&nbsp;
 											</td>
 											<td class="col-2">
 												<div class="post">
-													<h4><a href="<?php echo url::site() . 'admin/users/edit/' . $user_id; ?>"><?php echo $name; ?> (<?php echo $username; ?>)</a></h4>
+													<h4><a href="<?php echo url::site() . 'admin/users/edit/' . $user_id; ?>"><?php echo $name; ?></a></h4>
 												</div>
 												<ul class="info">
 													<li class="none-separator"><?php echo Kohana::lang('ui_main.email');?>: <strong><?php echo $email; ?></strong></li>
 												</ul>
 											</td>
+																						<?php
+												//Add item to users listing page
+												Event::run('ushahidi_action.users_listing_item',$user_id);
+											?>
+
 											<td class="col-3">
 												<?php echo strtoupper($role); ?>
 											</td>

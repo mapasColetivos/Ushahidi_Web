@@ -15,6 +15,8 @@
  * @license    http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL) 
  */
 ?>
+    <?php @require_once(APPPATH.'views/map_common_js.php'); ?>
+
 		var map, markers;
 		var myPoint;
 		var selectedFeature;
@@ -74,11 +76,11 @@
 						if ( typeof(feature) != 'undefined' && 
 							feature.data.id == <?php echo $incident_id; ?>)
 						{
-							return "<?php echo url::base().'media/img/openlayers/marker.png' ;?>";
+							return "<?php echo url::file_loc('img').'media/img/openlayers/marker.png' ;?>";
 						}
 						else
 						{
-							return "<?php echo url::base().'media/img/openlayers/marker-gold.png' ;?>";
+							return "<?php echo url::file_loc('img').'media/img/openlayers/marker-gold.png' ;?>";
 						}
 					},
 					fillcolor: function(feature)
@@ -138,20 +140,7 @@
 			
 			map.addLayer(markers);
 			
-			selectCtrl = new OpenLayers.Control.SelectFeature(markers, {
-				onSelect: onFeatureSelect, 
-				onUnselect: onFeatureUnselect
-			});
-			highlightCtrl = new OpenLayers.Control.SelectFeature(markers, {
-			    hover: true,
-			    highlightOnly: true,
-			    renderIntent: "temporary"
-			});		
-
-			map.addControl(selectCtrl);
-			map.addControl(highlightCtrl);
-			selectCtrl.activate();
-			//highlightCtrl.activate();
+      addFeatureSelectionEvents(map, markers);
 
 			// create a lat/lon object
 			myPoint = new OpenLayers.LonLat(<?php echo $longitude; ?>, <?php echo $latitude; ?>);
@@ -159,7 +148,7 @@
 			
 			// display the map centered on a latitude and longitude (Google zoom levels)
 
-			map.setCenter(myPoint, <?php echo ($incident_zoom) ? $incident_zoom : 10; ?>);
+			map.setCenter(myPoint, <?php echo ($incident_zoom) ? $incident_zoom : intval(Kohana::config('settings.default_zoom')); ?>);
 		});
 		
 		$(document).ready(function(){
@@ -243,51 +232,7 @@
 				return false;
 			});
 		});
-		
-		function onPopupClose(evt) {
-            selectCtrl.unselect(selectedFeature);
-			selectedFeature = '';
-        }
 
-        function onFeatureSelect(feature) {
-            selectedFeature = feature;
-			// Lon/Lat Spherical Mercator
-			zoom_point = feature.geometry.getBounds().getCenterLonLat();
-			lon = zoom_point.lon;
-			lat = zoom_point.lat;
-            var content = "<div class=\"infowindow\"><div class=\"infowindow_list\">"+feature.attributes.name + "</div>";
-			content = content + "\n<div class=\"infowindow_meta\"><a href='javascript:zoomToSelectedFeature("+ lon + ","+ lat +", 1)'>Zoom&nbsp;In</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href='javascript:zoomToSelectedFeature("+ lon + ","+ lat +", -1)'>Zoom&nbsp;Out</a></div>";
-			content = content + "</div>";
-			// Since KML is user-generated, do naive protection against
-            // Javascript.
-            if (content.search("<script") != -1) {
-                content = "Content contained Javascript! Escaped content below.<br />" + content.replace(/</g, "&lt;");
-            }
-            popup = new OpenLayers.Popup.FramedCloud("chicken", 
-                                     feature.geometry.getBounds().getCenterLonLat(),
-                                     new OpenLayers.Size(100,100),
-                                     content,
-                                     null, true, onPopupClose);
-            feature.popup = popup;
-            map.addPopup(popup);
-        }
-
-        function onFeatureUnselect(feature) {
-            map.removePopup(feature.popup);
-            feature.popup.destroy();
-            feature.popup = null;
-        }
-		
-		function zoomToSelectedFeature(lon, lat, zoomfactor){
-			var lonlat = new OpenLayers.LonLat(lon,lat);
-			map.panTo(lonlat);
-			// Get Current Zoom
-			currZoom = map.getZoom();
-			// New Zoom
-			newZoom = currZoom + zoomfactor;
-			map.zoomTo(newZoom);
-		}
-		
 		jQuery(window).bind("load", function() {
 			jQuery("div#slider1").codaSlider()
 			// jQuery("div#slider2").codaSlider()
@@ -296,23 +241,25 @@
 		
 		function rating(id,action,type,loader)
 		{
-			$('#' + loader).html('<img src="<?php echo url::base() . "media/img/loading_g.gif"; ?>">');
-			$.post("<?php echo url::site() . 'reports/rating/' ?>" + id, { action: action, type: type },
+			$('#' + loader).html('<img src="<?php echo url::file_loc('img')."media/img/loading_g.gif"; ?>">');
+			$.post("<?php echo url::site().'reports/rating/' ?>" + id, { action: action, type: type },
 				function(data){
 					if (data.status == 'saved'){
 						if (type == 'original') {
-							$('#oup_' + id).attr("src","<?php echo url::base() . 'media/img/'; ?>gray_up.png");
-							$('#odown_' + id).attr("src","<?php echo url::base() . 'media/img/'; ?>gray_down.png");
+							$('#oup_' + id).attr("src","<?php echo url::file_loc('img').'media/img/'; ?>gray_up.png");
+							$('#odown_' + id).attr("src","<?php echo url::file_loc('img').'media/img/'; ?>gray_down.png");
 							$('#orating_' + id).html(data.rating);
 						}
 						else if (type == 'comment')
 						{
-							$('#cup_' + id).attr("src","<?php echo url::base() . 'media/img/'; ?>gray_up.png");
-							$('#cdown_' + id).attr("src","<?php echo url::base() . 'media/img/'; ?>gray_down.png");
+							$('#cup_' + id).attr("src","<?php echo url::file_loc('img').'media/img/'; ?>gray_up.png");
+							$('#cdown_' + id).attr("src","<?php echo url::file_loc('img').'media/img/'; ?>gray_down.png");
 							$('#crating_' + id).html(data.rating);
 						}
 					} else {
-						alert('ERROR!');
+						if(typeof(data.message) != 'undefined') {
+							alert(data.message);
+						}
 					}
 					$('#' + loader).html('');
 			  	}, "json");

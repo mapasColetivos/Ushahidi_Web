@@ -9,7 +9,7 @@
  * http://www.gnu.org/copyleft/lesser.html
  * @author     Ushahidi Team <team@ushahidi.com>
  * @package    Ushahidi - http://source.ushahididev.com
- * @module     Feed Controller
+ * @subpackage Controllers
  * @copyright  Ushahidi - http://www.ushahidi.com
  * @license    http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL)
 *
@@ -68,13 +68,21 @@ class Feed_Controller extends Controller
 
             foreach($incidents as $incident)
             {
+                $categories = Array();
+                foreach ($incident->category AS $category)
+                {
+                  $categories[] = (string)$category->category_title;
+                }
+              
+              
                 $item = array();
                 $item['id'] = $incident->id;
                 $item['title'] = $incident->incident_title;
                 $item['link'] = $site_url.'reports/view/'.$incident->id;
                 $item['description'] = $incident->incident_description;
                 $item['date'] = $incident->incident_date;
-
+                $item['categories'] = $categories;
+                
                 if($incident->location_id != 0
                     AND $incident->location->longitude
                     AND $incident->location->latitude)
@@ -85,7 +93,7 @@ class Feed_Controller extends Controller
                 }
             }
 
-            $cache->set('feed_'.$limit.'_'.$page, $items, array('feed'), 3600); // 1 Hour
+            $cache->set($subdomain.'_feed_'.$limit.'_'.$page, $items, array('feed'), 3600); // 1 Hour
             $feed_items = $items;
         }
 
@@ -98,7 +106,7 @@ class Feed_Controller extends Controller
         $view->georss = 1; // this adds georss namespace in the feed
         $view->feed_url = $site_url.$feedpath;
         $view->feed_date = gmdate("D, d M Y H:i:s T", time());
-        $view->feed_description = Kohana::lang('ui_admin.incident_feed').' '.Kohana::config('settings.site_name');
+        $view->feed_description = htmlspecialchars(Kohana::lang('ui_admin.incident_feed').' '.Kohana::config('settings.site_name'));
         $view->items = $feed_items;
         $view->render(TRUE);
     }

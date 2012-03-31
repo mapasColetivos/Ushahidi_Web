@@ -10,7 +10,7 @@
  * http://www.gnu.org/copyleft/lesser.html
  * @author     Ushahidi Team <team@ushahidi.com>
  * @package    Ushahidi - http://source.ushahididev.com
- * @module     Checkin Model
+ * @subpackage Models
  * @copyright  Ushahidi - http://www.ushahidi.com
  * @license    http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL)
  */
@@ -18,7 +18,7 @@
 class Checkin_Model extends ORM
 {	
 	protected $belongs_to = array('user');
-	protected $has_many = array('media');
+	protected $has_many = array('media','comment');
 	protected $has_one = array('location','user');
 
 	// Database table name

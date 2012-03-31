@@ -21,12 +21,15 @@ Kohana::config_set('locale.language', $settings->site_language);
 // Main Site Settings
 Kohana::config_set('settings.site_name', $settings->site_name);
 Kohana::config_set('settings.site_email', $settings->site_email);
+Kohana::config_set('settings.site_banner_id', $settings->site_banner_id);
 Kohana::config_set('settings.site_tagline', $settings->site_tagline);
 Kohana::config_set('settings.site_style', $settings->site_style);
 Kohana::config_set('settings.site_contact_page', $settings->site_contact_page);
 Kohana::config_set('settings.site_help_page', $settings->site_help_page);
 Kohana::config_set('settings.site_message', $settings->site_message);
 Kohana::config_set('settings.site_copyright_statement', $settings->site_copyright_statement);
+Kohana::config_set('settings.site_submit_report_message', $settings->site_submit_report_message);
+Kohana::config_set('settings.allow_alerts', $settings->allow_alerts);
 Kohana::config_set('settings.allow_reports', $settings->allow_reports);
 Kohana::config_set('settings.allow_comments', $settings->allow_comments);
 Kohana::config_set('settings.allow_feed', $settings->allow_feed);
@@ -63,8 +66,10 @@ Kohana::config_set('settings.checkins', $settings->checkins);
 Kohana::config_set('settings.db_version', $settings->db_version);
 Kohana::config_set('settings.ushahidi_version', $settings->ushahidi_version);
 Kohana::config_set('settings.private_deployment', $settings->private_deployment);
+Kohana::config_set('settings.manually_approve_users', $settings->manually_approve_users);
+Kohana::config_set('settings.require_email_confirmation', $settings->require_email_confirmation);
 
-// Set Site Timezone 
+// Set Site Timezone
 if (function_exists('date_default_timezone_set'))
 {
 	$timezone = $settings->site_timezone;
@@ -89,7 +94,7 @@ if ($map_layer)
 // And in case you want to display all maps on one page...
 $api_google = $settings->api_google;
 $api_yahoo = $settings->api_yahoo;
-Kohana::config_set('settings.api_url_all', '<script src="http://dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=6"></script><script type="text/javascript" src="http://api.maps.yahoo.com/ajaxymap?v=3.0&appid=' . $api_yahoo . '"></script><script src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false" type="text/javascript"></script>'.html::script('http://www.openstreetmap.org/openlayers/OpenStreetMap.js'));
+Kohana::config_set('settings.api_url_all', '<script src="https://dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=6"></script><script type="text/javascript" src="http://api.maps.yahoo.com/ajaxymap?v=3.0&appid=' . $api_yahoo . '"></script><script src="https://maps.google.com/maps/api/js?v=3.2&amp;sensor=false" type="text/javascript"></script>'.html::script('https://www.openstreetmap.org/openlayers/OpenStreetMap.js'));
 
 // Additional Mime Types (KMZ/KML)
 Kohana::config_set('mimes.kml', array('text/xml'));

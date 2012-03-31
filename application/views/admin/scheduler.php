@@ -57,7 +57,7 @@
 				?>
 					<!-- green-box -->
 					<div class="green-box">
-						<h3><?php echo Kohana::lang('ui_main.feed_has_been');?> <?php echo $form_action; ?>!</h3>
+						<h3><?php echo Kohana::lang('ui_main.schedule');?> <?php echo $form_action; ?>!</h3>
 					</div>
 				<?php
 				}
@@ -208,7 +208,7 @@
 						</div>						
 						<div class="tab_form_item">
 							&nbsp;<br />
-							<input type="image" src="<?php echo url::base() ?>media/img/admin/btn-save.gif" class="save-rep-btn" />
+							<input type="image" src="<?php echo url::file_loc('img'); ?>media/img/admin/btn-save.gif" class="save-rep-btn" />
 						</div>
 						<?php print form::close(); ?>			
 						<div style="clear:both"></div>

@@ -133,7 +133,7 @@
 						</div>
 						<div class="tab_form_item">
 							&nbsp;<br />
-							<input type="image" src="<?php echo url::base() ?>media/img/admin/btn-save.gif" class="save-rep-btn" />
+							<input type="image" src="<?php echo url::file_loc('img'); ?>media/img/admin/btn-save.gif" class="save-rep-btn" />
 						</div>
 						<?php print form::close(); ?>			
 					</div>
@@ -143,9 +143,9 @@
 			// Levels JS
 			function fillFields(id, level_title, level_description, level_weight)
 			{
-				$("#level_id").attr("value", unescape(id));
-				$("#level_title").attr("value", unescape(level_title));
-				$("#level_description").attr("value", unescape(level_description));
-				$("#level_weight").attr("value", unescape(level_weight));
+				$("#level_id").attr("value", decodeURIComponent(id));
+				$("#level_title").attr("value", decodeURIComponent(level_title));
+				$("#level_description").attr("value", decodeURIComponent(level_description));
+				$("#level_weight").attr("value", decodeURIComponent(level_weight));
 			}
 			</script>

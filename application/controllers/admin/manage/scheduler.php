@@ -9,7 +9,7 @@
  * http://www.gnu.org/copyleft/lesser.html
  * @author     Ushahidi Team <team@ushahidi.com>
  * @package    Ushahidi - http://source.ushahididev.com
- * @module     Admin Scheduler Controller
+ * @subpackage Admin
  * @copyright  Ushahidi - http://www.ushahidi.com
  * @license    http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL)
  */
@@ -117,7 +117,7 @@ class Scheduler_Controller extends Admin_Controller
 					$scheduler->scheduler_minute = $post->scheduler_minute;
 					$scheduler->save();
 					$form_saved = TRUE;
-					$form_action = strtoupper(Kohana::lang('ui_admin.added_edited'));
+					$form_action = strtoupper(Kohana::lang('ui_admin.edited'));
 				}
 
 			} else {

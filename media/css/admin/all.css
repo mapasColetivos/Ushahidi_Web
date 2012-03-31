@@ -1,9 +1,9 @@
 body{
 	margin:0;
 	font:12px/16px "Trebuchet MS",sans-serif;
-	background:url(../../img/admin/body-bg.gif) repeat-x;
 	color:#555;
 	min-width:960px;
+	padding:0;
 }
 form{
 	margin:0;
@@ -15,7 +15,7 @@ form{
 }
 h1, h2 ,h3, h4{margin:0;}
 h1{
-	padding:58px 0 0 2px;
+	padding:16px 0 0 2px;
 	color:#000;
 	font:28px/30px Georgia, "Times New Roman", Times, serif;
 }
@@ -104,7 +104,7 @@ a:hover{ text-decoration:none;}
 }
 /*-- info-nav --*/
 .info-nav {
-	margin:40px 7px 0 0;
+	margin:16px 7px 0 0;
 	display:inline;
 	float:right;
 }
@@ -153,9 +153,12 @@ a:hover{ text-decoration:none;}
 	vertical-align: middle;
 	width:100px;
 }
+
+.info-buttons { clear:both; margin:10px 0 0 0; text-align:right; }
+
 /*-- nav-holder --*/
 .nav-holder {
-	padding:43px 0 0;
+	padding:18px 0 0;
 	width:100%;
 	clear:both;
 	overflow:hidden;
@@ -306,10 +309,10 @@ ul.inf li a{
 	clear:both;
 	overflow:hidden;
 }
-.post-edit-log-red{
+.post-edit-log-blue{
 	padding:3px;
-	background-color:#FFE7D5;
-	border:1px solid #FFB782;
+	background-color:#F2F7FA;
+	border:1px solid #A8CADE;
 }
 .post-edit-log-gray{
 	padding:3px;
@@ -930,6 +933,9 @@ div.experimental{
 	font-weight:bold;
 	text-transform: uppercase;
 }
+.welcome-form{
+	padding:12px 0px 0px 12px;
+}
 /*-- f-col --*/
 .f-col {
 	padding:0 10px 14px 20px;
@@ -1151,6 +1157,12 @@ a.rem{
 a.rem { background:url(../../img/icon-minus.gif) no-repeat;}
 input.short {
 	width:50px;
+}
+input.short2 {
+	width:100px;
+}
+input.short3 {
+	width:150px;
 }
 input.long {
 	width:454px;
@@ -1377,6 +1389,7 @@ div.sms_holder, div.settings_holder{
 	div.theme_holder{
 		width:243px;
 		margin-right:20px;
+		margin-bottom:20px;
 		border:1px solid #ccc;
 		float:left;
 		padding:10px;
@@ -1634,6 +1647,13 @@ a.new-form_field{
 }
 .hide{
 	display:none;
+}
+
+.required,
+.report-form h4 .required {
+  color: #CC1830;
+  font-size: 15px;
+  font-weight: normal;
 }
 
 /*-- Color Picker --*/
@@ -2208,6 +2228,14 @@ ul.map-toggles li a:active { display:inline-block; padding:3px 5px 3px 17px; out
 			.member_info_row ul li{
 				margin:2px 0 2px 0;
 			}
+			
+		.member_reputation{
+			font-size:120%;
+			font-weight:bold;
+			color:#888;
+			background-color:#eee;
+			padding:3px;
+		}
 .checkin_map{
 	margin-top:10px;
 	width:460px;
@@ -2215,5 +2243,232 @@ ul.map-toggles li a:active { display:inline-block; padding:3px 5px 3px 17px; out
 	border: 2px solid #ccc;
 }
 
-/*--  --*/
-/*--  --*/
+/*
+Button Styles
+*/
+a.button 
+/* button,
+input[type="submit"],
+input[type="reset"],
+input[type="button"] */ {
+	background: #eee; /* Old browsers */
+	
+  border: 1px solid #aaa;
+  border-top: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+  padding: 2px 10px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  color: #444;
+  display: inline-block;
+  font-size: 10px;
+  font-weight: bold;
+  text-decoration: none;
+  text-shadow: 0 1px rgba(255, 255, 255, .75);
+  cursor: pointer;
+  margin-bottom: 20px;
+  line-height: 21px;
+  font-family: "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif; }
+  
+a.button:hover
+/* button:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover,
+input[type="button"]:hover */ {
+	color: #222;
+	background: #eee; /* Old browsers */
+	
+  border: 1px solid #888;
+  border-top: 1px solid #aaa;
+  border-left: 1px solid #aaa; }
+  
+.badge {
+	float:left;
+	width:100px;
+	text-align:center;
+	background-color:#E9E9E9;
+	-moz-border-radius:5px;
+	border-radius:5px;
+	padding:5px;
+	margin:0px 5px;
+}
+
+/* jquery datePicker CSS */
+
+
+table.jCalendar {
+	border: 1px solid #000;
+	background: #aaa;
+    border-collapse: separate;
+    border-spacing: 2px;
+}
+table.jCalendar th {
+	background: #333;
+	color: #fff;
+	font-weight: bold;
+	padding: 3px 5px;
+}
+
+table.jCalendar td {
+	background: #ccc;
+	color: #000;
+	padding: 3px 5px;
+	text-align: center;
+}
+table.jCalendar td.other-month {
+	background: #ddd;
+	color: #aaa;
+}
+table.jCalendar td.today {
+	background: #666;
+	color: #fff;
+}
+table.jCalendar td.selected {
+	background: #f66;
+	color: #fff;
+}
+table.jCalendar td.selected.dp-hover {
+	background: #f33;
+	color: #fff;
+}
+table.jCalendar td.dp-hover,
+table.jCalendar tr.activeWeekHover td {
+	background: #fff;
+	color: #000;
+}
+table.jCalendar tr.selectedWeek td {
+	background: #f66;
+	color: #fff;
+}
+table.jCalendar td.disabled, table.jCalendar td.disabled.dp-hover {
+	background: #bbb;
+	color: #888;
+}
+table.jCalendar td.unselectable,
+table.jCalendar td.unselectable:hover,
+table.jCalendar td.unselectable.dp-hover {
+	background: #bbb;
+	color: #888;
+}
+
+/* For the popup */
+
+/* NOTE - you will probably want to style a.dp-choose-date - see how I did it in demo.css */
+
+div.dp-popup {
+	position: relative;
+	background: #ccc;
+	font-size: 10px;
+	font-family: arial, sans-serif;
+	padding: 2px;
+	width: 171px;
+	line-height: 1.2em;
+}
+div#dp-popup {
+	position: absolute;
+	z-index: 199;
+}
+div.dp-popup h2 {
+	font-size: 12px;
+	text-align: center;
+	margin: 2px 0;
+	padding: 0;
+}
+a#dp-close {
+	font-size: 11px;
+	padding: 4px 0;
+	text-align: center;
+	display: block;
+}
+a#dp-close:hover {
+	text-decoration: underline;
+}
+div.dp-popup a {
+	color: #000;
+	text-decoration: none;
+	padding: 3px 2px 0;
+}
+div.dp-popup div.dp-nav-prev {
+	position: absolute;
+	top: 2px;
+	left: 4px;
+	width: 100px;
+}
+div.dp-popup div.dp-nav-prev a {
+	float: left;
+}
+/* Opera needs the rules to be this specific otherwise it doesn't change the cursor back to pointer after you have disabled and re-enabled a link */
+div.dp-popup div.dp-nav-prev a, div.dp-popup div.dp-nav-next a {
+	cursor: pointer;
+}
+div.dp-popup div.dp-nav-prev a.disabled, div.dp-popup div.dp-nav-next a.disabled {
+	cursor: default;
+}
+div.dp-popup div.dp-nav-next {
+	position: absolute;
+	top: 2px;
+	right: 4px;
+	width: 100px;
+}
+div.dp-popup div.dp-nav-next a {
+	float: right;
+}
+div.dp-popup a.disabled {
+	cursor: default;
+	color: #aaa;
+}
+div.dp-popup td {
+	cursor: pointer;
+}
+div.dp-popup td.disabled {
+	cursor: default;
+}
+.transparent-25 {
+  /* IE 8 */
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=25)";
+
+  /* IE 5-7 */
+  filter: alpha(opacity=25);
+
+  /* Netscape */
+  -moz-opacity: 0.25;
+
+  /* Safari 1.x */
+  -khtml-opacity: 0.25;
+
+  /* Good browsers */
+  opacity: 0.25;
+}
+.transparent-50 {
+  /* IE 8 */
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+
+  /* IE 5-7 */
+  filter: alpha(opacity=50);
+
+  /* Netscape */
+  -moz-opacity: 0.5;
+
+  /* Safari 1.x */
+  -khtml-opacity: 0.5;
+
+  /* Good browsers */
+  opacity: 0.5;
+}
+.transparent-75 {
+  /* IE 8 */
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=75)";
+
+  /* IE 5-7 */
+  filter: alpha(opacity=75);
+
+  /* Netscape */
+  -moz-opacity: 0.75;
+
+  /* Safari 1.x */
+  -khtml-opacity: 0.75;
+
+  /* Good browsers */
+  opacity: 0.75;
+}

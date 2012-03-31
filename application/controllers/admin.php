@@ -1,16 +1,18 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 /**
- * This main controller for the Admin section 
+ * This main controller for the Admin section
  *
  * PHP version 5
- * LICENSE: This source file is subject to LGPL license 
+ * LICENSE: This source file is subject to LGPL license
  * that is available through the world-wide-web at the following URI:
  * http://www.gnu.org/copyleft/lesser.html
- * @author	   Ushahidi Team <team@ushahidi.com> 
+ *
+ * Admin_Controller
+ * @author	   Ushahidi Team <team@ushahidi.com>
  * @package    Ushahidi - http://source.ushahididev.com
- * @module	   Admin Controller  
+ * @subpackage Controllers
  * @copyright  Ushahidi - http://www.ushahidi.com
- * @license    http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL) 
+ * @license    http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL)
  */
 
 class Admin_Controller extends Template_Controller
@@ -50,20 +52,20 @@ class Admin_Controller extends Template_Controller
 	 * @var string
 	 */
 	protected $table_prefix;
-	
+
 	/**
 	 * Release name of the platform
 	 * @var string
 	 */
 	protected $release;
-	
+
 	/**
 	 * No. of items to display per page - to be used for paginating lists
 	 * @var int
 	 */
 	protected $items_per_page;
-	
-	
+
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -77,12 +79,13 @@ class Admin_Controller extends Template_Controller
 		// Load database
 		$this->db = new Database();
 
-		$upgrade = new Upgrade;
-
 		$this->auth = new Auth();
 		$this->session = Session::instance();
 		$this->auth->auto_login();
-		
+
+		// Themes Helper
+		$this->themes = new Themes();
+
 		// Admin is not logged in, or this is a member (not admin)
 		if ( ! $this->auth->logged_in('login') OR $this->auth->logged_in('member'))
 		{
@@ -92,21 +95,13 @@ class Admin_Controller extends Template_Controller
 		// Set Table Prefix
 		$this->table_prefix = Kohana::config('database.default.table_prefix');
 
-		//fetch latest release of ushahidi
-		$this->release = $upgrade->_fetch_core_release();
-        
-        if( ! empty($this->release) )
-        {
-		    $this->template->version = $this->_get_release_version();
-            $this->template->critical = $this->release->critical;
-        }
-		
+
 		// Get the no. of items to display setting
 		$this->items_per_page = (int) Kohana::config('settings.items_per_page_admin');
-		
+
 		// Get Session Information
 		$this->user = new User_Model($_SESSION['auth_user']->id);
-		
+
 		// Check if user has the right to see the admin panel
 		if(admin::admin_access($this->user) == FALSE)
 		{
@@ -123,6 +118,7 @@ class Admin_Controller extends Template_Controller
 
 		// Javascript Header
 		$this->template->map_enabled = FALSE;
+		$this->template->datepicker_enabled = FALSE;
 		$this->template->flot_enabled = FALSE;
 		$this->template->treeview_enabled = FALSE;
 		$this->template->protochart_enabled = FALSE;
@@ -145,7 +141,23 @@ class Admin_Controller extends Template_Controller
 		$this->template->this_page = "";
 
 		// Load profiler
-		// $profiler = new Profiler;	
+		// $profiler = new Profiler;
+
+		// Header Nav
+		$header_nav = new View('header_nav');
+		$this->template->header_nav = $header_nav;
+		$this->template->header_nav->loggedin_user = FALSE;
+		if ( isset(Auth::instance()->get_user()->id) )
+		{
+			// Load User
+			$this->template->header_nav->loggedin_role = ( Auth::instance()->logged_in('member') ) ? "members" : "admin";
+			$this->template->header_nav->loggedin_user = Auth::instance()->get_user();
+		}
+		$this->template->header_nav->site_name = Kohana::config('settings.site_name');
+
+		// Header and Footer Blocks
+		$this->template->header_block = $this->themes->admin_header_block();
+		$this->template->footer_block = $this->themes->footer_block();
     }
 
 	public function index()
@@ -160,30 +172,9 @@ class Admin_Controller extends Template_Controller
 			url::redirect('admin/dashboard');
 		}
 	}
-	
-    /**
-     * Fetches the latest ushahidi release version number
-     *
-     * @return int or string
-     */
-    private function _get_release_version()
-    {
-        
-        $release_version = $this->release->version;
-		
-        $version_ushahidi = Kohana::config('settings.ushahidi_version');
-		
-        if ($this->_new_or_not($release_version,$version_ushahidi))
-        {
-			return $release_version;
-		} 
-        else 
-        {
-			return "";
-		}
 
-    }
-    
+
+
     /**
      * Checks version sequence parts
      *
@@ -200,7 +191,7 @@ class Admin_Controller extends Template_Controller
 			// Split version numbers xx.xx.xx
 			$remote_version = explode(".", $release_version);
 			$local_version = explode(".", $version_ushahidi);
-		
+
 			// Check first part .. if its the same, move on to next part
 			if (isset($remote_version[0]) AND isset($local_version[0])
 				AND (int) $remote_version[0] > (int) $local_version[0])
@@ -214,7 +205,7 @@ class Admin_Controller extends Template_Controller
 			{
 				return true;
 			}
-			
+
 			// Check third part
 			if (isset($remote_version[2]) AND (int) $remote_version[2] > 0)
 			{

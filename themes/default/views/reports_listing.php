@@ -18,8 +18,8 @@
 				<tr>
 					<td>
 						<ul class="link-toggle report-list-toggle lt-icons-and-text">
-							<li class="active"><a href="#rb_list-view" class="list">List</a></li>
-							<li><a href="#rb_map-view" class="map">Map</a></li>
+							<li class="active"><a href="#rb_list-view" class="list"><?php echo Kohana::lang('ui_main.list'); ?></a></li>
+							<li><a href="#rb_map-view" class="map"><?php echo Kohana::lang('ui_main.map'); ?></a></li>
 						</ul>
 					</td>
 					<td><?php echo $pagination; ?></td>
@@ -71,7 +71,7 @@
 
 					$comment_count = $incident->comment->count();
 
-					$incident_thumb = url::base()."media/img/report-thumb-default.jpg";
+					$incident_thumb = url::file_loc('img')."media/img/report-thumb-default.jpg";
 					$media = $incident->media;
 					if ($media->count())
 					{
@@ -79,8 +79,7 @@
 						{
 							if ($photo->media_thumb)
 							{ // Get the first thumb
-								$prefix = url::base().Kohana::config('upload.relative_directory');
-								$incident_thumb = $prefix."/".$photo->media_thumb;
+								$incident_thumb = url::convert_uploaded_to_abs($photo->media_thumb);
 								break;
 							}
 						}
@@ -88,12 +87,12 @@
 				?>
 				<div id="<?php echo $incident_id ?>" class="rb_report <?php echo $incident_verified_class; ?>">
 					<div class="r_media">
-						<p class="r_photo"> <a href="<?php echo url::site(); ?>reports/view/<?php echo $incident_id; ?>">
-							<img src="<?php echo $incident_thumb; ?>" height="59" width="89" /> </a>
+						<p class="r_photo" style="text-align:center;"> <a href="<?php echo url::site(); ?>reports/view/<?php echo $incident_id; ?>">
+							<img src="<?php echo $incident_thumb; ?>" style="max-width:89px;max-height:59px;" /> </a>
 						</p>
 
 						<!-- Only show this if the report has a video -->
-						<p class="r_video" style="display:none;"><a href="#">Video</a></p>
+						<p class="r_video" style="display:none;"><a href="#"><?php echo Kohana::lang('ui_main.video'); ?></a></p>
 
 						<!-- Category Selector -->
 						<div class="r_categories">
@@ -117,6 +116,10 @@
 								<?php endif; ?>
 							<?php endforeach; ?>
 						</div>
+						<?php
+						// Action::report_extra_media - Add items to the report list in the media section
+						Event::run('ushahidi_action.report_extra_media', $incident_id);
+						?>
 					</div>
 
 					<div class="r_details">
@@ -129,10 +132,14 @@
 							</h3>
 						<p class="r_date r-3 bottom-cap"><?php echo $incident_date; ?></p>
 						<div class="r_description"> <?php echo $incident_description; ?>  
-						  <a class="btn-show btn-more" href="#<?php echo $incident_id ?>">More Info &raquo;</a> 
-						  <a class="btn-show btn-less" href="#<?php echo $incident_id ?>">&laquo; Less Info</a> 
+						  <a class="btn-show btn-more" href="#<?php echo $incident_id ?>"><?php echo Kohana::lang('ui_main.more_information'); ?> &raquo;</a> 
+						  <a class="btn-show btn-less" href="#<?php echo $incident_id ?>">&laquo; <?php echo Kohana::lang('ui_main.less_information'); ?></a> 
 						</div>
 						<p class="r_location"><a href="<?php echo url::site(); ?>reports/?l=<?php echo $location_id; ?>"><?php echo $location_name; ?></a></p>
+						<?php
+						// Action::report_extra_details - Add items to the report list details section
+						Event::run('ushahidi_action.report_extra_details', $incident_id);
+						?>
 					</div>
 				</div>
 			<?php } ?>
@@ -148,8 +155,8 @@
 				<tr>
 					<td>
 						<ul class="link-toggle report-list-toggle lt-icons-and-text">
-							<li class="active"><a href="#rb_list-view" class="list">List</a></li>
-							<li><a href="#rb_map-view" class="map">Map</a></li>
+							<li class="active"><a href="#rb_list-view" class="list"><?php echo Kohana::lang('ui_main.list'); ?></a></li>
+							<li><a href="#rb_map-view" class="map"><?php echo Kohana::lang('ui_main.map'); ?></a></li>
 						</ul>
 					</td>
 					<td><?php echo $pagination; ?></td>
@@ -157,8 +164,8 @@
 					<td class="last">
 						<ul class="link-toggle lt-icons-only">
 							<?php //@todo Toggle the status of these links depending on the current page ?>
-							<li><a href="#" class="prev">Previous</a></li>
-							<li><a href="#" class="next">Next</a></li>
+							<li><a href="#" class="prev" id="page_<?php echo $previous_page; ?>"><?php echo Kohana::lang('ui_main.previous'); ?></a></li>
+							<li><a href="#" class="next" id="page_<?php echo $next_page; ?>"><?php echo Kohana::lang('ui_main.next'); ?></a></li>
 						</ul>
 					</td>
 				</tr>

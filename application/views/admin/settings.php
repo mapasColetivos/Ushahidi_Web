@@ -48,8 +48,8 @@
 						?>
 						<div class="head">
 							<h3><?php echo Kohana::lang('settings.map_settings');?></h3>
-							<input type="image" src="<?php echo url::base() ?>media/img/admin/btn-cancel.gif" class="cancel-btn" />
-							<input type="image" src="<?php echo url::base() ?>media/img/admin/btn-save-settings.gif" class="save-rep-btn" />
+							<input type="image" src="<?php echo url::file_loc('img'); ?>media/img/admin/btn-cancel.gif" class="cancel-btn" />
+							<input type="image" src="<?php echo url::file_loc('img'); ?>media/img/admin/btn-save-settings.gif" class="save-rep-btn" />
 						</div>
 						<!-- column -->
 						<div class="l-column">
@@ -96,7 +96,7 @@
 	
 								<span class="blue_span"><?php echo Kohana::lang('ui_main.step');?> 2: </span><span class="dark_span"><?php echo Kohana::lang('settings.map_provider.get_api');?></span><br />
 								<div class="c_push">
-									<a href="http://code.google.com/apis/maps/signup.html" id="api_link" title="Get API Key"><img src="<?php echo url::base() ?>media/img/admin/btn-get-api-key.gif" border="0" alt="Get API Key"></a>
+									<a href="http://code.google.com/apis/maps/signup.html" id="api_link" title="Get API Key"><img src="<?php echo url::file_loc('img'); ?>media/img/admin/btn-get-api-key.gif" border="0" alt="Get API Key"></a>
 								</div>
 								
 								<div id="api_div_google" <?php if ($form['default_map'] != 1 && $form['default_map'] != 4) echo "style=\"display:none\""; ?>>
@@ -105,16 +105,10 @@
 										<?php print form::input('api_google', $form['api_google'], ' class="text"'); ?>
 									</div>
 								</div>
-								<div id="api_div_yahoo" <?php if ($form['default_map'] != 3) echo "style=\"display:none\""; ?>>
-									<span class="blue_span">Step 3: </span><span class="dark_span"><?php echo Kohana::lang('settings.map_provider.enter_api');?></span><br />
-									<div class="c_push">
-										<?php print form::input('api_yahoo', $form['api_yahoo'], ' class="text"'); ?>
-									</div>
-								</div>
 							</div>
 	
-								<input type="image" src="<?php echo url::base() ?>media/img/admin/btn-save-settings.gif" class="save-rep-btn" style="margin-left: 0px;" />
-								<input type="image" src="<?php echo url::base() ?>media/img/admin/btn-cancel.gif" class="cancel-btn" />
+								<input type="image" src="<?php echo url::file_loc('img'); ?>media/img/admin/btn-save-settings.gif" class="save-rep-btn" style="margin-left: 0px;" />
+								<input type="image" src="<?php echo url::file_loc('img'); ?>media/img/admin/btn-cancel.gif" class="cancel-btn" />
 						</div>
 						<div class="r-column">
 							<h4><a href="#" class="tooltip" title="<?php echo Kohana::lang("tooltips.settings_configure_map"); ?>"><?php echo Kohana::lang('settings.configure_map');?></a></h4>

@@ -46,13 +46,12 @@
  
      // Admin report functions 
      "reports" => "Admin_Reports",
-     "reportaction" => array("Admin_Reports", "report_action"),
                          	
      // Category Action 
-     "categoryaction" => array("Admin_Category","category_action"),
+     "category" => array("Admin_Category","category_action"),
 
      // Comment Action
-     "commentaction" => array( "Comments","comment_action"),
+     "comments" => "Comments",
      
      // Twitter action
      "twitteraction" => array( "Twitter", "twitter_action"),

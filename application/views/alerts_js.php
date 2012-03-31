@@ -33,8 +33,9 @@
 			// Create the map
 			var latitude = <?php echo $latitude; ?>;
 			var longitude = <?php echo $longitude; ?>;
+			var zoomLevel = <?php echo $default_zoom; ?>;
 			
-			map = createMap('divMap', latitude, longitude);
+			map = createMap('divMap', latitude, longitude, zoomLevel);
 			
 			// Add the radius layer
 			addRadiusLayer(map, latitude, longitude);
@@ -59,6 +60,9 @@
 				// Update form values (jQuery)
 				$("#alert_lat").attr("value", lonlat2.lat);
 				$("#alert_lon").attr("value", lonlat2.lon);
+				
+				// Looking up country name using reverse geocoding					
+				reverseGeocode(lonlat2.lat, lonlat2.lon);
 			});
 			
 			/* 
@@ -123,7 +127,7 @@
 		 */
 		function geoCode()
 		{
-			$('#find_loading').html('<img src="<?php echo url::base() . "media/img/loading_g.gif"; ?>">');
+			$('#find_loading').html('<img src="<?php echo url::file_loc('img')."media/img/loading_g.gif"; ?>">');
 			address = $("#location_find").val();
 			$.post("<?php echo url::site() . 'reports/geocode/' ?>", { address: address },
 				function(data){
@@ -140,6 +144,9 @@
 						radius = newRadius * 1000
 
 						drawCircle(data.message[1],data.message[0], radius);
+						
+						// Looking up country name using reverse geocoding					
+						reverseGeocode(data.message[0], data.message[1]);
 					
 						// Update form values (jQuery)
 						$("#alert_lat").attr("value", data.message[0]);
@@ -150,4 +157,18 @@
 					$('#find_loading').html('');
 				}, "json");
 			return false;
-		}		
+		}	
+			
+		// Reverse GeoCoder
+		function reverseGeocode(latitude, longitude) {		
+			var latlng = new google.maps.LatLng(latitude, longitude);
+			var geocoder = new google.maps.Geocoder();
+			geocoder.geocode({'latLng': latlng}, function(results, status){
+				if (status == google.maps.GeocoderStatus.OK) {
+					var country = results[results.length - 1].formatted_address;
+					$("#alert_country").val(country);
+				} else {
+					console.log("Geocoder failed due to: " + status);
+				}
+			});
+		}

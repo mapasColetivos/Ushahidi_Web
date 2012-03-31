@@ -42,6 +42,13 @@
 	}
 	
 	$(document).ready(function() {
+	
+	
+		//add Not Selected values to the custom form fields that are drop downs
+		$("select[id^='custom_field_']").prepend('<option value="---NOT_SELECTED---"><?php echo Kohana::lang("ui_main.not_selected"); ?></option>');
+		$("select[id^='custom_field_']").val("---NOT_SELECTED---");
+		$("input[id^='custom_field_']:checkbox").removeAttr("checked");
+		$("input[id^='custom_field_']:radio").removeAttr("checked");		
 		  
 		// "Choose Date Range"" Datepicker
 		var dates = $( "#report_date_from, #report_date_to" ).datepicker({
@@ -104,6 +111,8 @@
 				// Clear the url parameters
 				delete urlParameters['from'];
 				delete urlParameters['to'];
+				delete urlParameters['s'];
+				delete urlParameters['e'];
 			}
 			else if ($(this).attr("id") == 'dateRangeToday')
 			{
@@ -141,6 +150,8 @@
 			{
 				urlParameters['from'] = $("#report_date_from").val();
 				urlParameters['to'] = $("#report_date_to").val();
+				delete urlParameters['s'];
+				delete urlParameters['e'];
 			}
 			
 			// Hide the box
@@ -163,11 +174,13 @@
 			report_date_from = $("#report_date_from").val();
 			report_date_to = $("#report_date_to").val();
 			
-			if ($(this).id == "applyDateFilter" && report_date_from != '' && report_date_to != '')
+			if ($(this).attr("id") == "applyDateFilter" && report_date_from != '' && report_date_to != '')
 			{
 				// Add the parameters
 				urlParameters["from"] = report_date_from;
 				urlParameters["to"] = report_date_to;
+				delete urlParameters['s'];
+				delete urlParameters['e'];
 				
 				// Fetch the reports
 				fetchReports();
@@ -211,7 +224,7 @@
 				if (typeof radiusMap == 'undefined' || radiusMap == null)
 				{
 					// Create the map
-					radiusMap = createMap("divMap", latitude, longitude);
+					radiusMap = createMap("divMap", latitude, longitude, defaultZoom);
 					
 					// Add the radius layer
 					addRadiusLayer(radiusMap, latitude, longitude);
@@ -226,7 +239,7 @@
 						markers.clearMarkers();
 						markers.addMarker(m);
 
-						currRadius = $("#alert_radius").val();
+						currRadius = $("#alert_radius option:selected").val();
 						radius = currRadius * 1000
 
 						lonlat2.transform(proj_900913, proj_4326);
@@ -235,7 +248,7 @@
 						currLat = lonlat2.lat;
 						currLon = lonlat2.lon;
 
-						drawCircle(radiusMap, currLat, currLon);
+						drawCircle(radiusMap, currLat, currLon, radius);
 
 						// Store the radius and start locations
 						urlParameters["radius"] = currRadius;
@@ -333,7 +346,7 @@
 	function createIncidentMap()
 	{
 		// Creates the map
-		map = createMap('rb_map-view', latitude, longitude);
+		map = createMap('rb_map-view', latitude, longitude, defaultZoom);
 		map.addControl( new OpenLayers.Control.LoadingPanel({minSize: new OpenLayers.Size(573, 366)}) );
 		
 		mapLoaded = 1;
@@ -341,16 +354,58 @@
 	
 	function addToggleReportsFilterEvents()
 	{
+		// Checks if a filter exists in the list of deselected items
+		filterExists = function(itemId) {
+			if (deSelectedFilters.length == 0)
+			{
+				return false;
+			}
+			else
+			{
+				for (var i=0; i < deSelectedFilters.length; i++)
+				{
+					if (deSelectedFilters[i] == itemId)
+					{
+						return true;
+					}
+				}
+				return false;
+			}
+		};
+		
 		// toggle highlighting on the filter lists
 		$(".filter-list li a").toggle(
 			function(){
 				$(this).addClass("selected");
+				
+				// Check if the element is in the list of de-selected items and remove it
+				if (deSelectedFilters.length > 0)
+				{
+					var temp = [];
+					for (var i = 0; i<deSelectedFilters.length; i++)
+					{
+						if (deSelectedFilters[i] != $(this).attr("id"))
+						{
+							temp.push(deSelectedFilters[i]);
+						}
+					}
+					
+					deSelectedFilters = temp;
+				}
 			},
 			function(){
 				if ($(this).hasClass("selected"))
 				{
+					elementId = $(this).attr("id");
 					// Add the id of the deselected filter
-					deSelectedFilters.push($(this).attr("id"));
+					if ( ! filterExists(elementId))
+					{
+						deSelectedFilters.push(elementId);
+					}
+					
+					// Update the parameter value for the deselected filter
+					removeDeselectedReportFilter(elementId);
+					
 				}
 				
 				$(this).removeClass("selected");
@@ -359,39 +414,50 @@
 	}
 	
 	/**
+	 * Switch Views map, or list
+	 */
+	 function switchViews(view)
+	 {
+		 // Hide both divs
+		$("#rb_list-view, #rb_map-view").hide();
+		
+		// Show the appropriate div
+		$($(view).attr("href")).show();
+		
+		// Remove the class "selected" from all parent li's
+		$("#reports-box .report-list-toggle a").parent().removeClass("active");
+		
+		// Add class "selected" to both instances of the clicked link toggle
+		$("."+$(view).attr("class")).parent().addClass("active");
+		
+		// Check if the map view is active
+		if ($("#rb_map-view").css("display") == "block")
+		{
+			// Check if the map has already been created
+			if (mapLoaded == 0)
+			{
+				createIncidentMap();
+			}
+			
+			// Set the current page
+			urlParameters["page"] = $(".pager li a.active").html();
+			
+			// Load the map
+			setTimeout(function(){ showIncidentMap() }, 400);
+		}
+		return false;
+	 }
+	
+	
+	
+	
+	/**
 	 * List/map view toggle
 	 */
 	function addReportViewOptionsEvents()
 	{
 		$("#reports-box .report-list-toggle a").click(function(){
-			// Hide both divs
-			$("#rb_list-view, #rb_map-view").hide();
-			
-			// Show the appropriate div
-			$($(this).attr("href")).show();
-			
-			// Remove the class "selected" from all parent li's
-			$("#reports-box .report-list-toggle a").parent().removeClass("active");
-			
-			// Add class "selected" to both instances of the clicked link toggle
-			$("."+$(this).attr("class")).parent().addClass("active");
-			
-			// Check if the map view is active
-			if ($("#rb_map-view").css("display") == "block")
-			{
-				// Check if the map has already been created
-				if (mapLoaded == 0)
-				{
-					createIncidentMap();
-				}
-				
-				// Set the current page
-				urlParameters["page"] = $(".pager li a.active").html();
-				
-				// Load the map
-				setTimeout(function(){ showIncidentMap() }, 400);
-			}
-			return false;
+			return switchViews($(this));						
 		});
 	}
 	
@@ -412,6 +478,7 @@
 			
 			// Fetch the reports
 			fetchReports();
+			return false;
 			
 		});
 		
@@ -422,7 +489,10 @@
 				urlParameters["page"] = Number(pageNumber);
 				fetchReports();
 			}
+			return false;
 		});
+		
+		return false;
 	}
 	
 	/**
@@ -430,13 +500,13 @@
 	 */
 	function fetchReports()
 	{
+		//check and see what view was last viewed: list, or map.
+		var lastDisplyedWasMap = $("#rb_map-view").css("display") != "none";
+		
 		// Reset the map loading tracker
 		mapLoaded = 0;
 		
-		// Remove the deselected report filters
-		removeDeselectedReportFilters();
-	
-		var loadingURL = "<?php echo url::base().'media/img/loading_g.gif'; ?>"
+		var loadingURL = "<?php echo url::file_loc('img').'media/img/loading_g.gif'; ?>"
 		var statusHtml = "<div style=\"width: 100%; margin-top: 100px;\" align=\"center\">" + 
 					"<div><img src=\""+loadingURL+"\" border=\"0\"></div>" + 
 					"<p style=\"padding: 10px 2px;\"><h3><?php echo Kohana::lang('ui_main.loading_reports'); ?>...</h3></p>"
@@ -462,6 +532,14 @@
 				
 						attachPagingEvents();
 						addReportHoverEvents();
+						deSelectedFilters = [];
+						
+						//if the map was the last thing the user was looking at:
+						if(lastDisplyedWasMap)
+						{
+							switchViews($("#reports-box .report-list-toggle a.map"));
+							//$('ul.report-list-toggle li a.map').trigger('click');
+						}
 						
 					}, 400);
 				}
@@ -473,7 +551,7 @@
 	 * Removes the deselected report filters from the list
 	 * of filters for fetching the reports
 	 */
-	function removeDeselectedReportFilters()
+	function removeDeselectedReportFilter(elementId)
 	{
 		// Removes a parameter item from urlParameters
 		removeParameterItem = function(key, val) {
@@ -512,32 +590,26 @@
 		
 		if (deSelectedFilters.length > 0)
 		{
-			for (var i=0; i< deSelectedFilters.length; i++)
+			// Check for category filter
+			if (elementId.indexOf('filter_link_cat_') != -1){
+				catId = elementId.substring('filter_link_cat_'.length);
+				removeParameterItem("c", catId);
+			}
+			else if (elementId.indexOf('filter_link_mode_') != -1)
 			{
-				currentItem = deSelectedFilters[i];
-				if (currentItem != null && currentItem != '')
-				{
-					// Check for category filter
-					if (currentItem.indexOf('filter_link_cat_') != -1){
-						catId = currentItem.substring('filter_link_cat_'.length);
-						removeParameterItem("c", catId);
-					}
-					else if (currentItem.indexOf('filter_link_mode_') != -1)
-					{
-						modeId = currentItem.substring('filter_link_mode_'.length);
-						removeParameterItem("mode", modeId);
-					}
-					else if (currentItem.indexOf('filter_link_media_') != -1)
-					{
-						mediaType = currentItem.substring('filter_link_media_'.length);
-						removeParameterItem("m", mediaType);
-					}
-					else if (currentItem.indexOf('filter_link_verification_') != -1)
-					{
-						verification = currentItem.substring('filter_link_verification.length');
-						removeParameterItem("v", verification);
-					}
-				}
+				modeId = elementId.substring('filter_link_mode_'.length);
+				removeParameterItem("mode", modeId);
+			}
+			else if (elementId.indexOf('filter_link_media_') != -1)
+			{
+				mediaType = elementId.substring('filter_link_media_'.length);
+				removeParameterItem("m", mediaType);
+			}
+			else if (elementId.indexOf('filter_link_verification_') != -1)
+			{
+				verification = elementId.substring('filter_link_verification_'.length);
+				removeParameterItem("v", verification);
+				
 			}
 		}
 	}
@@ -603,11 +675,131 @@
 				urlParameters["v"] = verificationStatus;
 			}
 			
+			//
+			// Get the Custom Form Fields
+			// 
+			var customFields = new Array();
+			var checkBoxId = null;
+			var checkBoxArray = new Array();
+			$.each($("input[id^='custom_field_']"), function(i, item) {
+				var cffId = item.id.substring("custom_field_".length);
+				var value = $(item).val();
+				var type = $(item).attr("type");
+				if(type == "text")
+				{
+					if(value != "" && value != undefined && value != null)
+					{
+						customFields.push([cffId, value]);
+					}
+				}
+				else if(type == "radio")
+				{
+					if($(item).attr("checked"))
+					{
+						customFields.push([cffId, value]);
+					}
+				}
+				else if(type == "checkbox")
+				{
+					if($(item).attr("checked"))
+					{
+						checkBoxId = cffId;
+						checkBoxArray.push(value);
+					}
+				}
+				
+				if(type != "checkbox" && checkBoxId != null)
+				{
+					customFields.push([checkBoxId, checkBoxArray]);
+					checkBoxId = null;
+					checkBoxArray = new Array();
+				}
+				
+			});
+			//incase the last field was a checkbox
+			if(checkBoxId != null)
+			{
+				customFields.push([checkBoxId, checkBoxArray]);				
+			}
+			
+			//now selects
+			$.each($("select[id^='custom_field_']"), function(i, item) {
+				var cffId = item.id.substring("custom_field_".length);
+				var value = $(item).val();
+				if(value != "---NOT_SELECTED---")
+				{
+					customFields.push([cffId, value]);
+				}
+			});
+			if(customFields.length > 0)
+			{
+				urlParameters["cff"] = customFields;
+			}
+			else
+			{
+				delete urlParameters["cff"];
+			}
+			
+			
 			// Fetch the reports
 			fetchReports();
 			
 		});
 	}
+	
+	
+	/**
+	 * Makes a url string for the map stuff
+	 */
+	function makeUrlParamStr(str, params, arrayLevel)	 
+	{
+		//make sure arrayLevel is initialized
+		var arrayLevelStr = "";
+		if(arrayLevel != undefined)
+		{
+			arrayLevelStr = arrayLevel;
+		}
+		
+		var separator = "";
+		for(i in params)
+		{
+			//do we need to insert a separator?
+			if(str.length > 0)
+			{
+				separator = "&";
+			}
+			
+			//get the param
+			var param = params[i];
+	
+			//is it an array or not
+			if($.isArray(param))
+			{
+				if(arrayLevelStr == "")
+				{
+					str = makeUrlParamStr(str, param, i);
+				}
+				else
+				{
+					str = makeUrlParamStr(str, param, arrayLevelStr + "%5B" + i + "%5D");
+				}
+			}
+			else
+			{
+				if(arrayLevelStr == "")
+				{
+					str +=  separator + i + "=" + param.toString();
+				}
+				else
+				{
+					str +=  separator + arrayLevelStr + "%5B" + i + "%5D=" + param.toString();
+				}
+			}
+		}
+		
+		return str;
+	}
+	
 	
 	/**
 	 * Handles display of the incidents current incidents on the map
@@ -619,17 +811,7 @@
 		fetchURL = '<?php echo url::site().'json/index' ;?>';
 		
 		// Generate the url parameter string
-		parameterStr = "";
-		$.each(urlParameters, function(key, value){
-			if (parameterStr == "")
-			{
-				parameterStr += key + "=" + value.toString();
-			}
-			else
-			{
-				parameterStr += "&" + key + "=" + value.toString();
-			}
-		});
+		parameterStr = makeUrlParamStr("", urlParameters)
 		
 		// Add the parameters to the fetch URL
 		fetchURL += '?' + parameterStr;
@@ -695,10 +877,34 @@
 		if (typeof $("."+filterClass) == 'undefined')
 			return;
 		
-		// Deselect
-		$.each($("." + filterClass +" li a.selected"), function(i, item){
-			$(item).removeClass("selected");
-		});
+		if(parameterKey == "cff") //It's Cutom Form Fields baby
+		{
+			$.each($("input[id^='custom_field_']"), function(i, item){
+				if($(item).attr("type") == "checkbox" || $(item).attr("type") == "radio")
+				{
+					$(item).removeAttr("checked");
+				}
+				else
+				{
+					$(item).val("");
+				}
+			});			
+			$("select[id^='custom_field_']").val("---NOT_SELECTED---");
+		}
+		else //it's just some simple removing of a class
+		{
+			// Deselect
+			$.each($("." + filterClass +" li a.selected"), function(i, item){
+				$(item).removeClass("selected");
+			});			
+			
+			//if it's the location filter be sure to get rid of sw and ne
+			if(parameterKey == "start_loc" || parameterKey == "radius")
+			{
+				delete urlParameters["sw"];
+				delete urlParameters["ne"];
+			}
+		}
 		
 		// Remove the parameter key from urlParameters
 		delete urlParameters[parameterKey];

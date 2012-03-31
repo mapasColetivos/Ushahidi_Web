@@ -9,7 +9,7 @@
  * http://www.gnu.org/copyleft/lesser.html
  * @author	   Ushahidi Team <team@ushahidi.com>
  * @package	   Ushahidi - http://source.ushahididev.com
- * @module	   Admin Manage Controller
+ * @subpackage Admin
  * @copyright  Ushahidi - http://www.ushahidi.com
  * @license	   http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL)
  */
@@ -147,26 +147,50 @@ class Manage_Controller extends Admin_Controller
 					if ($filename)
 					{
 						$new_filename = "category_".$category->id."_".time();
+						
+						// Name the files for the DB
+						$cat_img_file = $new_filename.".png";
+						$cat_img_thumb_file = $new_filename."_16x16.png";
 
 						// Resize Image to 32px if greater
 						Image::factory($filename)->resize(32,32,Image::HEIGHT)
-							->save(Kohana::config('upload.directory', TRUE) . $new_filename.".png");
+							->save(Kohana::config('upload.directory', TRUE) . $cat_img_file);
 						// Create a 16x16 version too
 						Image::factory($filename)->resize(16,16,Image::HEIGHT)
-							->save(Kohana::config('upload.directory', TRUE) . $new_filename."_16x16.png");
+							->save(Kohana::config('upload.directory', TRUE) . $cat_img_thumb_file);
+							
+						// Okay, now we have these three different files on the server, now check to see
+						//   if we should be dropping them on the CDN
+						
+						if(Kohana::config("cdn.cdn_store_dynamic_content"))
+						{
+							$cat_img_file = cdn::upload($cat_img_file);
+							$cat_img_thumb_file = cdn::upload($cat_img_thumb_file);
+							
+							// We no longer need the files we created on the server. Remove them.
+							$local_directory = rtrim(Kohana::config('upload.directory', TRUE), '/').'/';
+							unlink($local_directory.$new_filename.".png");
+							unlink($local_directory.$new_filename."_16x16.png");
+						}
 
 						// Remove the temporary file
 						unlink($filename);
 
 						// Delete Old Image
 						$category_old_image = $category->category_image;
-						if ( ! empty($category_old_image)
-							AND file_exists(Kohana::config('upload.directory', TRUE).$category_old_image))
-							unlink(Kohana::config('upload.directory', TRUE).$category_old_image);
+						if ( ! empty($category_old_image))
+						{
+							if(file_exists(Kohana::config('upload.directory', TRUE).$category_old_image))
+							{
+								unlink(Kohana::config('upload.directory', TRUE).$category_old_image);
+							}elseif(Kohana::config("cdn.cdn_store_dynamic_content") AND valid::url($category_old_image)){
+								cdn::delete($category_old_image);
+							}
+						}
 
 						// Save
-						$category->category_image = $new_filename.".png";
-						$category->category_image_thumb = $new_filename."_16x16.png";
+						$category->category_image = $cat_img_file;
+						$category->category_image_thumb = $cat_img_thumb_file;
 						$category->save();
 					}
 
@@ -200,6 +224,47 @@ class Manage_Controller extends Admin_Controller
 						->where(array('category_id' => $category->id))
 						->delete_all();
 						
+					// Check for all reports tied to this category to be deleted
+					$result = ORM::factory('incident_category')
+								->where('category_id',$category->id)
+								->find_all();
+					
+					// If there are reports returned by the query
+					if($result)
+					{
+						foreach($result as $orphan)
+						{
+							$orphan_incident_id = $orphan->incident_id;
+						
+							// Check if the report is tied to any other category
+							$count = ORM::factory('incident_category')
+										->where('incident_id',$orphan_incident_id)
+										->count_all();
+					
+							// If this report is tied to only one category(is an orphan)
+							if($count == 1)
+							{
+								// Assign it to the special category for orphans
+								$orphaned = ORM::factory('incident_category',$orphan->id);
+								$orphaned->category_id = 5;
+								$orphaned->save();
+								
+								// Deactivate the report so that it's not accessible on the frontend
+								$orphaned_report = ORM::factory('incident',$orphan_incident_id);
+								$orphaned_report->incident_active = 0;
+								$orphaned_report->save();
+							
+							}
+						
+							// If this report is tied to more than one category(not orphaned), remove relation to category being deleted						
+							else
+							{
+								ORM::factory('incident_category')
+									->delete($orphan->id);
+							}
+						}
+					}
+					
 					// @todo Delete the category image
 					
 					// Delete category itself - except if it is trusted
@@ -217,7 +282,6 @@ class Manage_Controller extends Admin_Controller
 				if ($category->loaded)
 				{
 					$category->category_visible = ($category->category_visible == 1)? 0 : 1;
-
 					$category->save();
 					$form_saved = TRUE;
 					$form_action = strtoupper(Kohana::lang('ui_admin.modified'));
@@ -266,7 +330,6 @@ class Manage_Controller extends Admin_Controller
 		$categories = ORM::factory('category')
 						->with('category_lang')
 						->where('parent_id','0')
-						->orderby('category_position', 'asc')
 						->orderby('category_title', 'asc')
 						->find_all($this->items_per_page, $pagination->sql_offset);
 
@@ -398,7 +461,12 @@ class Manage_Controller extends Admin_Controller
 			$page = (isset($_POST['page_id']) AND Page_Model::is_valid_page($_POST['page_id']))
 				? ORM::factory('page', $_POST['page_id'])
 				: new Page_Model();
-
+				
+			
+			$post = array_merge($_POST, $_FILES);
+			$post = array_merge($post, array("id"=>$page->id));
+			Event::run('ushahidi_action.page_submit', $post);
+			
 			// Check for the specified action
 			if ($_POST['action'] == 'a')
 			{
@@ -408,7 +476,7 @@ class Manage_Controller extends Admin_Controller
 				if ($page->validate($data))
 				{
 					$page->save();
-					
+					Event::run('ushahidi_action.page_edit', $page);
 					$form_saved = TRUE;
 					$form_action = strtoupper(Kohana::lang('ui_admin.added_edited'));
 					array_fill_keys($form, '');
@@ -684,8 +752,10 @@ class Manage_Controller extends Admin_Controller
 			if ($post_data['action'] == 'a')
 			{
 				// Manually extract the primary layer data
-				$layer_data = arr::extract($post_data, 'layer_name', 'layer_color', 'layer_url', 'layer_file', 
-					'layer_file_old');
+				$layer_data = arr::extract($post_data, 'layer_name', 'layer_color', 'layer_url', 'layer_file_old');
+				
+				// Grab the layer file to be uploaded
+				$layer_data['layer_file'] = isset($post_data['layer_file']['name'])? $post_data['layer_file']['name'] : NULL;
 				
 				// Extract the layer file for upload validation
 				$other_data = arr::extract($post_data, 'layer_file');
@@ -707,6 +777,8 @@ class Manage_Controller extends Admin_Controller
 						$path_parts = pathinfo($path_info);
 						$file_name = $path_parts['filename'];
 						$file_ext = $path_parts['extension'];
+						$layer_file = $file_name.".".$file_ext;
+						$layer_url = '';
 
 						if (strtolower($file_ext) == "kmz")
 						{ 
@@ -717,21 +789,43 @@ class Manage_Controller extends Admin_Controller
 								foreach ($archive_files as $file)
 								{
 									$ext_file_name = $file['filename'];
+									$archive_file_parts = pathinfo($ext_file_name);
+									//because there can be more than one file in a KMZ
+									if ($archive_file_parts['extension'] == 'kml' AND $ext_file_name AND $archive->extract(PCLZIP_OPT_PATH, Kohana::config('upload.directory')) == TRUE)
+									{ 
+										// Okay, so we have an extracted KML - Rename it and delete KMZ file
+										rename($path_parts['dirname']."/".$ext_file_name, 
+											$path_parts['dirname']."/".$file_name.".kml");
+			
+										$file_ext = "kml";
+										unlink($path_info);
+										$layer_file = $file_name.".".$file_ext;
+									}
+									
 								}
 							}
 
-							if ($ext_file_name AND $archive->extract(PCLZIP_OPT_PATH, Kohana::config('upload.directory')) == TRUE)
-							{ 
-								// Okay, so we have an extracted KML - Rename it and delete KMZ file
-								rename($path_parts['dirname']."/".$ext_file_name, 
-									$path_parts['dirname']."/".$file_name.".kml");
-
-								$file_ext = "kml";
-								unlink($path_info);
-							}
+							
 						}
 
-						$layer->layer_file = $file_name.".".$file_ext;
+						
+						// Upload the KML to the CDN server if configured
+						if (Kohana::config("cdn.cdn_store_dynamic_content"))
+						{
+							// Upload the file to the CDN
+							$layer_url = cdn::upload($layer_file);
+
+							// We no longer need the files we created on the server. Remove them.
+							$local_directory = rtrim(Kohana::config('upload.directory', TRUE), '/').'/';
+							unlink($local_directory.$layer_file);
+
+							// We no longer need to store the file name for the local file since it's gone
+							$layer_file = '';
+						}
+
+						// Set the final variables for the DB
+						$layer->layer_url = $layer_url;
+						$layer->layer_file = $layer_file;
 						$layer->save();
 					}
 					

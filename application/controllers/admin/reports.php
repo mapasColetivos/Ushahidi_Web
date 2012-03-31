@@ -9,25 +9,26 @@
  * http://www.gnu.org/copyleft/lesser.html
  * @author	   Ushahidi Team <team@ushahidi.com>
  * @package	   Ushahidi - http://source.ushahididev.com
- * @module	   Admin Reports Controller
+ * @subpackage Admin
  * @copyright  Ushahidi - http://www.ushahidi.com
  * @license	   http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL)
  */
 
-class Reports_Controller extends Admin_Controller
-{
+class Reports_Controller extends Admin_Controller {
 	public function __construct()
 	{
 		parent::__construct();
 
 		$this->template->this_page = 'reports';
+		$this->params = array('all_reports' => TRUE);
 	}
 
 
 	/**
-	* Lists the reports.
-	* @param int $page
-	*/
+	 * Lists the reports.
+	 *
+	 * @param int $page
+	 */
 	public function index($page = 1)
 	{
 		// If user doesn't have access, redirect to dashboard
@@ -39,63 +40,71 @@ class Reports_Controller extends Admin_Controller
 		$this->template->content = new View('admin/reports');
 		$this->template->content->title = Kohana::lang('ui_admin.reports');
 
+		// Database table prefix
+		$table_prefix = Kohana::config('database.default.table_prefix');
 
-		if (!empty($_GET['status']))
+		// Hook into the event for the reports::fetch_incidents() method
+		Event::add('ushahidi_filter.fetch_incidents_set_params', array($this,'_add_incident_filters'));
+
+
+		$status = "0";
+
+		if ( !empty($_GET['status']))
 		{
 			$status = $_GET['status'];
 
 			if (strtolower($status) == 'a')
 			{
-				$filter = 'incident_active = 0';
+				array_push($this->params, 'i.incident_active = 0');
 			}
 			elseif (strtolower($status) == 'v')
 			{
-				$filter = 'incident_verified = 0';
+				array_push($this->params, 'i.incident_verified = 0');
+			}
+			elseif (strtolower($status) == 'o')
+			{
+				array_push($this->params, 'ic.category_id = 5');
 			}
 			else
 			{
 				$status = "0";
-				$filter = '1=1';
 			}
-		}
-		else
-		{
-			$status = "0";
-			$filter = "1=1";
 		}
 
 		// Get Search Keywords (If Any)
 		if (isset($_GET['k']))
 		{
 			//	Brute force input sanitization
-			
-			// Phase 1 - Strip the search string of all non-word characters 
-			$keyword_raw = preg_replace('/[^\w+]\w*/', '', $_GET['k']);
-			
+
+			// Phase 1 - Strip the search string of all non-word characters
+			$keyword_raw = (isset($_GET['k']))? preg_replace('#/\w+/#', '', $_GET['k']) : "";
+
 			// Strip any HTML tags that may have been missed in Phase 1
 			$keyword_raw = strip_tags($keyword_raw);
-			
+
 			// Phase 3 - Invoke Kohana's XSS cleaning mechanism just incase an outlier wasn't caught
 			// in the first 2 steps
 			$keyword_raw = $this->input->xss_clean($keyword_raw);
-			
-			$filter .= " AND (".$this->_get_searchstring($keyword_raw).")";
+
+			$filter = " (".$this->_get_searchstring($keyword_raw).")";
+
+			array_push($this->params, $filter);
 		}
 		else
 		{
 			$keyword_raw = "";
 		}
 
-		// check, has the form been submitted?
+		// Check, has the form been submitted?
 		$form_error = FALSE;
 		$form_saved = FALSE;
 		$form_action = "";
-		
+
 		if ($_POST)
 		{
 			$post = Validation::factory($_POST);
 
-			 //	 Add some filters
+			 //	Add some filters
 			$post->pre_filter('trim', TRUE);
 
 			// Add some rules, the input field, followed by a list of checks, carried out in order
@@ -104,48 +113,62 @@ class Reports_Controller extends Admin_Controller
 
 			if ($post->validate())
 			{
-				if ($post->action == 'a')		// Approve Action
+				// Approve Action
+				if ($post->action == 'a')
 				{
 					foreach($post->incident_id as $item)
 					{
-						$update = new Incident_Model($item);
-						if ($update->loaded == true) 
+						// Database instance
+						$db = new Database();
+
+						// Query to check if this report is orphaned i.e categoryless
+						$query = "SELECT ic.* FROM ".$table_prefix."incident_category ic
+								INNER JOIN ".$table_prefix."category c ON c.id = ic.category_id INNER JOIN ".$table_prefix."incident i ON i.id=ic.incident_id
+								WHERE c.category_title =\"NONE\" AND c.category_trusted = '1' AND ic.incident_id = $item";
+						$result = $db->query($query);
+
+						// Only approve the report IF it's not orphaned i.e the query returns a null set
+						if(count($result) == 0)
 						{
-							if( $update->incident_active == 0 ) 
+							$update = new Incident_Model($item);
+							if ($update->loaded == TRUE)
 							{
-								$update->incident_active = '1';
-							} 
-							else {
-								$update->incident_active = '0';
+								$update->incident_active =($update->incident_active == 0) ? '1' : '0';
+
+								// Tag this as a report that needs to be sent out as an alert
+								if ($update->incident_alert_status != '2')
+								{
+									// 2 = report that has had an alert sent
+									$update->incident_alert_status = '1';
+								}
+
+								$update->save();
+
+								$verify = new Verify_Model();
+								$verify->incident_id = $item;
+								$verify->verified_status = '1';
+
+								// Record 'Verified By' Action
+								$verify->user_id = $_SESSION['auth_user']->id;
+								$verify->verified_date = date("Y-m-d H:i:s",time());
+								$verify->save();
+
+								// Action::report_approve - Approve a Report
+								Event::run('ushahidi_action.report_approve', $update);
 							}
-
-							// Tag this as a report that needs to be sent out as an alert
-							if ($update->incident_alert_status != '2')
-							{ // 2 = report that has had an alert sent
-								$update->incident_alert_status = '1';
-							}
-
-							$update->save();
-
-							$verify = new Verify_Model();
-							$verify->incident_id = $item;
-							$verify->verified_status = '1';
-							$verify->user_id = $_SESSION['auth_user']->id;			// Record 'Verified By' Action
-							$verify->verified_date = date("Y-m-d H:i:s",time());
-							$verify->save();
-
-							// Action::report_approve - Approve a Report
-							Event::run('ushahidi_action.report_approve', $update);
 						}
+						$form_action = strtoupper(Kohana::lang('ui_admin.approved'));
 					}
-					$form_action = strtoupper(Kohana::lang('ui_admin.approved'));
+
 				}
-				elseif ($post->action == 'u')	// Unapprove Action
+				// Unapprove Action
+				elseif ($post->action == 'u')
 				{
-					foreach($post->incident_id as $item)
+					foreach ($post->incident_id as $item)
 					{
 						$update = new Incident_Model($item);
-						if ($update->loaded == true) {
+						if ($update->loaded == TRUE)
+						{
 							$update->incident_active = '0';
 
 							// If Alert hasn't been sent yet, disable it
@@ -159,7 +182,9 @@ class Reports_Controller extends Admin_Controller
 							$verify = new Verify_Model();
 							$verify->incident_id = $item;
 							$verify->verified_status = '0';
-							$verify->user_id = $_SESSION['auth_user']->id;			// Record 'Verified By' Action
+
+							// Record 'Verified By' Action
+							$verify->user_id = $_SESSION['auth_user']->id;
 							$verify->verified_date = date("Y-m-d H:i:s",time());
 							$verify->save();
 
@@ -169,38 +194,46 @@ class Reports_Controller extends Admin_Controller
 					}
 					$form_action = strtoupper(Kohana::lang('ui_admin.unapproved'));
 				}
-				elseif ($post->action == 'v')	// Verify Action
+				// Verify Action
+				elseif ($post->action == 'v')
 				{
-					foreach($post->incident_id as $item)
+					foreach ($post->incident_id as $item)
 					{
 						$update = new Incident_Model($item);
 						$verify = new Verify_Model();
-						if ($update->loaded == true) {
+						if ($update->loaded == TRUE)
+						{
 							if ($update->incident_verified == '1')
 							{
 								$update->incident_verified = '0';
 								$verify->verified_status = '0';
 							}
-							else {
+							else
+							{
 								$update->incident_verified = '1';
 								$verify->verified_status = '2';
 							}
 							$update->save();
 
 							$verify->incident_id = $item;
-							$verify->user_id = $_SESSION['auth_user']->id;			// Record 'Verified By' Action
+							// Record 'Verified By' Action
+							$verify->user_id = $_SESSION['auth_user']->id;
 							$verify->verified_date = date("Y-m-d H:i:s",time());
 							$verify->save();
 						}
 					}
-					$form_action = "VERIFIED";
+
+					// Set the form action
+					$form_action = strtoupper(Kohana::lang('ui_admin.verified_unverified'));
 				}
-				elseif ($post->action == 'd')	//Delete Action
+
+				//Delete Action
+				elseif ($post->action == 'd')
 				{
 					foreach($post->incident_id as $item)
 					{
 						$update = new Incident_Model($item);
-						if ($update->loaded == true)
+						if ($update->loaded == TRUE)
 						{
 							$incident_id = $update->id;
 							$location_id = $update->location_id;
@@ -216,7 +249,8 @@ class Reports_Controller extends Admin_Controller
 							ORM::factory('incident_lang')->where('incident_id',$incident_id)->delete_all();
 
 							// Delete Photos From Directory
-							foreach (ORM::factory('media')->where('incident_id',$incident_id)->where('media_type', 1) as $photo) {
+							foreach (ORM::factory('media')->where('incident_id',$incident_id)->where('media_type', 1) as $photo)
+							{
 								deletePhoto($photo->id);
 							}
 
@@ -228,13 +262,17 @@ class Reports_Controller extends Admin_Controller
 
 							// Delete relationship to SMS message
 							$updatemessage = ORM::factory('message')->where('incident_id',$incident_id)->find();
-							if ($updatemessage->loaded == true) {
+							if ($updatemessage->loaded == TRUE)
+							{
 								$updatemessage->incident_id = 0;
 								$updatemessage->save();
 							}
 
 							// Delete Comments
 							ORM::factory('comment')->where('incident_id',$incident_id)->delete_all();
+
+							// Delete form responses
+							ORM::factory('form_response')->where('incident_id', $incident_id)->delete_all();
 
 							// Action::report_delete - Deleted a Report
 							Event::run('ushahidi_action.report_delete', $incident_id);
@@ -251,59 +289,26 @@ class Reports_Controller extends Admin_Controller
 
 		}
 
+
+		// Fetch all incidents
+		$all_incidents = reports::fetch_incidents();
+
 		// Pagination
 		$pagination = new Pagination(array(
-			'query_string'	 => 'page',
-			'items_per_page' => $this->items_per_page,
-			'total_items'	 => ORM::factory('incident')
-				->join('location', 'incident.location_id', 'location.id','INNER')
-				->where($filter)
-				->count_all()
-			));
+				'style' => 'front-end-reports',
+				'query_string' => 'page',
+				'items_per_page' => (int) Kohana::config('settings.items_per_page'),
+				'total_items' => $all_incidents->count()
+				));
 
-		$incidents = ORM::factory('incident')
-			->join('location', 'incident.location_id', 'location.id','INNER')
-			->where($filter)
-			->orderby('incident_dateadd', 'desc')
-			->find_all($this->items_per_page, $pagination->sql_offset);
+		Event::run('ushahidi_filter.pagination',$pagination);
 
-		$location_ids = array();
-		foreach ($incidents as $incident)
-		{
-			$location_ids[] = $incident->location_id;
-		}
-		
-		//check if location_ids is not empty
-		if( count($location_ids ) > 0 ) 
-		{
-			$locations_result = ORM::factory('location')->in('id',implode(',',$location_ids))->find_all();
-			$locations = array();
-			foreach ($locations_result as $loc)
-			{
-				$locations[$loc->id] = $loc->location_name;
-			}
-		}
-		else
-		{
-			$locations = array();
-		}
+		// Reports
+		$incidents = Incident_Model::get_incidents(reports::$params, $pagination);
 
-		$this->template->content->locations = $locations;
 
-		//GET countries
-		$countries = array();
-		foreach (ORM::factory('country')->orderby('country')->find_all() as $country)
-		{
-			// Create a list of all categories
-			$this_country = $country->country;
-			if (strlen($this_country) > 35)
-			{
-				$this_country = substr($this_country, 0, 35) . "...";
-			}
-			$countries[$country->id] = $this_country;
-		}
-
-		$this->template->content->countries = $countries;
+		Event::run('ushahidi_filter.filter_incidents',$incidents);
+		$this->template->content->countries = Country_Model::get_countries_list();
 		$this->template->content->incidents = $incidents;
 		$this->template->content->pagination = $pagination;
 		$this->template->content->form_error = $form_error;
@@ -319,15 +324,16 @@ class Reports_Controller extends Admin_Controller
 		// Javascript Header
 		$this->template->js = new View('admin/reports_js');
 	}
+
 	/**
-	* Edit a report
-	* @param bool|int $id The id no. of the report
-	* @param bool|string $saved
-	*/
-	function edit( $id = false, $saved = false )
+	 * Edit a report
+	 * @param bool|int $id The id no. of the report
+	 * @param bool|string $saved
+	 */
+	public function edit($id = FALSE, $saved = FALSE)
 	{
 		$db = new Database();
-		
+
 		// If user doesn't have access, redirect to dashboard
 		if ( ! admin::permissions($this->user, "reports_edit"))
 		{
@@ -354,6 +360,7 @@ class Reports_Controller extends Admin_Controller
 			'geometry' => array(),
 			'location_name' => '',
 			'country_id' => '',
+			'country_name' =>'',
 			'incident_category' => array(),
 			'incident_news' => array(),
 			'incident_video' => array(),
@@ -364,12 +371,10 @@ class Reports_Controller extends Admin_Controller
 			'custom_field' => array(),
 			'incident_active' => '',
 			'incident_verified' => '',
-			'incident_source' => '',
-			'incident_information' => '',
 			'incident_zoom' => ''
 		);
 
-		//	copy the form as errors, so the errors will be stored with keys corresponding to the form field names
+		// Copy the form as errors, so the errors will be stored with keys corresponding to the form field names
 		$errors = $form;
 		$form_error = FALSE;
 		$form_saved = ($saved == 'saved');
@@ -378,27 +383,40 @@ class Reports_Controller extends Admin_Controller
 		$form['locale'] = Kohana::config('locale.language');
 		//$form['latitude'] = Kohana::config('settings.default_lat');
 		//$form['longitude'] = Kohana::config('settings.default_lon');
-		$form['country_id'] = Kohana::config('settings.default_country');
 		$form['incident_date'] = date("m/d/Y",time());
 		$form['incident_hour'] = date('h');
 		$form['incident_minute'] = date('i');
 		$form['incident_ampm'] = date('a');
-		
+		$form['country_id'] = Kohana::config('settings.default_country');
+
+
+		//get the form ID if relevant, kind of a hack
+		//to just hit the database like this for one
+		//tiny bit of info then throw away the DB model object,
+		//but seems to be what everyone else does, so
+		//why should I care. Just know that when your Ush system crashes
+		//because you have 1000 concurrent users you'll need to do this
+		//correctly. Etherton.
+		$form_id = '';
+		if($id && Incident_Model::is_valid_incident($id, FALSE))
+		{
+			$form_id = ORM::factory('incident', $id)->form_id;
+		}
 		// initialize custom field array
-        $form['custom_field'] = customforms::get_custom_form_fields($id,'',true);
+        $form['custom_field'] = customforms::get_custom_form_fields($id,$form_id,true);
 
 		// Locale (Language) Array
 		$this->template->content->locale_array = Kohana::config('locale.all_languages');
 
 		// Create Categories
-		$this->template->content->categories = Category_Model::get_categories();
+		$this->template->content->categories = Category_Model::get_categories(0, TRUE, FALSE);
 		$this->template->content->new_categories_form = $this->_new_categories_form_arr();
 
 		// Time formatting
 		$this->template->content->hour_array = $this->_hour_array();
 		$this->template->content->minute_array = $this->_minute_array();
 		$this->template->content->ampm_array = $this->_ampm_array();
-		
+
 		$this->template->content->stroke_width_array = $this->_stroke_width_array();
 
 		// Get Countries
@@ -413,7 +431,12 @@ class Reports_Controller extends Admin_Controller
 			}
 			$countries[$country->id] = $this_country;
 		}
+
+		// Initialize Default Value for Hidden Field Country Name, just incase Reverse Geo coding yields no result
+		$form['country_name'] = $countries[$form['country_id']];
+
 		$this->template->content->countries = $countries;
+
 
 		//GET custom forms
 		$forms = array();
@@ -421,14 +444,14 @@ class Reports_Controller extends Admin_Controller
 		{
 			$forms[$custom_forms->id] = $custom_forms->form_title;
 		}
-		
+
 		$this->template->content->forms = $forms;
-		
+
 		// Get the incident media
-		$incident_media =  Incident_Model::is_valid_incident($id)
+		$incident_media =  Incident_Model::is_valid_incident($id, FALSE)
 			? ORM::factory('incident', $id)->media
 			: FALSE;
-		
+
 		$this->template->content->incident_media = $incident_media;
 
 		// Are we creating this report from SMS/Email/Twitter?
@@ -445,6 +468,7 @@ class Reports_Controller extends Admin_Controller
 
 				// Has a report already been created for this Message?
 				if ($message->incident_id != 0) {
+
 					// Redirect to report
 					url::redirect('admin/reports/edit/'. $message->incident_id);
 				}
@@ -456,7 +480,7 @@ class Reports_Controller extends Admin_Controller
 					$form['incident_title'] = $message->message;
 					$incident_description = $message->message_detail;
 				}
-				
+
 				$form['incident_description'] = $incident_description;
 				$form['incident_date'] = date('m/d/Y', strtotime($message->message_date));
 				$form['incident_hour'] = date('h', strtotime($message->message_date));
@@ -473,6 +497,15 @@ class Reports_Controller extends Admin_Controller
 					$form['longitude'] = $message->reporter->location->longitude;
 					$form['location_name'] = $message->reporter->location->location_name;
 				}
+
+				//Events to manipulate an already known location
+
+				Event::run('ushahidi_action.location_from',$message_from = $message->message_from);
+				//filter location name
+				Event::run('ushahidi_filter.location_name',$form['location_name']);
+				//filter //location find
+				Event::run('ushahidi_filter.location_find',$form['location_find']);
+
 
 				// Retrieve Last 5 Messages From this account
 				$this->template->content->all_messages = ORM::factory('message')
@@ -532,45 +565,55 @@ class Reports_Controller extends Admin_Controller
 			}
 		}
 
-		// check, has the form been submitted, if so, setup validation
+		// Check, has the form been submitted, if so, setup validation
 		if ($_POST)
 		{
 			// Instantiate Validation, use $post, so we don't overwrite $_POST fields with our own things
 			$post = array_merge($_POST, $_FILES);
-			
+
 			// Check if the service id exists
 			if (isset($service_id) AND intval($service_id) > 0)
 			{
 				$post = array_merge($post, array('service_id' => $service_id));
 			}
-			
-			// 
-			// Notes: E.Kala 16th July 2011
-			// @todo Will have to rethink this event call
-			// 
+
+			// Check if the incident id is valid an add it to the post data
+			if (Incident_Model::is_valid_incident($id, FALSE))
+			{
+				$post = array_merge($post, array('incident_id' => $id));
+			}
+
+			/**
+			 * NOTES - E.Kala July 27, 2011
+			 *
+			 * Previously, the $post parameter for this event was a Validation
+			 * object. Now it's an array (i.e. the raw data without any validation rules applied to them).
+			 * As such, all plugins making use of this event shall have to be updated
+			 */
+
 			// Action::report_submit_admin - Report Posted
-			// Event::run('ushahidi_action.report_submit_admin', $post);
+			Event::run('ushahidi_action.report_submit_admin', $post);
 
 			// Validate
 			if (reports::validate($post, TRUE))
 			{
 				// Yes! everything is valid
 				$location_id = $post->location_id;
-				
+
 				// STEP 1: SAVE LOCATION
 				$location = new Location_Model($location_id);
 				reports::save_location($post, $location);
 
 				// STEP 2: SAVE INCIDENT
 				$incident = new Incident_Model($id);
-				reports::save_incident($post, $incident, $location->id, $_SESSION["auth_user"]->id);
-				
+				reports::save_report($post, $incident, $location->id);
+
 				// STEP 2b: Record Approval/Verification Action
 				$verify = new Verify_Model();
 				reports::verify_approve($post, $verify, $incident);
-				
+
 				// STEP 2c: SAVE INCIDENT GEOMETRIES
-				reports::save_inc_geometry($post, $incident);
+				reports::save_report_geometry($post, $incident);
 
 				// STEP 3: SAVE CATEGORIES
 				reports::save_category($post, $incident);
@@ -618,39 +661,42 @@ class Reports_Controller extends Admin_Controller
 				}
 
 				// STEP 7: SAVE CUSTOM FORM FIELDS
-				reports::save_custom_fields($incident, $post);
+				reports::save_custom_fields($post, $incident);
 
 				// Action::report_edit - Edited a Report
 				Event::run('ushahidi_action.report_edit', $incident);
 
-
 				// SAVE AND CLOSE?
-				if ($post->save == 1)		
-				{
-					// Save but don't close
-					url::redirect('admin/reports/edit/'. $incident->id .'/saved');
+				switch($post->save) {
+					case 1:
+					case 'dontclose':
+						// Save but don't close
+						url::redirect('admin/reports/edit/'. $incident->id .'/saved');
+						break;
+					case 'addnew':
+						// Save and add new
+						url::redirect('admin/reports/edit/0/saved');
+						break;
+					default:
+						// Save and close
+						url::redirect('admin/reports/');
 				}
-				else						
-				{
-					// Save and close
-					url::redirect('admin/reports/');
-				}
-				
+
 			}
 			// No! We have validation errors, we need to show the form again, with the errors
 			else
 			{
-				// repopulate the form fields
+				// Repopulate the form fields
 				$form = arr::overwrite($form, $post->as_array());
 
-				// populate the error fields, if any
+				// Populate the error fields, if any
 				$errors = arr::overwrite($errors, $post->errors('report'));
 				$form_error = TRUE;
 			}
 		}
 		else
 		{
-			if (Incident_Model::is_valid_incident($id))
+			if (Incident_Model::is_valid_incident($id, FALSE))
 			{
 				// Retrieve Current Incident
 				$incident = ORM::factory('incident', $id);
@@ -682,21 +728,27 @@ class Reports_Controller extends Admin_Controller
 							$incident_photo[] = $media->media_link;
 						}
 					}
-					
+
 					// Get Geometries via SQL query as ORM can't handle Spatial Data
-					$sql = "SELECT AsText(geometry) as geometry, geometry_label, 
-						geometry_comment, geometry_color, geometry_strokewidth 
-						FROM ".Kohana::config('database.default.table_prefix')."geometry 
+					$sql = "SELECT AsText(geometry) as geometry, geometry_label,
+						geometry_comment, geometry_color, geometry_strokewidth
+						FROM ".Kohana::config('database.default.table_prefix')."geometry
 						WHERE incident_id=".$id;
 					$query = $db->query($sql);
 					foreach ( $query as $item )
 					{
-						$form['geometry'][] = $item;
+						$geometry = array(
+								"geometry" => $item->geometry,
+								"label" => $item->geometry_label,
+								"comment" => $item->geometry_comment,
+								"color" => $item->geometry_color,
+								"strokewidth" => $item->geometry_strokewidth
+							);
+						$form['geometry'][] = json_encode($geometry);
 					}
-					
+
 					// Combine Everything
-					$incident_arr = array
-					(
+					$incident_arr = array(
 						'location_id' => $incident->location->id,
 						'form_id' => $incident->form_id,
 						'locale' => $incident->locale,
@@ -720,8 +772,6 @@ class Reports_Controller extends Admin_Controller
 						'custom_field' => customforms::get_custom_form_fields($id,$incident->form_id,true),
 						'incident_active' => $incident->incident_active,
 						'incident_verified' => $incident->incident_verified,
-						'incident_source' => $incident->incident_source,
-						'incident_information' => $incident->incident_information,
 						'incident_zoom' => $incident->incident_zoom
 					);
 
@@ -736,16 +786,16 @@ class Reports_Controller extends Admin_Controller
 
 			}
 		}
-		
+
 		$this->template->content->id = $id;
 		$this->template->content->form = $form;
 		$this->template->content->errors = $errors;
 		$this->template->content->form_error = $form_error;
 		$this->template->content->form_saved = $form_saved;
-		
+
 		// Retrieve Custom Form Fields Structure
 		$this->template->content->custom_forms = new View('reports_submit_custom_forms');
-        $disp_custom_fields = customforms::get_custom_form_fields($id,$form['form_id'],false,"view");
+		$disp_custom_fields = customforms::get_custom_form_fields($id, $form['form_id'], FALSE, "view");
 		$custom_field_mismatch = customforms::get_edit_mismatch($form['form_id']);
         $this->template->content->custom_forms->disp_custom_fields = $disp_custom_fields;
 		$this->template->content->custom_forms->custom_field_mismatch = $custom_field_mismatch;
@@ -768,8 +818,9 @@ class Reports_Controller extends Admin_Controller
 		$this->template->colorpicker_enabled = TRUE;
 		$this->template->treeview_enabled = TRUE;
 		$this->template->json2_enabled = TRUE;
-		
-		$this->template->js = new View('admin/reports_edit_js');
+
+		$this->template->js = new View('reports_submit_edit_js');
+		$this->template->js->edit_mode = TRUE;
 		$this->template->js->default_map = Kohana::config('settings.default_map');
 		$this->template->js->default_zoom = Kohana::config('settings.default_zoom');
 
@@ -783,7 +834,7 @@ class Reports_Controller extends Admin_Controller
 			$this->template->js->latitude = $form['latitude'];
 			$this->template->js->longitude = $form['longitude'];
 		}
-		
+
 		$this->template->js->incident_zoom = $form['incident_zoom'];
 		$this->template->js->geometries = $form['geometry'];
 
@@ -791,7 +842,7 @@ class Reports_Controller extends Admin_Controller
 		$this->template->content->date_picker_js = $this->_date_picker_js();
 		$this->template->content->color_picker_js = $this->_color_picker_js();
 		$this->template->content->new_category_toggle_js = $this->_new_category_toggle_js();
-		
+
 		// Pack Javascript
 		$myPacker = new javascriptpacker($this->template->js , 'Normal', false, false);
 		$this->template->js = $myPacker->pack();
@@ -801,7 +852,7 @@ class Reports_Controller extends Admin_Controller
 	/**
 	 * Download Reports in CSV format
 	 */
-	function download()
+	public function download()
 	{
 		// If user doesn't have access, redirect to dashboard
 		if ( ! admin::permissions($this->user, "reports_download"))
@@ -813,12 +864,13 @@ class Reports_Controller extends Admin_Controller
 		$this->template->content->title = Kohana::lang('ui_admin.download_reports');
 
 		$form = array(
-			'data_point'   => '',
+			'data_active'   => '',
+			'data_verified'   => '',
 			'data_include' => '',
 			'from_date'	   => '',
 			'to_date'	   => ''
 		);
-		
+
 		$errors = $form;
 		$form_error = FALSE;
 
@@ -828,11 +880,12 @@ class Reports_Controller extends Admin_Controller
 			// Instantiate Validation, use $post, so we don't overwrite $_POST fields with our own things
 			$post = Validation::factory($_POST);
 
-			 //	 Add some filters
+			 //	Add some filters
 			$post->pre_filter('trim', TRUE);
 
 			// Add some rules, the input field, followed by a list of checks, carried out in order
-			$post->add_rules('data_point.*','required','numeric','between[1,4]');
+			$post->add_rules('data_active.*','required','numeric','between[0,1]');
+			$post->add_rules('data_verified.*','required','numeric','between[0,1]');
 			//$post->add_rules('data_include.*','numeric','between[1,5]');
 			$post->add_rules('data_include.*','numeric','between[1,6]');
 			$post->add_rules('from_date','date_mmddyyyy');
@@ -842,17 +895,20 @@ class Reports_Controller extends Admin_Controller
 			if (!empty($_POST['from_date']) OR !empty($_POST['to_date']))
 			{
 				// Valid FROM Date?
-				if (empty($_POST['from_date']) OR (strtotime($_POST['from_date']) > strtotime("today"))) {
+				if (empty($_POST['from_date']) OR (strtotime($_POST['from_date']) > strtotime("today")))
+				{
 					$post->add_error('from_date','range');
 				}
 
 				// Valid TO date?
-				if (empty($_POST['to_date']) OR (strtotime($_POST['to_date']) > strtotime("today"))) {
+				if (empty($_POST['to_date']) OR (strtotime($_POST['to_date']) > strtotime("today")))
+				{
 					$post->add_error('to_date','range');
 				}
 
 				// TO Date not greater than FROM Date?
-				if (strtotime($_POST['from_date']) > strtotime($_POST['to_date'])) {
+				if (strtotime($_POST['from_date']) > strtotime($_POST['to_date']))
+				{
 					$post->add_error('to_date','range_greater');
 				}
 			}
@@ -860,154 +916,220 @@ class Reports_Controller extends Admin_Controller
 			// Test to see if things passed the rule checks
 			if ($post->validate())
 			{
-				// Add Filters
-				$filter = " ( 1=1";
+				//set filter
+				$filter = '( ';
+				
 				// Report Type Filter
+				$show_active = false;
+				$show_inactive = false;
+				$show_verified = false;
+				$show_not_verified = false;
 				foreach($post->data_point as $item)
 				{
 					if ($item == 1)
 					{
-						$filter .= " OR incident_active = 1 ";
+						$show_active = true;
 					}
-					
+
 					if ($item == 2)
 					{
-						$filter .= " OR incident_verified = 1 ";
+						$show_verified = true;
 					}
-					
+
 					if ($item == 3)
 					{
-						$filter .= " OR incident_active = 0 ";
+						$show_inactive = true;
 					}
-					
+
 					if ($item == 4)
 					{
-						$filter .= " OR incident_verified = 0 ";
+						$show_not_verified = true;
 					}
 				}
-				$filter .= ") ";
+				//handle active or not active
+				if($show_active && !$show_inactive)
+				{				
+					$filter .= ' incident_active = 1 ';
+				}
+				elseif(!$show_active && $show_inactive)
+				{				
+					$filter .= '  incident_active = 0 ';
+				}
+				elseif($show_active && $show_inactive)
+				{				
+					$filter .= ' (incident_active = 1 OR incident_active = 0) ';
+				}
+				elseif(!$show_active && !$show_inactive)
+				{				
+					$filter .= ' (incident_active = 0 AND incident_active = 1) ';
+				}
+				
+				$filter .= ' AND ';
+				
+				//handle verified
+				if($show_verified && !$show_not_verified)
+				{				
+					$filter .= ' incident_verified = 1 ';
+				}
+				elseif(!$show_verified && $show_not_verified)
+				{				
+					$filter .= ' incident_verified = 0 ';
+				}
+				elseif($show_verified && $show_not_verified)
+				{				
+					$filter .= ' (incident_verified = 0 OR incident_verified = 1) ';
+				}
+				elseif(!$show_verified && !$show_not_verified)
+				{				
+					$filter .= ' (incident_verified = 0 AND incident_verified = 1) ';
+				}
+				
+				$filter .= ') ';
 
 				// Report Date Filter
-				if (!empty($post->from_date) AND !empty($post->to_date))
+				if ( ! empty($post->from_date) AND !empty($post->to_date))
 				{
-					$filter .= " AND ( incident_date >= '" . date("Y-m-d H:i:s",strtotime($post->from_date)) . "' AND incident_date <= '" . date("Y-m-d H:i:s",strtotime($post->to_date)) . "' ) ";
+					$filter .= " AND ( incident_date >= '" . date("Y-m-d H:i:s",strtotime($post->from_date))
+							. "' AND incident_date <= '" . date("Y-m-d H:i:s",strtotime($post->to_date)) . "' ) ";
 				}
 
 				// Retrieve reports
 				$incidents = ORM::factory('incident')->where($filter)->orderby('incident_dateadd', 'desc')->find_all();
 
 				// Column Titles
-				$report_csv = "#,INCIDENT TITLE,INCIDENT DATE";
+				ob_start();
+				echo "#,INCIDENT TITLE,INCIDENT DATE";
 				foreach($post->data_include as $item)
 				{
 					if ($item == 1) {
-						$report_csv .= ",LOCATION";
+						echo ",LOCATION";
 					}
-					
+
 					if ($item == 2) {
-						$report_csv .= ",DESCRIPTION";
+						echo ",DESCRIPTION";
 					}
-					
+
 					if ($item == 3) {
-						$report_csv .= ",CATEGORY";
+						echo ",CATEGORY";
 					}
-					
+
 					if ($item == 4) {
-						$report_csv .= ",LATITUDE";
+						echo ",LATITUDE";
 					}
-					
+
 					if($item == 5) {
-						$report_csv .= ",LONGITUDE";
+						echo ",LONGITUDE";
 					}
 					if($item == 6)
 					{
-						$custom_titles = ORM::factory('form_field')->orderby('field_position','desc')->find_all();
+						$custom_titles = customforms::get_custom_form_fields('','',false);
 						foreach($custom_titles as $field_name)
 						{
 
-							$report_csv .= ",".$field_name->field_name;
-						}	
+							echo ",".$field_name['field_name'];
+						}
 
 					}
 
 				}
-				
-				$report_csv .= ",APPROVED,VERIFIED";
-				
-				
-				$report_csv .= "\n";
+
+				echo ",APPROVED,VERIFIED";
+
+				//Incase a plugin would like to add some custom fields
+				$custom_headers = "";
+				Event::run('ushahidi_filter.report_download_csv_header', $custom_headers);
+				echo $custom_headers;
+
+				echo "\n";
 
 				foreach ($incidents as $incident)
 				{
-					$report_csv .= '"'.$incident->id.'",';
-					$report_csv .= '"'.$this->_csv_text($incident->incident_title).'",';
-					$report_csv .= '"'.$incident->incident_date.'"';
+					echo '"'.$incident->id.'",';
+					echo '"'.$this->_csv_text($incident->incident_title).'",';
+					echo '"'.$incident->incident_date.'"';
 
 					foreach($post->data_include as $item)
 					{
 						switch ($item)
 						{
 							case 1:
-								$report_csv .= ',"'.$this->_csv_text($incident->location->location_name).'"';
+								echo ',"'.$this->_csv_text($incident->location->location_name).'"';
 							break;
 
 							case 2:
-								$report_csv .= ',"'.$this->_csv_text($incident->incident_description).'"';
+								echo ',"'.$this->_csv_text($incident->incident_description).'"';
 							break;
 
 							case 3:
-								$report_csv .= ',"';
-							
+								echo ',"';
+
 								foreach($incident->incident_category as $category)
 								{
 									if ($category->category->category_title)
 									{
-										$report_csv .= $this->_csv_text($category->category->category_title) . ", ";
+										echo $this->_csv_text($category->category->category_title) . ", ";
 									}
 								}
-								$report_csv .= '"';
+								echo '"';
 							break;
-						
+
 							case 4:
-								$report_csv .= ',"'.$this->_csv_text($incident->location->latitude).'"';
+								echo ',"'.$this->_csv_text($incident->location->latitude).'"';
 							break;
-						
+
 							case 5:
-								$report_csv .= ',"'.$this->_csv_text($incident->location->longitude).'"';
+								echo ',"'.$this->_csv_text($incident->location->longitude).'"';
 							break;
 
 							case 6:
 								$incident_id = $incident->id;
-								$custom_fields = ORM::factory('form_response')->where('incident_id',$incident_id)->orderby('form_field_id','desc')->find_all();
-								foreach($custom_fields as $custom_field)
+								$custom_fields = customforms::get_custom_form_fields($incident_id,'',false);
+								if ( ! empty($custom_fields))
 								{
-									$report_csv .=',"'.$this->_csv_text($custom_field->form_response).'"';
-								}	
+									foreach($custom_fields as $custom_field)
+									{
+										echo',"'.$this->_csv_text($custom_field['field_response']).'"';
+									}
+								}
+								else
+								{
+									$custom_field = customforms::get_custom_form_fields('','',false);
+									foreach ($custom_field as $custom)
+									{
+										echo',"'.$this->_csv_text("").'"';
+									}
+								}
 								break;
 
 						}
 					}
-					
+
 					if ($incident->incident_active)
 					{
-						$report_csv .= ",YES";
+						echo ",YES";
 					}
 					else
 					{
-						$report_csv .= ",NO";
+						echo ",NO";
 					}
-					
+
 					if ($incident->incident_verified)
 					{
-						$report_csv .= ",YES";
+						echo ",YES";
 					}
 					else
 					{
-						$report_csv .= ",NO";
+						echo ",NO";
 					}
-					
-					$report_csv .= "\n";
+
+					//Incase a plugin would like to add some custom data for an incident
+					$event_data = array("report_csv" => "", "incident" => $incident);
+					Event::run('ushahidi_filter.report_download_csv_incident', $event_data);
+					echo $event_data['report_csv'];
+
+					echo "\n";
 				}
+				$report_csv = ob_get_clean();
 
 				// Output to browser
 				header("Content-type: text/x-csv");
@@ -1018,13 +1140,14 @@ class Reports_Controller extends Admin_Controller
 				exit;
 
 			}
+
 			// No! We have validation errors, we need to show the form again, with the errors
 			else
 			{
-				// repopulate the form fields
+				// Repopulate the form fields
 				$form = arr::overwrite($form, $post->as_array());
 
-				// populate the error fields, if any
+				// Populate the error fields, if any
 				$errors = arr::overwrite($errors, $post->errors('report'));
 				$form_error = TRUE;
 			}
@@ -1041,31 +1164,31 @@ class Reports_Controller extends Admin_Controller
 
 	public function upload()
 	{
-
 		// If user doesn't have access, redirect to dashboard
 		if ( ! admin::permissions($this->user, "reports_upload"))
 		{
 			url::redirect(url::site().'admin/dashboard');
 		}
 
-		if($_SERVER['REQUEST_METHOD'] == 'GET') {
+		if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 			$this->template->content = new View('admin/reports_upload');
 			$this->template->content->title = 'Upload Reports';
 			$this->template->content->form_error = false;
 		}
+
 		if ($_SERVER['REQUEST_METHOD']=='POST')
 		{
 			$errors = array();
 			$notices = array();
-			
-			if (!$_FILES['csvfile']['error']) 
+
+			if (!$_FILES['csvfile']['error'])
 			{
 				if (file_exists($_FILES['csvfile']['tmp_name']))
 				{
 					if($filehandle = fopen($_FILES['csvfile']['tmp_name'], 'r'))
 					{
 						$importer = new ReportsImporter;
-						
+
 						if ($importer->import($filehandle))
 						{
 							$this->template->content = new View('admin/reports_upload_success');
@@ -1083,12 +1206,16 @@ class Reports_Controller extends Admin_Controller
 					{
 						$errors[] = Kohana::lang('ui_admin.file_open_error');
 					}
-				} // file exists?
+				}
+
+				// File exists?
 				else
 				{
 					$errors[] = Kohana::lang('ui_admin.file_not_found_upload');
 				}
-			} // upload errors?
+			}
+
+			// Upload errors?
 			else
 			{
 				$errors[] = $_FILES['csvfile']['error'];
@@ -1101,7 +1228,7 @@ class Reports_Controller extends Admin_Controller
 				$this->template->content->errors = $errors;
 				$this->template->content->form_error = 1;
 			}
-		} // _POST
+		}
 	}
 
 	/**
@@ -1110,7 +1237,7 @@ class Reports_Controller extends Admin_Controller
 	* @param bool|string $saved
 	*/
 
-	function translate( $id = false, $saved = false )
+	public function translate( $id = false, $saved = FALSE)
 	{
 		$this->template->content = new View('admin/reports_translate');
 		$this->template->content->title = Kohana::lang('ui_admin.translate_reports');
@@ -1120,7 +1247,7 @@ class Reports_Controller extends Admin_Controller
 		{
 			$incident_id = (int) $_GET['iid'];
 			$incident = ORM::factory('incident', $incident_id);
-			
+
 			if ($incident->loaded == true)
 			{
 				$orig_locale = $incident->locale;
@@ -1140,35 +1267,29 @@ class Reports_Controller extends Admin_Controller
 		}
 
 
-		// setup and initialize form field names
-		$form = array
-		(
+		// Setup and initialize form field names
+		$form = array(
 			'locale'	  => '',
 			'incident_title'	  => '',
 			'incident_description'	  => ''
 		);
-		//	copy the form as errors, so the errors will be stored with keys corresponding to the form field names
+
+		// Copy the form as errors, so the errors will be stored with keys corresponding to the form field names
 		$errors = $form;
 		$form_error = FALSE;
-		if ($saved == 'saved')
-		{
-			$form_saved = TRUE;
-		}
-		else
-		{
-			$form_saved = FALSE;
-		}
+
+		$form_saved = ($saved == 'saved')? TRUE : FALSE;
 
 		// Locale (Language) Array
 		$this->template->content->locale_array = Kohana::config('locale.all_languages');
 
-		// check, has the form been submitted, if so, setup validation
+		// Check, has the form been submitted, if so, setup validation
 		if ($_POST)
 		{
 			// Instantiate Validation, use $post, so we don't overwrite $_POST fields with our own things
 			$post = Validation::factory($_POST);
 
-			 //	 Add some filters
+			 //	Add some filters
 			$post->pre_filter('trim', TRUE);
 
 			// Add some rules, the input field, followed by a list of checks, carried out in order
@@ -1196,11 +1317,14 @@ class Reports_Controller extends Admin_Controller
 
 
 				// SAVE AND CLOSE?
-				if ($post->save == 1)		// Save but don't close
+				// Save but don't close
+				if ($post->save == 1)
 				{
 					url::redirect('admin/reports/translate/'. $incident_l->id .'/saved/?iid=' . $incident_id);
 				}
-				else						// Save and close
+
+				// Save and close
+				else
 				{
 					url::redirect('admin/reports/');
 				}
@@ -1209,17 +1333,17 @@ class Reports_Controller extends Admin_Controller
 			// No! We have validation errors, we need to show the form again, with the errors
 			else
 			{
-				// repopulate the form fields
+				// Repopulate the form fields
 				$form = arr::overwrite($form, $post->as_array());
 
-				// populate the error fields, if any
+				// Populate the error fields, if any
 				$errors = arr::overwrite($errors, $post->errors('report'));
 				$form_error = TRUE;
 			}
 		}
 		else
 		{
-			if ( $id )
+			if ($id)
 			{
 				// Retrieve Current Incident
 				$incident_l = ORM::factory('incident_lang', $id)->where('incident_id', $incident_id)->find();
@@ -1253,18 +1377,18 @@ class Reports_Controller extends Admin_Controller
 	/**
 	* Save newly added dynamic categories
 	*/
-	function save_category()
+	public function save_category()
 	{
 		$this->auto_render = FALSE;
 		$this->template = "";
 
-		// check, has the form been submitted, if so, setup validation
+		// Check, has the form been submitted, if so, setup validation
 		if ($_POST)
 		{
 			// Instantiate Validation, use $post, so we don't overwrite $_POST fields with our own things
 			$post = Validation::factory($_POST);
 
-			 //	 Add some filters
+			 //	Add some filters
 			$post->pre_filter('trim', TRUE);
 
 			// Add some rules, the input field, followed by a list of checks, carried out in order
@@ -1286,7 +1410,6 @@ class Reports_Controller extends Admin_Controller
 
 				echo json_encode(array("status"=>"saved", "id"=>$category->id));
 			}
-
 			else
 
 			{
@@ -1303,26 +1426,43 @@ class Reports_Controller extends Admin_Controller
 	* Delete Photo
 	* @param int $id The unique id of the photo to be deleted
 	*/
-	function deletePhoto ( $id )
+	public function deletePhoto ($id)
 	{
 		$this->auto_render = FALSE;
 		$this->template = "";
 
-		if ( $id )
+		if ($id)
 		{
 			$photo = ORM::factory('media', $id);
 			$photo_large = $photo->media_link;
+			$photo_medium = $photo->media_medium;
 			$photo_thumb = $photo->media_thumb;
 
-			// Delete Files from Directory
-			if ( ! empty($photo_large))
+			if (file_exists(Kohana::config('upload.directory', TRUE).$photo_large))
 			{
-				unlink(Kohana::config('upload.directory', TRUE) . $photo_large);
+				unlink(Kohana::config('upload.directory', TRUE).$photo_large);
 			}
-			
-			if ( ! empty($photo_thumb))
+			elseif (Kohana::config("cdn.cdn_store_dynamic_content") AND valid::url($photo_large))
 			{
-				unlink(Kohana::config('upload.directory', TRUE) . $photo_thumb);
+				cdn::delete($photo_large);
+			}
+
+			if (file_exists(Kohana::config('upload.directory', TRUE).$photo_medium))
+			{
+				unlink(Kohana::config('upload.directory', TRUE).$photo_medium);
+			}
+			elseif (Kohana::config("cdn.cdn_store_dynamic_content") AND valid::url($photo_medium))
+			{
+				cdn::delete($photo_medium);
+			}
+
+			if (file_exists(Kohana::config('upload.directory', TRUE).$photo_thumb))
+			{
+				unlink(Kohana::config('upload.directory', TRUE).$photo_thumb);
+			}
+			elseif (Kohana::config("cdn.cdn_store_dynamic_content") AND valid::url($photo_thumb))
+			{
+				cdn::delete($photo_thumb);
 			}
 
 			// Finally Remove from DB
@@ -1335,8 +1475,7 @@ class Reports_Controller extends Admin_Controller
 	// Dynamic categories form fields
 	private function _new_categories_form_arr()
 	{
-		return array
-		(
+		return array(
 			'category_name' => '',
 			'category_description' => '',
 			'category_color' => '',
@@ -1348,7 +1487,8 @@ class Reports_Controller extends Admin_Controller
 	{
 		for ($i=1; $i <= 12 ; $i++)
 		{
-			$hour_array[sprintf("%02d", $i)] = sprintf("%02d", $i);		// Add Leading Zero
+			// Add Leading Zero
+			$hour_array[sprintf("%02d", $i)] = sprintf("%02d", $i);
 		}
 		return $hour_array;
 	}
@@ -1357,7 +1497,8 @@ class Reports_Controller extends Admin_Controller
 	{
 		for ($j=0; $j <= 59 ; $j++)
 		{
-			$minute_array[sprintf("%02d", $j)] = sprintf("%02d", $j);	// Add Leading Zero
+			// Add Leading Zero
+			$minute_array[sprintf("%02d", $j)] = sprintf("%02d", $j);
 		}
 
 		return $minute_array;
@@ -1367,38 +1508,38 @@ class Reports_Controller extends Admin_Controller
 	{
 		return $ampm_array = array('pm'=>Kohana::lang('ui_admin.pm'),'am'=>Kohana::lang('ui_admin.am'));
 	}
-	
+
 	private function _stroke_width_array()
 	{
 		for ($i = 0.5; $i <= 8 ; $i += 0.5)
 		{
 			$stroke_width_array["$i"] = $i;
 		}
-		
+
 		return $stroke_width_array;
 	}
 
 	// Javascript functions
-	 private function _color_picker_js()
+	private function _color_picker_js()
 	{
-	 return "<script type=\"text/javascript\">
-				$(document).ready(function() {
-				$('#category_color').ColorPicker({
-						onSubmit: function(hsb, hex, rgb) {
-							$('#category_color').val(hex);
-						},
-						onChange: function(hsb, hex, rgb) {
-							$('#category_color').val(hex);
-						},
-						onBeforeShow: function () {
-							$(this).ColorPickerSetColor(this.value);
-						}
-					})
-				.bind('keyup', function(){
-					$(this).ColorPickerSetColor(this.value);
-				});
-				});
-			</script>";
+		 return "<script type=\"text/javascript\">
+					$(document).ready(function() {
+					$('#category_color').ColorPicker({
+							onSubmit: function(hsb, hex, rgb) {
+								$('#category_color').val(hex);
+							},
+							onChange: function(hsb, hex, rgb) {
+								$('#category_color').val(hex);
+							},
+							onBeforeShow: function () {
+								$(this).ColorPickerSetColor(this.value);
+							}
+						})
+					.bind('keyup', function(){
+						$(this).ColorPickerSetColor(this.value);
+					});
+					});
+				</script>";
 	}
 
 	private function _date_picker_js()
@@ -1440,13 +1581,13 @@ class Reports_Controller extends Admin_Controller
 			return;
 
 		$iid = (isset($_GET['iid']) AND intval($_GTE['iid'] > 0))? intval($_GET['iid']) : 0;
-		
+
 		// Load translation
 		$translate = ORM::factory('incident_lang')
 						->where('incident_id',$iid)
 						->where('locale',$post->locale)
 						->find();
-		
+
 		if ($translate->loaded)
 		{
 			$post->add_error( 'locale', 'exists');
@@ -1458,22 +1599,6 @@ class Reports_Controller extends Admin_Controller
 		}
 	}
 
-
-	/**
-	 * Ajax call to update Incident Reporting Form
-	 */
-    public function switch_form()
-    {
-        $this->template = "";
-        $this->auto_render = FALSE;
-
-        isset($_POST['form_id']) ? $form_id = $_POST['form_id'] : $form_id = "1";
-        isset($_POST['incident_id']) ? $incident_id = $_POST['incident_id'] : $incident_id = "";
-		$form_fields = customforms::switcheroo($incident_id,$form_id);
-	
-        echo json_encode(array("status"=>"success", "response"=>$form_fields));
-    }
-
 	/**
 	 * Creates a SQL string from search keywords
 	 */
@@ -1482,7 +1607,10 @@ class Reports_Controller extends Admin_Controller
 		$or = '';
 		$where_string = '';
 
-
+		/**
+		 * NOTES: 2011-11-17 - John Etherton <john@ethertontech.com> I'm pretty sure this needs to be
+		 * internationalized, seems rather biased towards English.
+		 * */
 		// Stop words that we won't search for
 		// Add words as needed!!
 		$stop_words = array('the', 'and', 'a', 'to', 'of', 'in', 'i', 'is', 'that', 'it',
@@ -1490,39 +1618,52 @@ class Reports_Controller extends Admin_Controller
 		'at', 'or', 'as', 'was', 'so', 'if', 'out', 'not');
 
 		$keywords = explode(' ', $keyword_raw);
-		
-		if (is_array($keywords) && !empty($keywords))
+
+		if (is_array($keywords) AND !empty($keywords))
 		{
 			array_change_key_case($keywords, CASE_LOWER);
 			$i = 0;
-			
-			foreach($keywords as $value)
+
+			foreach ($keywords as $value)
 			{
-				if (!in_array($value,$stop_words) && !empty($value))
+				if (!in_array($value,$stop_words) AND !empty($value))
 				{
-					$chunk = mysql_real_escape_string($value);
-					if ($i > 0) {
+					$chunk = $this->db->escape_str($value);
+					if ($i > 0)
+					{
 						$or = ' OR ';
 					}
-					$where_string = $where_string.$or."incident_title LIKE '%$chunk%' OR incident_description LIKE '%$chunk%'  OR location_name LIKE '%$chunk%'";
+					$where_string = $where_string
+									.$or
+									."incident_title LIKE '%$chunk%' OR incident_description LIKE '%$chunk%'  OR location_name LIKE '%$chunk%'";
 					$i++;
 				}
 			}
 		}
 
-		if ($where_string)
-		{
-			return $where_string;
-		}
-		else
-		{
-			return "1=1";
-		}
+		// Return
+		return (!empty($where_string)) ? $where_string :  "1=1";
 	}
 
 	private function _csv_text($text)
 	{
 		$text = stripslashes(htmlspecialchars($text));
 		return $text;
+	}
+
+
+	/**
+	 * Adds extra filter paramters to the reports::fetch_incidents()
+	 * method. This way we can add 'all_reports=>true and other filters
+	 * that don't come standard sinc we are on the backend.
+	 * Works by simply adding in SQL conditions to the params
+	 * array of the reprots::fetch_incidents() method
+	 * @return none
+	 */
+	public function _add_incident_filters()
+	{
+		$params = Event::$data;
+		$params = array_merge($params, $this->params);
+		Event::$data = $params;
 	}
 }

@@ -5,27 +5,32 @@
 		<link><?php echo $site_url; ?></link>
 		<pubDate><?php echo gmdate("D, d M Y H:i:s T", strtotime($feed_date)); ?></pubDate>
 		<description><?php echo $feed_description; ?></description>
-		<generator>Ushahidi Engine</generator>
+		<generator>Ushahidi Platform</generator>
 		<atom:link href="<?php echo $feed_url; ?>" rel="self" type="application/rss+xml" />
-		<?php
-		// Event::feed_rss_head - Add to the feed head
-		Event::run('ushahidi_action.feed_rss_head');
+		
+		<?php // Event::feed_rss_head - Add to the feed head ?>
+		<?php Event::run('ushahidi_action.feed_rss_head'); ?>
 
-		foreach ($items as $item)
-		{?>
-		<item>
-			<title><?php echo $item['title']; ?></title>
+		<?php foreach ($items as $item): ?>
+			<item>
+			<title><?php echo htmlspecialchars($item['title']); ?></title>
 			<link><?php echo $item['link']; ?></link>
-			<description><![CDATA[<?php echo $item['description']; ?>]]></description>
+			<description><![CDATA[<?php echo htmlspecialchars($item['description'], ENT_COMPAT, 'UTF-8'); ?>]]></description>
 			<pubDate><?php echo gmdate("D, d M Y H:i:s T", strtotime($item['date'])); ?></pubDate>
 			<guid><?php if(isset($item['guid'])) echo $item['guid']; else echo $item['link'] ?></guid>
-<?php if(isset($item['point'])) echo "\t\t\t<georss:point>".$item['point'][0]." ".$item['point'][1]."</georss:point>\n"; ?>
-			<?php
-			// Event::feed_rss_item - Add to the feed item
-			Event::run('ushahidi_action.feed_rss_item', $item['id']);
-			?>
-		</item><?php 
-		}?>
 
+			<?php if (isset($item['point'])): ?>
+				<georss:point><?php echo $item['point'][0]." ".$item['point'][1]; ?></georss:point>
+			<?php endif; ?>
+
+			<?php foreach ($item['categories'] as $category): ?>
+				<category><?php echo htmlspecialchars($category); ?></category>
+			<?php endforeach; ?>
+
+			<?php // Event::feed_rss_item - Add to the feed item ?>
+			<?php Event::run('ushahidi_action.feed_rss_item', $item['id']); ?>
+			</item>
+		<?php endforeach; ?>
+		
 	</channel>
 </rss>

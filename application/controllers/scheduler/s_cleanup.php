@@ -8,7 +8,7 @@
  * http://www.gnu.org/copyleft/lesser.html
  * @author	   Ushahidi Team <team@ushahidi.com>
  * @package	   Ushahidi - http://source.ushahididev.com
- * @module	   Cleanup Scheduler Controller
+ * @subpackage Scheduler
  * @copyright  Ushahidi - http://www.ushahidi.com
  * @license	   http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL)
 */
@@ -26,8 +26,14 @@ class S_Cleanup_Controller extends Controller {
 	 */
 	public function index()
 	{
-		// open the images directory
+		// open the images directory and create it if it's not there.
+		if( ! is_dir(Kohana::config('upload.relative_directory')))
+		{
+			mkdir(Kohana::config('upload.relative_directory'), 0755);
+		}
+
 		$dhandle = opendir(Kohana::config('upload.relative_directory'));
+
 		// define an array to hold the files
 		$files = array();
 		

@@ -9,7 +9,7 @@
  * http://www.gnu.org/copyleft/lesser.html
  * @author     Ushahidi Team <team@ushahidi.com> 
  * @package    Ushahidi - http://source.ushahididev.com
- * @module     Scheduler Controller  
+ * @subpackage Controllers
  * @copyright  Ushahidi - http://www.ushahidi.com
  * @license    http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL) 
 */
@@ -134,8 +134,8 @@ class Scheduler_Controller extends Controller
             }
             if (isset($_GET['debug']) AND $_GET['debug'] == 1)
             {
-                //$debug .= "<BR /><BR />CRON DEBUG:<BR \>".nl2br($cron->getDebug());
-                $debug .= "<BR \>~~~~~~~~~~~~~~~~~~~~~~~~~~~<BR />~~~~~~~~~~~~~~~~~~~~~~~~~~~<BR /><BR /><BR />";
+                //$debug .= "<BR /><BR />CRON DEBUG:<BR />".nl2br($cron->getDebug());
+                $debug .= "<BR />~~~~~~~~~~~~~~~~~~~~~~~~~~~<BR />~~~~~~~~~~~~~~~~~~~~~~~~~~~<BR /><BR /><BR />";
             }
         }
         

@@ -9,7 +9,7 @@
  * http://www.gnu.org/copyleft/lesser.html
  * @author     Ushahidi Team <team@ushahidi.com> 
  * @package    Ushahidi - http://source.ushahididev.com
- * @module     Layers Model  
+ * @subpackage Models
  * @copyright  Ushahidi - http://www.ushahidi.com
  * @license    http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL) 
  */
@@ -35,23 +35,41 @@ class Layer_Model extends ORM
 		$array = Validation::factory($array)
 				->pre_filter('trim')
 				->add_rules('layer_name','required', 'length[3,80]')
-				->add_rules('layer_color','required', 'length[6,6]')
-				->add_rules('layer_url','url');
+				->add_rules('layer_color','required', 'length[6,6]');
 		
+		// Add callbacks for the layer url and layer file
+		$array->add_callbacks('layer_url', array($this, 'layer_url_file_check'));
+		$array->add_callbacks('layer_file', array($this, 'layer_url_file_check'));
+		
+		// Pass validation to parent and return
+		return parent::validate($array, $save);
+	}
+	
+	/**
+	 * Performs validation checks on the layer url and layer file - Checks that at least
+	 * one of them has been specified using the applicable validation rules
+	 *
+	 * @param Validation $array Validation object containing the field names to be checked
+	 */
+	public function layer_url_file_check(Validation $array)
+	{
 		// Ensure at least a layer URL or layer file has been specified
-		if ( empty($array->layer_url) AND empty($array->layer_file) AND empty($array->layer_file_old))
+		if (empty($array->layer_url) AND empty($array->layer_file) AND empty($array->layer_file_old))
 		{
 			$array->add_error('layer_url', 'atleast');
 		}
 		
-		if ( ! empty($array->layer_url) AND
-			( ! empty($array->layer_file) OR !empty($array->layer_file_old)) )
+		// Add validation rule for the layer URL if specified
+		if ( ! empty($array->layer_url) AND (empty($array->layer_file) OR empty($array->layer_file_old)))
+		{
+			$array->add_rules('layer_url', 'url');
+		}
+		
+		// Check if both the layer URL and the layer file have been specified
+		if ( ! empty($array->layer_url) AND ( ! empty($array->layer_file_old) OR ! empty($array->layer_file)))
 		{
 			$array->add_error('layer_url', 'both');
 		}
-		
-		// Pass validation to parent and return
-		return parent::validate($array, $save);
 	}
 	
 	/**
