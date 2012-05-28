@@ -159,10 +159,7 @@ function onFeatureSelect (feature) {
 		      foo=foo + feature.attributes[key] + "\n";
 		  }
 		}
-//		subTitle=feature.layer[name];
-
-
-//		foo+=feature.geometry.getBounds().getCenterLonLat();
+		
 		$.ajax({
 			url: baseUrl+"index.php/locations/popupkml/",
 			async: false,
@@ -252,7 +249,7 @@ function fill_map_with_markers() {
 		lon = <?php echo $location->longitude ?>;
 		fid = <?php echo $location->id ?>;
 		cat = <?php echo $location->category_id() ?>;
-		color = "<?php if($color_with_category) {echo $location->category_color();} else {echo $location->layer_color();} ?>";
+		color = "<?php if ($color_with_category) { echo $location->category_color(); } else { echo $location->layer_color(); } ?>";
 	
 		add_marker(lon,lat,fid,cat,"#"+color);
 	
@@ -420,7 +417,7 @@ $(document).ready(function() {
 	// 	$("#OpenLayers_Control_MinimizeDiv").show();
 	// 	$("#OpenLayers_Control_MaximizeDiv").hide();								
 	// });
-		
+
 	$("a[id^='cat_']").click(function(event){		
 		var catID = this.id.substring(4);
 		var isActive = $(this).hasClass("active");
@@ -569,7 +566,7 @@ function switchImage(img, layer){
 }
 	
 function geoCode() {
-	$('#find_loading').html('<img src="<?php echo url::base() . "index.php/media/img/loading_g.gif"; ?>">');
+	$('#find_loading').html('<img src="<?php echo url::base()."index.php/media/img/loading_g.gif"; ?>">');
 	address = $("#location_find_main").val();
 	
 	$.post("<?php echo url::site() . 'reports/geocode/' ?>", {address: address}, 

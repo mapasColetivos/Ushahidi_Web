@@ -27,21 +27,21 @@
 			<div class="user_title">
 				<h2>
 					<?php echo $user->name;?>
-					<?php if ($myself && ($user->id == $myself->id)) { ?>
+					<?php if ($myself && ($user->id == $myself->id)): ?>
 					  <a class="btn_editar edit" href='<?php echo url::base()."users/profile/".$user->id ?>'>editar</a>
-					<? } ?>
+					<?php endif; ?>
 				</h2>
 				<br/>
 				<p>
 					localização: <?php if ($user->localization) {echo $user->localization;} else {echo "Não informado";} ?>
 				</p>
 				<p>
-<?php
-if(substr_count($user->web,'http'))
-    $uweb = $user->web;
-else 
-    $uweb = 'http://'.$user->web;
-?>
+				<?php
+				if (substr_count($user->web,'http'))
+				    $uweb = $user->web;
+				else 
+				    $uweb = 'http://'.$user->web;
+				?>
 					web: <?php if ($user->web) {echo "<a href='".$uweb."' target='_blank' >".$uweb."</a>";} else {echo "Não informado";} ?>
                     
 				</p>
@@ -52,11 +52,11 @@ else
 			<div class="maping">
 				<h3>Mapeadores</h3>
 				<div class="followee_box">
-					<?php foreach ($user->followees() as $followee) { ?>
+					<?php foreach ($user->followees() as $followee): ?>
 						<a href=<?php echo url::base().'users/index/'.$followee->followee_id; ?>>
 							<img width='30px' title="<?php echo ORM::factory('user')->find($followee->followee_id)->username ?>" src="<?php echo ORM::factory('user')->find($followee->followee_id)->photo(30)?>"/>
 						</a>
-					<?php } ?>
+					<?php endforeach; ?>
 				</div>		
 			</div>			
 			<div id="maps_count">
@@ -85,45 +85,45 @@ else
 					</table>
 					<div id="maps_count_list">
 						<ul class="map_list" id="created_counter_list">							
-							<?php foreach ($user->created_maps() as $map) { 
-								  if ( $map->incident_privacy-1) { ?>
-								      <li>
-									      <a href="<?php echo url::base()."reports/view/".$map->id ?>">
-										      <?php echo $map->incident_title ?>
-									      </a>
-								      </li>
-							<?php 	  } 
-								}?>
+							<?php foreach ($user->created_maps() as $map): ?>
+							<?php if ( $map->incident_privacy-1): ?>
+						      <li>
+							      <a href="<?php echo url::base()."reports/view/".$map->id ?>">
+								      <?php echo $map->incident_title ?>
+							      </a>
+						      </li>
+							<?php endif; ?>
+							<?php endforeach; ?>
 
 						</ul>				
 						<ul class="map_list" id="available_counter_list" style='display:none'>							
-							<?php foreach ($user->available_maps() as $map) {
-								  if ( $map->incident_privacy-1) { ?>
-									<li>
-										<a href="<?php echo url::base()."reports/view/".$map->id ?>">
-											<?php echo $map->incident_title ?>
-										</a>
-									</li>
-							<?php 	  } 
-								}?>
+							<?php foreach ($user->available_maps() as $map): ?>
+							<?php if ($map->incident_privacy-1): ?>
+								<li>
+									<a href="<?php echo url::base()."reports/view/".$map->id ?>">
+										<?php echo $map->incident_title ?>
+									</a>
+								</li>
+							<?php endif; ?>
+							<?php endforeach; ?>
 						</ul>
+
 						<ul class="map_list" id="following_counter_list" style='display:none'>
-							<?php foreach ($user->following_maps() as $map) {
-								  if ( $map->incident_privacy-1) { ?>
-									      <li>
-										      <a href="<?php echo url::base()."reports/view/".$map->id ?>">
-											      <?php echo $map->incident_title ?>
-											      
-										      </a>
-									      </li>
-							<?php 	  } 
-								}?>
-						</ul>							
+							<?php foreach ($user->following_maps() as $map): ?>
+							<?php if ( $map->incident_privacy-1): ?>
+								<li>
+								 <a href="<?php echo url::base()."reports/view/".$map->id ?>">
+								  <?php echo $map->incident_title ?>
+  
+								 </a>
+								</li>
+							<?php endif; ?>
+							<?php endforeach; ?>
+						</ul>
+
 					</div>
 					<p id="new_map">
-						<?php
-							echo "<a href='".url::base()."reports/submit'>+ criar novo mapa</a>"
-						?>
+						<a href="<?php echo url::base().'reports/submit' ;?>">+ criar novo mapa</a>
 					</p>	
 				</div>
 			</div>	
@@ -142,22 +142,20 @@ else
 			</div>
 			
 			<div id="user_map">
-		        <div id="display_box" >			
-      			  <div id="kmls">
-        			  <ul id="layer_list" style="display:none;">
-        			  <?php foreach($user_categories as $category) {
-        				  echo "<li>";
-        				  echo "<span class='swatch' style='background-color:#".$category->category_color."'></span>";
-        				  echo "<span class='category-title'>";
-        					echo $category->category_title;
-        					echo "</span>";								  
-        				  echo "</li>";
-                  }?>        			  
-                </ul>                  
-        			</div>
-        		</div>
-    			</div>
-			</div>	
+				<div id="display_box" >			
+					<div id="kmls">
+						<ul id="layer_list" style="display:none;">
+						<?php foreach($user_categories as $category): ?>
+							<li>
+								<span class="swatch" style='background-color: "<?php echo '%'.$category->category_color; ?>"></span>
+								<span class="category-title"><?php echo $category->category_title; ?></span>
+							</li>
+						<?php endforeach; ?>
+						</ul>
+					</div>
+				</div>
+			</div>
 		</div>
+	</div>
 	</div>
 </div>

@@ -37,7 +37,7 @@ class Reports_Controller extends Main_Controller {
 	public function index($cluster_id = 0)
 	{
 		// Cacheable Controller
-		$this->is_cachable = TRUE;
+		$this->is_cachable = FALSE;
 		$this->themes->map_enabled = TRUE;
 		$this->template->header->this_page = 'reports';
 		$this->template->content = new View('reports');
@@ -295,19 +295,12 @@ class Reports_Controller extends Main_Controller {
 			'incident_privacy' => false,
 		);
 
-		//	copy the form as errors, so the errors will be stored with keys corresponding to the form field names
+		// Copy the form as errors, so the errors will be stored with keys
+		// corresponding to the form field names
 		$errors = $form;
 		$form_error = FALSE;
 
-		if ($saved == 'saved')
-		{
-			$form_saved = TRUE;
-		}
-		else
-		{
-			$form_saved = FALSE;
-		}
-
+		$form_saved = ($saved == 'saved');
 
 		// Initialize Default Values
 		$form['incident_date'] = date("m/d/Y",time());
@@ -315,7 +308,7 @@ class Reports_Controller extends Main_Controller {
 		$form['incident_minute'] = "00";
 		$form['incident_ampm'] = "pm";
 		// initialize custom field array
-		$form['custom_field'] = $this->_get_custom_form_fields($id,'',true);
+		$form['custom_field'] = $this->_get_custom_form_fields($id, '', TRUE);
 		//GET custom forms
 		$forms = array();
 		foreach (ORM::factory('form')->find_all() as $custom_forms)
@@ -351,7 +344,8 @@ class Reports_Controller extends Main_Controller {
 			//$post->add_rules('location_name', 'required', 'length[3,200]');
 
 			//XXX: Hack to validate for no checkboxes checked
-			if (!isset($_POST['incident_category'])) {
+			if ( ! isset($_POST['incident_category']))
+			{
 				$post->incident_category = "";
 				$post->add_error('incident_category', 'required');
 			}
@@ -361,7 +355,7 @@ class Reports_Controller extends Main_Controller {
 			}
 
 			// Validate only the fields that are filled in
-			if (!empty($_POST['incident_news']))
+			if ( ! empty($_POST['incident_news']))
 			{
 				foreach ($_POST['incident_news'] as $key => $url)
 				{
@@ -374,11 +368,11 @@ class Reports_Controller extends Main_Controller {
 			}
 
 			// Validate only the fields that are filled in
-			if (!empty($_POST['incident_video']))
+			if ( ! empty($_POST['incident_video']))
 			{
 				foreach ($_POST['incident_video'] as $key => $url)
 				{
-					if (!empty($url) AND
+					if ( ! empty($url) AND
 							!(bool) filter_var($url, FILTER_VALIDATE_URL,
 																			 FILTER_FLAG_HOST_REQUIRED))
 					{
@@ -389,21 +383,21 @@ class Reports_Controller extends Main_Controller {
 
 			// Validate photo uploads
 			$post->add_rules('incident_photo', 'upload::valid',
-											 'upload::type[gif,jpg,png]', 'upload::size[2M]');
+							 'upload::type[gif,jpg,png]', 'upload::size[2M]');
 
 
 			// Validate Personal Information
-			if (!empty($_POST['person_first']))
+			if ( ! empty($_POST['person_first']))
 			{
 				$post->add_rules('person_first', 'length[3,100]');
 			}
 
-			if (!empty($_POST['person_last']))
+			if ( ! empty($_POST['person_last']))
 			{
 				$post->add_rules('person_last', 'length[3,100]');
 			}
 
-			if (!empty($_POST['person_email']))
+			if ( ! empty($_POST['person_email']))
 			{
 				$post->add_rules('person_email', 'email', 'length[3,100]');
 			}
@@ -463,13 +457,13 @@ class Reports_Controller extends Main_Controller {
 				// STEP 7: SAVE CUSTOM FORM FIELDS
 				if (isset($post->custom_field))
 				{
-					foreach($post->custom_field as $key => $value)
+					foreach ($post->custom_field as $key => $value)
 					{
 						$form_response = ORM::factory('form_response')
-						->where('form_field_id', $key)
-						->where('incident_id', $incident->id)
-						->find();
-						if ($form_response->loaded == true)
+						    ->where('form_field_id', $key)
+						    ->where('incident_id', $incident->id)
+						    ->find();
+						if ($form_response->loaded == TRUE)
 						{
 							$form_response->form_field_id = $key;
 							$form_response->form_response = $value;
@@ -540,8 +534,9 @@ class Reports_Controller extends Main_Controller {
 		$this->themes->treeview_enabled = TRUE;
 		$this->themes->js = new View('reports_submit_js');
 		$this->themes->js->default_map = Kohana::config('settings.default_map');
-		$this->themes->js->default_zoom = Kohana::config('settings.default_zoom');				
-		if (!$form['latitude'] OR !$form['latitude'])
+		$this->themes->js->default_zoom = Kohana::config('settings.default_zoom');
+		
+		if ( ! $form['latitude'] OR ! $form['latitude'])
 		{
 			$this->themes->js->latitude = Kohana::config('settings.default_lat');
 			$this->themes->js->longitude = Kohana::config('settings.default_lon');
@@ -551,8 +546,6 @@ class Reports_Controller extends Main_Controller {
 			$this->themes->js->latitude = $form['latitude'];
 			$this->themes->js->longitude = $form['longitude'];
 		}
-		
-
 		
 		// Zoom Array for Slider
         $default_zoom_array = array();
@@ -575,20 +568,20 @@ class Reports_Controller extends Main_Controller {
     /**
 	 * Submits a new report.
 	 */
-	public function edit($id = false, $saved = false)
+	public function edit($id = FALSE, $saved = FALSE)
 	{
 		$incident = ORM::factory('incident')->where("id",$id)->find();
-		
-		if ( ($this->user->id != 1) and (!$this->user or ($incident->owner_id != $this->user->id))  ) {
-      url::redirect('login');
+
+		if (($this->user->id != 1) AND ( ! $this->user OR ($incident->owner_id != $this->user->id)))
+		{
+			url::redirect('login');
 		}
-		
+
 		$this->template->header->this_page = 'reports_submit';
 		$this->template->header->explode_content = TRUE;
 		$this->template->content = new View('reports_submit');
 
-		$form = array
-		(
+		$form = array(
 			'incident_title' => $incident->incident_title,
 			'incident_description' => $incident->incident_description,
 			'incident_date' => '',
@@ -668,11 +661,18 @@ class Reports_Controller extends Main_Controller {
 		$this->template->header->header_block = $this->themes->header_block();
 	}
 	
-	public function view($map_id = false){
+	public function view($map_id = FALSE)
+	{
+		$incident = ORM::factory('incident')->where('id', $map_id)->find();
+
+		if ( ! $incident->loaded)
+		{
+			url::redirect('/reports');
+		}
+		
 		$this->template->content = new View('maps_dashboard');
 		$this->template->content->user =  $this->user;		
-	
-		$incident = ORM::factory('incident')->where('id',$map_id)->find();
+		
 		$this->template->content->incident = $incident;
 	
 		// Javascript Header
@@ -702,7 +702,7 @@ class Reports_Controller extends Main_Controller {
 	 * @param boolean $id If id is supplied, a report with that id will be
 	 * retrieved.
 	 */
-	public function view_ushahidi($id = false)
+	public function view_ushahidi($id = FALSE)
 	{
 		$this->template->header->this_page = 'reports';
 		$this->template->content = new View('reports_view');
@@ -711,26 +711,25 @@ class Reports_Controller extends Main_Controller {
 
 		$api_akismet = Kohana::config('settings.api_akismet');
 
-		if ( !$id )
+		if ( ! $id)
 		{
-
 			url::redirect('main');
-
-		}else{
+		}
+		else
+		{
 			$incident = ORM::factory('incident')
 				->where('id',$id)
 				->where('incident_active',1)
 				->find();
-			if ( $incident->id == 0 )	// Not Found
+
+			if ($incident->id == 0)	// Not Found
 			{
 				url::redirect('reports/view/');
 			}
 
 			// Comment Post?
 			// Setup and initialize form field names
-
-			$form = array
-			(
+			$form = array(
 				'comment_author' => '',
 				'comment_description' => '',
 				'comment_email' => '',
@@ -744,14 +743,12 @@ class Reports_Controller extends Main_Controller {
 
 			// Check, has the form been submitted, if so, setup validation
 
-			if ($_POST AND Kohana::config('settings.allow_comments') )
+			if ($_POST AND Kohana::config('settings.allow_comments'))
 			{
 				// Instantiate Validation, use $post, so we don't overwrite $_POST fields with our own things
-
 				$post = Validation::factory($_POST);
 
 				// Add some filters
-
 				$post->pre_filter('trim', TRUE);
 
 				// Add some rules, the input field, followed by a list of checks, carried out in order
@@ -762,7 +759,6 @@ class Reports_Controller extends Main_Controller {
 				$post->add_rules('captcha', 'required', 'Captcha::valid');
 
 				// Test to see if things passed the rule checks
-
 				if ($post->validate())
 				{
 					// Yes! everything is valid
@@ -770,11 +766,9 @@ class Reports_Controller extends Main_Controller {
 					if ($api_akismet != "")
 					{
 						// Run Akismet Spam Checker
-
 						$akismet = new Akismet();
 
 						// Comment data
-
 						$comment = array(
 							'author' => $post->comment_author,
 							'email' => $post->comment_email,
@@ -796,15 +790,14 @@ class Reports_Controller extends Main_Controller {
 							if ($akismet->is_error('AKISMET_INVALID_KEY'))
 							{
 								// throw new Kohana_Exception('akismet.api_key');
-
-							}elseif ($akismet->is_error('AKISMET_RESPONSE_FAILED')){
-
+							}
+							elseif ($akismet->is_error('AKISMET_RESPONSE_FAILED'))
+							{
 								// throw new Kohana_Exception('akismet.server_failed');
-
-							}elseif ($akismet->is_error('AKISMET_SERVER_NOT_FOUND')){
-
+							}
+							elseif ($akismet->is_error('AKISMET_SERVER_NOT_FOUND'))
+							{
 								// throw new Kohana_Exception('akismet.server_not_found');
-
 							}
 
 							// If the server is down, we have to post
@@ -812,22 +805,17 @@ class Reports_Controller extends Main_Controller {
 							// $this->_post_comment($comment);
 
 							$comment_spam = 0;
-						}else{
-
-							if ($akismet->is_spam())
-							{
-								$comment_spam = 1;
-							}else{
-								$comment_spam = 0;
-							}
 						}
-					}else{
-
+						else
+						{
+							$comment_spam = $akismet->is_spam() ? 1 : 0;
+						}
+					}
+					else
+					{
 						// No API Key!!
-
 						$comment_spam = 0;
 					}
-
 
 					$comment = new Comment_Model();
 					$comment->incident_id = $id;
@@ -870,11 +858,10 @@ class Reports_Controller extends Main_Controller {
 						);
 
 					// Redirect
-
 					url::redirect('reports/view/'.$id);
-
-				}else{
-
+				}
+				else
+				{
 					// No! We have validation errors, we need to show the form again, with the errors
 
 					// Repopulate the form fields
@@ -907,17 +894,18 @@ class Reports_Controller extends Main_Controller {
 			if ($incident->incident_rating == '')
 			{
 				$this->template->content->incident_rating = 0;
-			}else{
+			}
+			else
+			{
 				$this->template->content->incident_rating = $incident->incident_rating;
 			}
 
 			// Retrieve Media
-
 			$incident_news = array();
 			$incident_video = array();
 			$incident_photo = array();
 
-			foreach($incident->media as $media)
+			foreach ($incident->media as $media)
 			{
 				if ($media->media_type == 4) // NEWS
 				{
@@ -944,27 +932,26 @@ class Reports_Controller extends Main_Controller {
 				if ($id)
 				{
 					$incident_comments = ORM::factory('comment')
-													  ->where('incident_id',$id)
-													  ->where('comment_active','1')
-													  ->where('comment_spam','0')
-													  ->orderby('comment_date', 'asc')
-													  ->find_all();
+					    ->where('incident_id',$id)
+					    ->where('comment_active','1')
+					    ->where('comment_spam','0')
+					    ->orderby('comment_date', 'asc')
+					    ->find_all();
 				}
+				
 				$this->template->content->comments->incident_comments = $incident_comments;
 			}
 		}
 
 		// Add Neighbors
 
-		$this->template->content->incident_neighbors = $this->_get_neighbors($incident->locations[0]->latitude,
-																									 $incident->locations[0]->longitude);
+		$this->template->content->incident_neighbors = $this->_get_neighbors(
+			$incident->locations[0]->latitude, $incident->locations[0]->longitude);
 
 		// Video links
-
 		$this->template->content->incident_videos = $incident_video;
 
 		// Images
-
 		$this->template->content->incident_photos = $incident_photo;
 
 		// Create object of the video embed class
@@ -973,7 +960,6 @@ class Reports_Controller extends Main_Controller {
 		$this->template->content->videos_embed = $video_embed;
 
 		// Javascript Header
-
 		$this->themes->map_enabled = TRUE;
 		$this->themes->photoslider_enabled = TRUE;
 		$this->themes->videoslider_enabled = TRUE;
@@ -987,11 +973,11 @@ class Reports_Controller extends Main_Controller {
 
 		// Initialize custom field array
 
-		$form_field_names = $this->_get_custom_form_fields($id,$incident->form_id,false);
+		$form_field_names = $this->_get_custom_form_fields($id,$incident->form_id, FALSE);
 
 		// Retrieve Custom Form Fields Structure
 
-		$disp_custom_fields = $this->_get_custom_form_fields($id,$incident->form_id,true);
+		$disp_custom_fields = $this->_get_custom_form_fields($id,$incident->form_id, TRUE);
 		$this->template->content->disp_custom_fields = $disp_custom_fields;
 
 		// Are we allowed to submit comments?
@@ -1016,7 +1002,7 @@ class Reports_Controller extends Main_Controller {
 	/**
 	 * Report Thanks Page
 	 */
-	function thanks()
+	public function thanks()
 	{
 		$this->template->content = new View('reports_submit_thanks');
 
@@ -1028,12 +1014,12 @@ class Reports_Controller extends Main_Controller {
 	 * Report Rating.
 	 * @param boolean $id If id is supplied, a rating will be applied to selected report
 	 */
-	public function rating($id = false)
+	public function rating($id = FALSE)
 	{
 		$this->template = "";
 		$this->auto_render = FALSE;
 
-		if (!$id)
+		if ( ! $id)
 		{
 			echo json_encode(array("status"=>"error", "message"=>"ERROR!"));
 		}
@@ -1058,7 +1044,7 @@ class Reports_Controller extends Main_Controller {
 					$action = 0;
 				}
 
-				if (!empty($action) AND ($type == 'original' OR $type == 'comment'))
+				if ( ! empty($action) AND ($type == 'original' OR $type == 'comment'))
 				{
 					// Has this IP Address rated this post before?
 					if ($type == 'original')
@@ -1171,7 +1157,7 @@ class Reports_Controller extends Main_Controller {
 	 */
 	private function _get_rating($id = false, $type = NULL)
 	{
-		if (!empty($id) AND ($type == 'original' OR $type == 'comment'))
+		if ( ! empty($id) AND ($type == 'original' OR $type == 'comment'))
 		{
 			if ($type == 'original')
 			{
@@ -1318,7 +1304,7 @@ class Reports_Controller extends Main_Controller {
 			}
 		}
 
-		return true;
+		return TRUE;
 	}
 
 	/**
@@ -1329,18 +1315,18 @@ class Reports_Controller extends Main_Controller {
 	private function _is_numeric_array($numeric_array=array())
 	{
 		if (count($numeric_array) == 0)
+		{
 			return FALSE;
+		}
 		else
 		{
 			foreach ($numeric_array as $item)
 			{
-				if (! is_numeric($item))
+				if ( ! is_numeric($item))
 					return FALSE;
 			}
 
 			return TRUE;
 		}
 	}
-
-
-} // End Reports
+}
