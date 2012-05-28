@@ -184,6 +184,10 @@ class Locations_Controller extends Main_Controller {
 			$location->save();
 			url::redirect(url::site().'locations/submit/'.$incident->id);
 		}
+		else
+		{
+			url::redirect(url::site());
+		}
 	}
 	
 	public function kml($layer_id = FALSE, $incident_id = FALSE)

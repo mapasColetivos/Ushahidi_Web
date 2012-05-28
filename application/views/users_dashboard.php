@@ -27,7 +27,7 @@
 			<div class="user_title">
 				<h2>
 					<?php echo $user->name;?>
-					<?php if ($myself && ($user->id == $myself->id)): ?>
+					<?php if ($myself AND ($user->id == $myself->id)): ?>
 					  <a class="btn_editar edit" href='<?php echo url::base()."users/profile/".$user->id ?>'>editar</a>
 					<?php endif; ?>
 				</h2>
@@ -86,7 +86,7 @@
 					<div id="maps_count_list">
 						<ul class="map_list" id="created_counter_list">							
 							<?php foreach ($user->created_maps() as $map): ?>
-							<?php if ( $map->incident_privacy-1): ?>
+							<?php if ( $map->incident_privacy - 1): ?>
 						      <li>
 							      <a href="<?php echo url::base()."reports/view/".$map->id ?>">
 								      <?php echo $map->incident_title ?>
