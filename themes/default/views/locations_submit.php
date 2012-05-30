@@ -6,7 +6,7 @@
 			<input type='hidden' id="longitude" value=0>
 			<div class="report_row">
 				<div class="report-find-location">
-					<a id="finish_edition" href="<?php echo url::base().'index.php/reports/view/$incident->id'; ?>" class="btn_submit_location" >Finalizar Mapa</a>
+					<a id="finish_edition" href="<?php echo url::site().'index.php/reports/view/'.$incident->id; ?>" class="btn_submit_location" >Finalizar Mapa</a>
 					<?php if ($umessage): ?>
 						<?php echo $umessage; ?>
 						<script type='text/javascript'>alert('".<?php echo $umessage; ?>. "');</script>"
@@ -15,7 +15,7 @@
 					<h3>
 						<?php echo $incident->incident_title; ?>
 						<?php if ($incident->id AND ( ($incident->owner_id == $user->id) OR ($user->id == 1)) ): ?>
-							<a class="btn_editar" href="<?php echo url::base().'index.php/reports/edit/$incident->id' ;?>">editar</a>
+							<a class="btn_editar" href="<?php echo url::site().'index.php/reports/edit/'.$incident->id ;?>">editar</a>
 						<?php endif; ?>
 					</h3>
 					<div class="toolbox">
@@ -34,18 +34,18 @@
 								    value="point" id="pointToggle" onclick="toggleControl('point');" data-image="location"  />
 								<label for="pointToggle">
 									<img title="criar novo ponto" for="pointToggle"
-									    id="img_location" src="<?php echo url::base() ?>media/img/toolbar/location.png" />
+									    id="img_location" src="<?php echo url::site() ?>media/img/toolbar/location.png" />
 								</label> 
 							</li>
 							<li>
-								<a rel="layer" href="<?php echo url::base().'index.php/kml/index/$incident->id'; ?>">
+								<a rel="layer" href="<?php echo url::site().'index.php/kml/index/'.$incident->id; ?>">
 									<img src="<?php echo url::base() ?>/media/img/toolbar/upload.png"
 									    data-image="upload" title="importar camadas (.KML, .KMZ)"/>
 								</a>
 							</li>
 							<li>
-								<a href="<?php echo url::base().'index.php/locations/export/$incident->id'; ?>" class="save-rep-btn">
-								<img src="<?php echo url::base().'/media/img/toolbar/download.png'; ?>" 
+								<a href="<?php echo url::site().'index.php/locations/export/'.$incident->id; ?>" class="save-rep-btn">
+								<img src="<?php echo url::site().'/media/img/toolbar/download.png'; ?>" 
 								    data-image="download" title="exportar dados (.CSV)" /></a>
 							</li>
 						</ul>
@@ -84,7 +84,7 @@
 								<ul>
 								<?php foreach($incident->layers() as $kml): ?>
 									<li>
-										<img class="swatch" src="<?php echo url::base()."media/img/kml.png"; ?> />
+										<img class="swatch" src="<?php echo url::site()."media/img/kml.png"; ?> />
 											<span id="layer_kml<?php echo $kml->id; ?>" class="category-title"">
 										<?php echo $kml->layer_name; ?>
 									
@@ -98,7 +98,7 @@
 											    ->id;
 										?>
 										<?php if ($incident_kml_id > 0): ?>
-											<a class="layer_remove" href="<?php echo url::base()."/locations/kml_delete/$kml->id/$incident->id"; ?>">X</a>
+											<a class="layer_remove" href="<?php echo url::site()."/locations/kml_delete/".$kml->id."/".$incident->id; ?>">X</a>
 										<?php endif; ?>
 										</span>
 									</li>

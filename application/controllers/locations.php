@@ -209,7 +209,7 @@ class Locations_Controller extends Main_Controller {
 	}
 
 	
-	public function show($id = false, $incident_id = FALSE)
+	public function show($id = FALSE, $incident_id = FALSE)
 	{
 		if ( ! Kohana::config('settings.allow_reports'))
 		{
