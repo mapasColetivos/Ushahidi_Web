@@ -1,4 +1,4 @@
-  <?php defined('SYSPATH') OR die('No direct access allowed.');
+<?php defined('SYSPATH') OR die('No direct access allowed.');
 /**
  * Front-End Nav helper class.
  *
@@ -12,58 +12,82 @@ class nav_Core {
 	/**
 	 * Generate Main Tabs
      * @param string $this_page
+     * @param array $dontshow
 	 * @return string $menu
      */
-	public static function main_tabs($this_page = FALSE)
+	public static function main_tabs($this_page = FALSE, $dontshow = FALSE)
 	{
-		$user = Session::instance()->get('auth_user',FALSE);
 		$menu = "";
 		
+		if( ! is_array($dontshow))
+		{
+			// Set $dontshow as an array to prevent errors
+			$dontshow = array();
+		}
+		
 		// Home
-		$menu .= "<ul id='home_link'><li><a class='first' href=\"".url::site()."main\" ";
-		$menu .= ($this_page == "home") ? " id=\"active\"" : "";
-	 	$menu .= ">".Kohana::lang('ui_main.home')."</a></li>";
+		if( ! in_array('home',$dontshow))
+		{
+			$menu .= "<li><a href=\"".url::site()."main\" ";
+			$menu .= ($this_page == 'home') ? " class=\"active\"" : "";
+		 	$menu .= ">".Kohana::lang('ui_main.home')."</a></li>";
+		 }
 
 		// Reports List
-		$menu .= "<li>|</li><li><a href=\"".url::site()."static/about\"";
-		$menu .= ($this_page == "about") ? " id=\"active\"" : "";
-		$menu .= ">".Kohana::lang('ui_main.about')."</a></li></ul>";
+		if( ! in_array('reports',$dontshow))
+		{
+			$menu .= "<li><a href=\"".url::site()."reports\" ";
+			$menu .= ($this_page == 'reports') ? " class=\"active\"" : "";
+		 	$menu .= ">".Kohana::lang('ui_main.reports')."</a></li>";
+		 }
 		
-		$menu .= "<li><a href=\"".url::site()."help\" ";
-		$menu .= ($this_page == "help") ? " id=\"active\"" : "";
-		//$menu .= ">".Kohana::lang('ui_main.help')."</a></li></ul>";
-		$menu .= ">como colaborar</a></li>"; 
-
+		// Reports Submit
+		if( ! in_array('reports_submit',$dontshow))
+		{
+			if (Kohana::config('settings.allow_reports'))
+			{
+				$menu .= "<li><a href=\"".url::site()."reports/submit\" ";
+				$menu .= ($this_page == 'reports_submit') ? " class=\"active\"":"";
+			 	$menu .= ">".Kohana::lang('ui_main.submit')."</a></li>";
+			}
+		}
 		
-		$menu .= "<ul id='galery'><li><a class='first' href=\"".url::site()."reports\" ";
-		$menu .= ($this_page == 'reports') ? " id=\"active\"" : "";
-	 	$menu .= ">".Kohana::lang('ui_main.reports')."</a></li>";	
-	 	
-	 	$menu .= "<li >|</li><li><a href='".url::site()."static/narratives' ";
-	 	$menu .= ($this_page == 'narratives') ? " id=\"active\"" : "";
-		$menu .= ">narrativas</a></li>";	
-
-	 	$menu .= "<li>|</li><li><a href='".url::site()."static/visualizations' ";
-	 	$menu .= ($this_page == 'visualizations') ? " id=\"active\"" : "";
-		$menu .= ">visualizações</a></li></ul>";	
-
-    $menu .= "<ul id='login'>";
-		$menu .= "<li><a href=\"".url::site()."reports/submit\" ";
- 		$menu .= ">Criar Novo Mapa</a></li>";    
-		// Login
-		if (!$user){
-			$menu .= "<li><a class='first' href=\"".url::site()."users/signup\" ";
-	 		$menu .= ">".Kohana::lang('ui_main.signup')."</a></li>";
-	 		
-			$menu .= "<li>|</li><li><a href=\"".url::site()."login\" ";
-	 		$menu .= ">".Kohana::lang('ui_main.login')."</a></li></ul>";
-	 	} else {	 		
-	 		$menu .= "<ul id='login'><li><a href='".url::site()."users/index/".$user->id."' class='active_user first'>".$user->username."</a></li>";
-	 		$menu .= "<li><a class='first' href=\"".url::site()."login/log_out\" ";
-	 		$menu .= ">".Kohana::lang('ui_main.logout')."</a></li></ul>";	 		
-	 	}
+		// Alerts
+		if(! in_array('alerts',$dontshow))
+		{
+			if(Kohana::config('settings.allow_alerts'))
+			{
+				$menu .= "<li><a href=\"".url::site()."alerts\" ";
+				$menu .= ($this_page == 'alerts') ? " class=\"active\"" : "";
+				$menu .= ">".Kohana::lang('ui_main.alerts')."</a></li>";
+			}
+		}
+		
+		// Contacts
+		if( ! in_array('contact',$dontshow))
+		{
+			if (Kohana::config('settings.site_contact_page') AND Kohana::config('settings.site_email') != "")
+			{
+				$menu .= "<li><a href=\"".url::site()."contact\" ";
+				$menu .= ($this_page == 'contact') ? " class=\"active\"" : "";
+			 	$menu .= ">".Kohana::lang('ui_main.contact')."</a></li>";	
+			}
+		}
+		
+		// Custom Pages
+		$pages = ORM::factory('page')->where('page_active', '1')->find_all();
+		foreach ($pages as $page)
+		{
+			$menu .= "<li><a href=\"".url::site()."page/index/".$page->id."\" ";
+			$menu .= ($this_page == 'page_'.$page->id) ? " class=\"active\"" : "";
+		 	$menu .= ">".$page->page_tab."</a></li>";
+		}
 
 		echo $menu;
+		
+		// Action::nav_admin_reports - Add items to the admin reports navigation tabs
 		Event::run('ushahidi_action.nav_main_top', $this_page);
 	}
+	
+	
 }

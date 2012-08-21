@@ -4,7 +4,7 @@ body {
 	margin:0;
 	font-family:Verdana, Arial, Helvetica, sans-serif;
 	text-align:center;
-	/*background-image:url(../img/bkg_login.gif);*/
+	background-image:url(../img/bkg_login.gif);
 }
 body td {
 	font-family:Verdana, Arial, Helvetica, sans-serif;
@@ -19,6 +19,7 @@ a:hover {
 }
 
 div#ushahidi_login_logo {text-align:center; padding:50px 0 20px 0;}
+div#ushahidi_login_logo img { width:400px; height:80px;  }
 div#framework_error { background:#fff; font-family:sans-serif; color:#111; font-size:14px; line-height:130%;border:3px solid #ccc;text-align:left;padding: 20px; }
 div#framework_error h3 { color:#fff; font-size:16px; padding:8px 6px; margin:0 0 8px; background:#666; text-align:center; }
 div#framework_error a { color:#228; text-decoration:none; }

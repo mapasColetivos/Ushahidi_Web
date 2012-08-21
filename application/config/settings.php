@@ -4,7 +4,7 @@
 * SITE CONFIGURATIONS
 */
 
-// Find the subdomain (for MHI)
+// Find the subdomain
 $subdomain = '';
 if(substr_count($_SERVER["HTTP_HOST"],'.') > 1) $subdomain = substr($_SERVER["HTTP_HOST"],0,strpos($_SERVER["HTTP_HOST"],'.'));
 
@@ -12,7 +12,7 @@ $config = array
 (
 	'site_name' => 'Ushahidi',
 	'site_email' => '',
-	'default_map' => 'google_normal',
+	'default_map' => '',
 	'api_google' => '',
 	'api_yahoo' => '',
 	'default_city' => '',
@@ -20,10 +20,11 @@ $config = array
 	'default_lat' => '',
 	'default_lon' => '',
 	'default_zoom' => '',
-	'items_per_page' => '20',
+	'items_per_page' => '5',
 	'items_per_page_admin' => '20',
 	'items_per_api_request' => '20',
 	'api_url' => '<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=" type="text/javascript"></script>',
 	'api_url_all' => '',
-	'subdomain' => $subdomain
+	'subdomain' => $subdomain,
+	'title_delimiter' => ' | '
 );

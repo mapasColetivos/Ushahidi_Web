@@ -10,8 +10,7 @@
 <style type="text/css">
 <?php include Kohana::find_file('views', 'kohana_errors', FALSE, 'css') ?>
 </style>
-<div id="ushahidi_login_logo"><img src="<?php echo url::base(); ?>media/img/admin/logo_login.png" /></div>
-<div id="framework_error" style="width:42em;margin-top:60px; margin-left: 60px;">
+<div id="framework_error" style="width:42em;margin:20px auto;">
 <h3><?php echo html::specialchars($error) ?></h3>
 <p><?php echo html::specialchars($description) ?></p>
 <?php if ( ! empty($line) AND ! empty($file)): ?>

@@ -9,7 +9,11 @@
  * http://www.gnu.org/copyleft/lesser.html
  * @author     Ushahidi Team <team@ushahidi.com> 
  * @package    Ushahidi - http://source.ushahididev.com
+<<<<<<< HEAD
  * @module     Incident Lang Model  
+=======
+ * @subpackage Models
+>>>>>>> master
  * @copyright  Ushahidi - http://www.ushahidi.com
  * @license    http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL) 
  */

@@ -544,10 +544,11 @@ div.additional-content ol {
 
 /* content blocks */
 div.content-container{
-    padding: 15px; 
+    padding: 15px;
+    background: #E2E2E2;
 }
 
-div.content-block-left{ F
+div.content-block-left{
     padding: 15px;
     background: #FFFFFF;
     width: 427px;
@@ -555,7 +556,7 @@ div.content-block-left{ F
     margin-right: 15px;
 }
 
-div.content-block-left h5 span { F
+div.content-block-left h5 span {
     font-size: 75%;
 }
 
@@ -611,7 +612,6 @@ div.footer-credits{
     font-weight: bold;
     text-transform: uppercase;
     margin: 0 20px 0 0;
-
 }
 
 /* reports */
@@ -1852,3 +1852,11 @@ div.green-box ul, div.red-box ul{
 .right-cap	{ -webkit-border-top-right-radius: 0px; -webkit-border-bottom-right-radius: 0px; -moz-border-radius-topright: 0px; -moz-border-radius-bottomright: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; }
 .bottom-cap	{ -webkit-border-top-left-radius: 0px; -webkit-border-top-right-radius: 0px; -moz-border-radius-topright: 0px; -moz-border-radius-topleft: 0px; border-top-right-radius: 0px; border-top-left-radius: 0px; }
 .left-cap		{ -webkit-border-top-left-radius: 0px; -webkit-border-bottom-left-radius: 0px; -moz-border-radius-topleft: 0px; -moz-border-radius-bottomleft: 0px; border-top-left-radius: 0px; border-bottom-left-radius: 0px; }
+
+/* floaties */
+.right {
+	float:right;
+}
+.left {
+	float:left;
+}

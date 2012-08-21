@@ -49,7 +49,7 @@ class Image_GD_Driver extends Image_Driver {
 		// Set the "save" function
 		switch (strtolower(substr(strrchr($file, '.'), 1)))
 		{
-			case 'jpg':			
+			case 'jpg':
 			case 'jpeg':
 				$save = 'imagejpeg';
 			break;
@@ -66,10 +66,8 @@ class Image_GD_Driver extends Image_Driver {
 			throw new Kohana_Exception('image.type_not_allowed', $image['file']);
 
 		// Make sure the image type is supported for saving
-		if (empty($save) OR ! function_exists($save)){
-			$save = 'imagejpeg';		
-			//throw new Kohana_Exception('image.type_not_allowed', $dir.".".$file.$save);
-		}
+		if (empty($save) OR ! function_exists($save))
+			throw new Kohana_Exception('image.type_not_allowed', $dir.$file);
 
 		// Load the image
 		$this->image = $image;

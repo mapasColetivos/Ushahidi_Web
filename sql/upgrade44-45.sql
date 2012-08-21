@@ -1,6 +1,4 @@
-CREATE TABLE IF NOT EXISTS `tags` (
-    `id` int(11) unsigned NOT NULL auto_increment,
-    `value` varchar(50) NOT NULL,
-    `incident_id` INT NOT NULL DEFAULT '0',
-  PRIMARY KEY  (`id`)
-);
+ALTER TABLE `incident` ADD `incident_zoom` tinyint NULL DEFAULT NULL  AFTER `incident_alert_status`;
+
+-- Update the database version
+UPDATE `settings` SET `db_version` = 45 WHERE `id` = 1 LIMIT 1;

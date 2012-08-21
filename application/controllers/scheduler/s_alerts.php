@@ -8,7 +8,7 @@
  * http://www.gnu.org/copyleft/lesser.html
  * @author	   Ushahidi Team <team@ushahidi.com> 
  * @package	   Ushahidi - http://source.ushahididev.com
- * @module	   Alerts Controller  
+ * @subpackage Scheduler
  * @copyright  Ushahidi - http://www.ushahidi.com
  * @license	   http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL) 
 */
@@ -32,12 +32,12 @@ class S_Alerts_Controller extends Controller {
 		// Create A 15 Minute SEND LOCK
 		// This lock is released at the end of execution
 		// Or expires automatically
-		$alerts_lock = $this->cache->get("alerts_lock");
+		$alerts_lock = $this->cache->get(Kohana::config('settings.subdomain')."_alerts_lock");
 		if ( ! $alerts_lock)
 		{
 			// Lock doesn't exist
 			$timestamp = time();
-			$this->cache->set("alerts_lock", $timestamp, array("alerts"), 900);
+			$this->cache->set(Kohana::config('settings.subdomain')."_alerts_lock", $timestamp, array("alerts"), 900);
 		}
 		else
 		{
@@ -49,7 +49,7 @@ class S_Alerts_Controller extends Controller {
 	
 	function __destruct()
 	{
-		$this->cache->delete("alerts_lock");
+		$this->cache->delete(Kohana::config('settings.subdomain')."_alerts_lock");
 	}
 	
 	public function index() 
@@ -81,7 +81,8 @@ class S_Alerts_Controller extends Controller {
 		$incidents = $db->query("SELECT i.id, incident_title, 
 			incident_description, incident_verified, 
 			l.latitude, l.longitude, a.alert_id, a.incident_id
-			FROM ".$this->table_prefix."incident AS i INNER JOIN ".$this->table_prefix."location AS l ON l.`incident_id` = i.id LEFT OUTER JOIN ".$this->table_prefix."alert_sent AS a ON i.id = a.incident_id WHERE
+			FROM ".$this->table_prefix."incident AS i INNER JOIN ".$this->table_prefix."location AS l ON i.location_id = l.id
+			LEFT OUTER JOIN ".$this->table_prefix."alert_sent AS a ON i.id = a.incident_id WHERE
 			i.incident_active=1 AND i.incident_alert_status = 1 ");
 		
 		foreach ($incidents as $incident)
@@ -89,11 +90,12 @@ class S_Alerts_Controller extends Controller {
 			// ** Pre-Formatting Message ** //
 			// Convert HTML to Text
 			$incident_description = $incident->incident_description;
+			$incident_url = url::site().'reports/view/'.$incident->id;
 			$html2text = new Html2Text($incident_description);
 			$incident_description = $html2text->get_text();
 
 			// EMAIL MESSAGE
-			$email_message = $incident_description;
+			$email_message = $incident_description."\n\n".$incident_url;
 
 			// SMS MESSAGE
 			$sms_message = $incident_description;
@@ -107,6 +109,9 @@ class S_Alerts_Controller extends Controller {
 			$latitude = (double) $incident->latitude;
 			$longitude = (double) $incident->longitude;
 			
+			// Find all the catecories including parents
+			$category_ids = $this->_find_categories($incident->id);
+
 			// Get all alertees
 			$alertees = ORM::factory('alert')
 				->where('alert_confirmed','1')
@@ -118,6 +123,11 @@ class S_Alerts_Controller extends Controller {
 				if ($alertee->id == $incident->alert_id)
 					continue;
 				
+				// Check the categories
+				if (!$this->_check_categories($alertee, $category_ids)) {
+				  continue;
+				}
+
 				$alert_radius = (int) $alertee->alert_radius;
 				$alert_type = (int) $alertee->alert_type;
 				$latitude2 = (double) $alertee->alert_lat;
@@ -180,7 +190,7 @@ class S_Alerts_Controller extends Controller {
 				}
 			} // End For Each Loop
 			
-			
+
 			// Update Incident - All Alerts Have Been Sent!
 			$update_incident = ORM::factory('incident', $incident->id);
 			if ($update_incident->loaded)
@@ -189,5 +199,62 @@ class S_Alerts_Controller extends Controller {
 				$update_incident->save();
 			}
 		}
+	}
+
+	private function _find_categories($incident_id) {
+	  $ret = array();
+	  $incident_categories = ORM::factory('incident_category')
+	    ->where('incident_id', $incident_id)
+	    ->find_all();
+
+	  foreach ($incident_categories as $ic) {
+	    $category = ORM::factory('category')
+	      ->where('id', $ic->category_id)
+	      ->find();
+	    $this->_add_category($ret, $category);
+	  }
+
+	  return $ret;
+	}
+
+	private function _add_category(array & $ids, Category_Model $category) {
+	  if ($category == null) {
+	    return;
+	  }
+
+	  $id = (string)$category->id;
+
+	  if (!array_key_exists($id, $ids)) {
+	    $ids[$id] = 1;
+	  }
+
+	  if ($category->parent_id != 0) {
+	    $parent = ORM::factory('category')
+	      ->where('id', $category->parent_id)
+	      ->find();
+
+	    $this->_add_category($ids, $parent);
+	  }
+	}
+
+	private function _check_categories(Alert_Model $alertee, array $category_ids) {
+	  $ret = false;
+
+	  $alert_categories = ORM::factory('alert_category')
+	    ->where('alert_id', $alertee->id)
+	    ->find_all();
+
+	  if (count($alert_categories) == 0) {
+	    $ret = true;
+	  }
+	  else {
+	    foreach ($alert_categories as $ac) {
+	      if (array_key_exists((string)$ac->category_id, $category_ids)) {
+		$ret = true;
+	      }
+	    }
+	  }
+
+	  return $ret;
 	}
 }
