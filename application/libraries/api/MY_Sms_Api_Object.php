@@ -113,7 +113,6 @@ class Sms_Api_Object extends Api_Object_Core {
             ? $this->array_as_xml($data)
             : $this->array_as_xml($data, $this->replar);
     }
-   
 
     /**
      * Delete existing SMS message

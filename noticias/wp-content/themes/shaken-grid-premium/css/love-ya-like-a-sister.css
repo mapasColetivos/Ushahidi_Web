@@ -1,0 +1,9 @@
+h1, h2, h3, h4, h5, .format-quote p, .quote .entry p, .menu li a{
+	font-family:'Love Ya Like A Sister', Arial, Helvetica, sans-serif;
+	font-weight: normal;
+}
+
+.wf-active .header-nav li{
+	text-transform: none;
+	font-size: 15px;
+}

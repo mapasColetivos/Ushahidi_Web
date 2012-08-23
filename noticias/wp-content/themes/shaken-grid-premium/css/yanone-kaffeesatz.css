@@ -1,0 +1,22 @@
+/* ----------- Regular ----------- */
+.menu li a, h1, h2, h3, h4, h5{
+	font-family:'Yanone Kaffeesatz', Arial, Helvetica, sans-serif;
+	font-weight:400;
+}
+
+/* ----------- Light ----------- */
+#site-description, .format-quote p, .quote .entry p{
+	font-family:'Yanone Kaffeesatz', Arial, Helvetica, sans-serif;
+	font-weight:300;
+}
+
+.wf-active #site-description, .wf-active .box h2{ font-size: 16px; }
+
+.wf-active .header-nav li{
+	font-size: 18px;
+	text-transform: uppercase;
+}
+
+.wf-active .widget ul h3, .wf-active .widget .cat-post-item h3, .wf-active .recent-posts h3{ font-size: 18px; }
+
+.wf-active h3.widget-title{ font-size: 20px; }

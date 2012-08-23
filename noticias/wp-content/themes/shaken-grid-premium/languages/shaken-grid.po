@@ -1,0 +1,331 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: shaken-grid-premium\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-09-11 17:03-0500\n"
+"PO-Revision-Date: 2011-09-11 17:03-0500\n"
+"Last-Translator: Sawyer <hello@sawyerhollenshead.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: _e;gettext;gettext_noop;__\n"
+"X-Poedit-Basepath: ../\n"
+"X-Poedit-Language: English\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: 404.php:14
+msgid "Page Not Found"
+msgstr ""
+
+#: 404.php:15
+msgid "Maybe try searching for something?"
+msgstr ""
+
+#: comments.php:17
+msgid "This post is password protected. Enter the password to view any comments."
+msgstr ""
+
+#: comments.php:33
+msgid "What Others Are Saying"
+msgstr ""
+
+#: comments.php:37
+#: comments.php:57
+msgid "<span class=\"meta-nav\">&larr;</span> Older Comments"
+msgstr ""
+
+#: comments.php:38
+#: comments.php:58
+msgid "Newer Comments <span class=\"meta-nav\">&rarr;</span>"
+msgstr ""
+
+#: comments.php:65
+msgid "Be the first to leave a comment"
+msgstr ""
+
+#: footer.php:26
+msgid "Copyright"
+msgstr ""
+
+#: footer.php:30
+msgid "Powered by"
+msgstr ""
+
+#: footer.php:31
+msgid "Social media icons by"
+msgstr ""
+
+#: functions.php:179
+msgid "Header Menu"
+msgstr ""
+
+#: functions.php:188
+msgid "The sidebar on basic pages"
+msgstr ""
+
+#: functions.php:197
+msgid "The sidebar on pages with the template of \"Unique Sidebar\" assigned to them."
+msgstr ""
+
+#: functions.php:206
+msgid "The sidebar on blog post pages"
+msgstr ""
+
+#: functions.php:215
+msgid "The sidebar on the gallery and archive pages"
+msgstr ""
+
+#: header.php:50
+#, php-format
+msgid "Page %s"
+msgstr ""
+
+#: loop.php:30
+msgid "Filter"
+msgstr ""
+
+#: loop.php:32
+msgid "All"
+msgstr ""
+
+#: loop.php:202
+msgid "Continue Reading &rarr;"
+msgstr ""
+
+#: loop.php:207
+#: page.php:25
+#: single.php:66
+#: single.php:101
+msgid "Edit this post"
+msgstr ""
+
+#: loop.php:214
+msgid "Shortlink"
+msgstr ""
+
+#: loop.php:226
+msgid "<span class=\"meta-nav\">&larr;</span> Older"
+msgstr ""
+
+#: loop.php:227
+msgid "Newer <span class=\"meta-nav\">&rarr;</span>"
+msgstr ""
+
+#: loop.php:236
+msgid "Sorry, no posts were found"
+msgstr ""
+
+#: page.php:23
+#: single.php:64
+msgid "Pages:"
+msgstr ""
+
+#: search.php:26
+msgid "Sorry, nothing was found for your search"
+msgstr ""
+
+#: search.php:27
+msgid "Maybe try searching for something different."
+msgstr ""
+
+#: sidebar.php:23
+msgid "Archives"
+msgstr ""
+
+#: single.php:50
+#: template-archives.php:34
+msgid "Posted on"
+msgstr ""
+
+#: single.php:53
+msgid "by"
+msgstr ""
+
+#: single.php:71
+#: single.php:99
+#: template-archives.php:35
+msgid "Category"
+msgstr ""
+
+#: single.php:74
+#: template-archives.php:37
+msgid "Tags"
+msgstr ""
+
+#: template-archives.php:17
+msgid "Recent Posts"
+msgstr ""
+
+#: template-archives.php:52
+msgid "Categories"
+msgstr ""
+
+#: template-archives.php:61
+msgid "Monthly Archives"
+msgstr ""
+
+#: template-archives.php:70
+msgid "Most Popular Posts"
+msgstr ""
+
+#: functions/shaken-utils.php:30
+#, php-format
+msgid "%s"
+msgstr ""
+
+#: functions/shaken-utils.php:31
+#, php-format
+msgid "%1$s at %2$s"
+msgstr ""
+
+#: functions/shaken-utils.php:31
+#: functions/shaken-utils.php:51
+msgid "(Edit)"
+msgstr ""
+
+#: functions/shaken-utils.php:35
+msgid "Your comment is awaiting moderation."
+msgstr ""
+
+#: functions/shaken-utils.php:51
+msgid "Pingback:"
+msgstr ""
+
+#: functions/admin-options/options-framework.php:255
+msgid "Click OK to reset. Any theme settings will be lost!"
+msgstr ""
+
+#: functions/admin-options/options-framework.php:287
+msgid "Default options restored."
+msgstr ""
+
+#: functions/admin-options/options-framework.php:328
+msgid "Options saved."
+msgstr ""
+
+#: functions/admin-options/options-framework.php:386
+msgid "Theme Options"
+msgstr ""
+
+#: functions/admin-options/options-medialibrary-uploader.php:26
+msgid "Options Framework Internal Container"
+msgstr ""
+
+#: functions/admin-options/options-medialibrary-uploader.php:128
+msgid "Upload"
+msgstr ""
+
+#: functions/admin-options/options-medialibrary-uploader.php:151
+msgid "View File"
+msgstr ""
+
+#: functions/admin-options/options-medialibrary-uploader.php:288
+msgid "Gallery"
+msgstr ""
+
+#: functions/admin-options/options-medialibrary-uploader.php:288
+msgid "Previously Uploaded"
+msgstr ""
+
+#: functions/widgets/ads.php:156
+#: functions/widgets/flickr.php:16
+msgid "Title:"
+msgstr ""
+
+#: functions/widgets/ads.php:196
+msgid "Configure and display up to four 150x50 sidebar advertisements."
+msgstr ""
+
+#: functions/widgets/ads.php:198
+msgid "Shaken - Simple Sidebar Ads"
+msgstr ""
+
+#: functions/widgets/category-posts.php:104
+msgid "Posted in"
+msgstr ""
+
+#: functions/widgets/category-posts.php:133
+msgid "Title"
+msgstr ""
+
+#: functions/widgets/category-posts.php:147
+msgid "Number of posts to show"
+msgstr ""
+
+#: functions/widgets/flickr.php:5
+msgid "Add thumbnail images of your recent uploads to Flickr."
+msgstr ""
+
+#: functions/widgets/flickr.php:6
+msgid "Shaken - Flickr"
+msgstr ""
+
+#: functions/widgets/flickr.php:18
+msgid "Flickr ID (<a href=\"http://www.idgettr.com/\">idGettr</a>):"
+msgstr ""
+
+#: functions/widgets/flickr.php:20
+msgid "Number of photos to show:"
+msgstr ""
+
+#: functions/widgets/popular-posts.php:5
+msgid "Shaken - Popular Posts"
+msgstr ""
+
+#: functions/widgets/related-posts.php:25
+msgid "List related posts"
+msgstr ""
+
+#: functions/widgets/related-posts.php:26
+msgid "Shaken - Related Posts"
+msgstr ""
+
+#: functions/widgets/share.php:5
+msgid "Add social bookmarking links for users to share your blog post"
+msgstr ""
+
+#: functions/widgets/share.php:6
+msgid "Shaken - Share Buttons"
+msgstr ""
+
+#: functions/widgets/testimonials.php:5
+msgid "Shaken - Testimonial"
+msgstr ""
+
+#: functions/widgets/testimonials.php:46
+msgid "Text:"
+msgstr ""
+
+#: functions/widgets/testimonials.php:50
+msgid "Citation:"
+msgstr ""
+
+#: functions/widgets/twitter.php:5
+msgid "Display your latest Twitter updates."
+msgstr ""
+
+#: functions/widgets/twitter.php:6
+msgid "Shaken - Twitter"
+msgstr ""
+
+#: functions/widgets/twitter.php:18
+msgid "Username:"
+msgstr ""
+
+#: functions/widgets/twitter.php:21
+msgid "Number of tweets to show (default = 5):"
+msgstr ""
+
+#: includes/action-buttons.php:27
+msgid "Enlarge"
+msgstr ""
+
+#: includes/action-buttons.php:31
+msgid "Share"
+msgstr ""
+
+#: includes/action-buttons.php:36
+msgid "Comment"
+msgstr ""
+

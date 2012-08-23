@@ -1,0 +1,11 @@
+== Changelog ==
+These are the changes seen by Workaholic since it was first available for public download.
+
+= Version 3.0.4 (February 24, 2011) =
+
+= Version 3.0.3 (February 22, 2011) =
+	* Integrating WordPress 2.9 features 
+	* Fixed featured thumbnail heights and title/category position bugs in IE8
+
+= Version 1.0 (June 18, 2009) =
+	* Initial release

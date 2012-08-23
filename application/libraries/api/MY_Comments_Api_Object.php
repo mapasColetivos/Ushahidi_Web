@@ -692,7 +692,6 @@ class Comments_Api_Object extends Api_Object_Core {
 						// the comment :(
 						// $this->_post_comment($comment);
 
-						$comment_spam = 0;
 					}
 					else
 					{

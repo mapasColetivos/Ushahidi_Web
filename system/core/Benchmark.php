@@ -86,6 +86,7 @@ final class Benchmark {
 	}
 
 	/**
+>>>>>>> master
 	 * Get the elapsed time between a start and stop.
 	 *
 	 * @param   string   benchmark name, TRUE for all

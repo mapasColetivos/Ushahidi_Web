@@ -386,6 +386,7 @@ class Manage_Controller extends Admin_Controller
 							->where('parent_id','0')
 							->where('category_trusted != 1')
 							->select_list('id', 'category_title');
+>>>>>>> master
 
 		// add none to the list
 		$parents_array[0] = "--- Top Level Category ---";
@@ -603,7 +604,6 @@ class Manage_Controller extends Admin_Controller
 			'feed_id' => '',
 			'feed_name' => '',
 			'feed_url' => '',
-			'feed_active' => ''
 		);
 		//	copy the form as errors, so the errors will be stored with keys corresponding to the form field names
 		$errors = $form;

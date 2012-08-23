@@ -228,6 +228,17 @@ ul.sub-nav  li a:hover{ text-decoration:underline;}
 	overflow:hidden;
 	clear:both;
 }
+
+.bg-small{
+	width:740px;
+	background:#fff;
+	clear:both;
+	overflow:hidden;
+	padding-bottom:29px;
+	height: 500px;
+	overflow: auto;
+}
+
 .bg{
 	width:940px;
 	background:#fff;
@@ -325,10 +336,10 @@ ul.inf li a{
 	clear:both;
 	overflow:hidden;
 }
-.post-edit-log-blue{
+.post-edit-log-red{
 	padding:3px;
-	background-color:#F2F7FA;
-	border:1px solid #A8CADE;
+	background-color:#FFE7D5;
+	border:1px solid #FFB782;
 }
 .post-edit-log-gray{
 	padding:3px;
@@ -1263,7 +1274,6 @@ input.long2 {
 	float:left;
 	width:180px;
 }
-
 .save-rep-btn,
 .save-close-btn,
 .cancel-btn {
@@ -2182,6 +2192,10 @@ tr.addon_active td{
 	background-color:#ffffcc;
 }
 
+<<<<<<< HEAD
+/*--  --*/
+/*--  --*/
+=======
 /* floaties */
 .right {
 	float:right;
