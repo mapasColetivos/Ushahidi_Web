@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
-<NetworkLink>
-	<name>Para a Cristina - FSP</name>
-	<Link>
-		<href>http://maps.google.com.br/maps/ms?ie=UTF8&amp;hl=pt-BR&amp;vps=2&amp;jsv=346c&amp;authuser=0&amp;oe=UTF8&amp;msa=0&amp;msid=207394573753040081141.0004a4a9b3775fa5a00a6&amp;output=kml</href>
-	</Link>
-</NetworkLink>
-</kml>
