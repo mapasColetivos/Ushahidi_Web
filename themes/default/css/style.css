@@ -356,11 +356,6 @@ div#mainmenu a{
     font-size: 120%;
 }
 
-div#mainmenu a:hover, div#mainmenu a.active{
-    text-decoration: none;
-    background: #2E8AB8;
-}
-
 /* Filters */
 div.filters{
     font-size: 85%;
