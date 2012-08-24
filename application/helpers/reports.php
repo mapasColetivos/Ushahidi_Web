@@ -928,7 +928,7 @@ class reports_Core {
 		else
 		{
 			// Return
-			return Incident_Model::get_incidents(self::$params, false, $order_field, $sort);;
+			return Incident_Model::get_incidents(self::$params, false, $order_field, $sort);
 		}
 	}	
 }

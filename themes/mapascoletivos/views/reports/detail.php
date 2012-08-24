@@ -116,10 +116,25 @@
 				<!-- /followers -->
 				<?php endif; ?>
 
-				<!-- following -->
+				<?php if ($user): ?>
+				<!-- follow incident(map) -->
 				<div class="follow">
+					<p>
+					<?php 
+						// Show the follow/unfollow buttons
+						if ($user->is_incident_follower($incident))
+						{
+							echo html::anchor("social/unfollow_map/".$incident->id, html::image("media/img/btn_deixar_seguir_mapa.png"));
+						}
+						else
+						{
+							echo html::anchor("social/follow_map/".$incident->id, html::image("media/img/btn_seguir_mapa.png"));
+						}
+					?>
+					</p>
 				</div>
-				<!-- /following -->
+				<!-- /follow -->
+				<?php endif; ?>
 
 			</div>
 

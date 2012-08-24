@@ -9,7 +9,7 @@
  * that is available through the world-wide-web at the following URI:
  * http://www.gnu.org/copyleft/lesser.html
  * @author     Ushahidi Team <team@ushahidi.com>
- * @package    Ushahidi - http://source.ushahididev.com
+ * @package    Ushahidi - http://github.com/ushahidi/Ushahidi_Web
  * @subpackage Models
  * @copyright  Ushahidi - http://www.ushahidi.com
  * @license    http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL)
@@ -17,7 +17,25 @@
 
 class User_Model extends Auth_User_Model {
 
-	protected $has_many = array('alert', 'comment', 'openid', 'private_message', 'rating');
+	/**
+	 * One-to-many relationship definition
+	 * @var array
+	 */
+	protected $has_many = array(
+		'alert',
+		'comment', 
+		'openid', 
+		'private_message',
+		'rating',
+		'media',
+		'incident',
+		'location',
+		'incident_kml',
+		'user_followers',
+		'layer',
+		'location_layer',
+		'incident_follows',
+	);
 	
 	/**
 	 * Creates a basic user and assigns to login and member roles
@@ -27,7 +45,7 @@ class User_Model extends Auth_User_Model {
 	 * @param   string  riverid user id
 	 * @return  object  ORM object from saving the user
 	 */
-	public static function create_user($email,$password,$riverid=false,$name=false)
+	public static function create_user($email, $password, $riverid=false, $name=false)
 	{
 		$user = ORM::factory('user');
 
@@ -91,12 +109,14 @@ class User_Model extends Auth_User_Model {
 
 	/**
 	 * Returns data for a user based on user id
-	 * @return object
+	 *
+	 * @return mixed User_Model if the user exists, FALSE otherwise
 	 */
 	public static function get_user_by_id($user_id)
 	{
-		$user = ORM::factory('user')->where(array('id'=>$user_id))->find();
-		return $user;
+		$user = ORM::factory('user', $user_id);
+		
+		return $user->loaded ? $user : FALSE;
 	}
 
 	/**
@@ -353,6 +373,144 @@ class User_Model extends Auth_User_Model {
 		
 		// Send anyone else to login
 		return 'login';
+	}
+
+	/**
+	 * Get the url for the current user's dashboard
+	 * @return string
+	 */
+	public function get_dashboard_url()
+	{
+		return ($this->username == "admin")
+		    ? url::site()."admin/dashboard"
+		    : url::site()."users/index/".$this->id;
+	}
+
+	/**
+	 * Get's the current user's avatar from Gravatar
+	 *
+	 * @param  int $size Size of the gravatar image. The default size is 30px
+	 * @return string
+	 */
+	public function gravatar($size = 30)
+	{
+		$email_hash = md5(strtolower(trim($this->email)));
+		return 'https://secure.gravatar.com/avatar/'.$email_hash.'?s='.$size.'&d='.url::base().'media/img/user_no_photo.png';
+	}
+
+	/**
+	 * Verifies whether the current user is following the specified user
+	 *
+	 * @param  Model_User $user
+	 * @return bool
+	 */
+	public function is_following($user)
+	{
+		return ORM::factory('user_followers')
+		    ->where('user_id', $user->id)
+		    ->where('follower_id', $this->id)
+		    ->find()
+		    ->loaded;
+	}
+
+	/**
+	 * Gets the list of all users that the current user is following
+	 *
+	 * @return ORM_Iterator
+	 */
+	public function get_following()
+	{
+		return ORM::factory('user')
+		    ->join('user_followers', 'user_followers.user_id', 'users.id')
+		    ->where('user_followers.follower_id', $this->id)
+		    ->find_all();
+	}
+
+	/**
+	 * Gets the list of all users that are following the current user
+	 *
+	 * @return ORM_Iterator
+	 */
+	public function get_followers()
+	{
+		return ORM::factory('user')
+		    ->join('user_followers', 'user_followers.follower_id', 'users.id')
+		    ->where('users.id', $this->id)
+		    ->find_all();
+	}
+
+	/**
+	 * Gets all incidents in which the current user has collaborated on by
+	 *     1. Creating an incident
+	 *     2. Uploading a KML for that incident
+	 *     3. Submitting a location for the incident
+	 *     4. Uploading media (news source link, images, video) for the incident
+	 *
+	 * @return array
+	 */
+	public function get_incidents_collaborated_on()
+	{
+		$incidents = array();
+
+		// Get the incidents
+		foreach ($this->incident as $incident)
+		{
+			$this->_add_incident_to_array($incidents, $incident);
+		}
+
+		// KMLs uploaded by the user (incident_kml)
+		foreach ($this->incident_kml as $kml)
+		{
+			$this->_add_incident_to_array($incidents, $kml->incident);
+		}
+
+		// Locations created by the user (location)
+		foreach ($this->location as $location)
+		{
+			$this->_add_incident_to_array($incidents, $location->incident);
+		}
+
+		// Location layers (location_layer)
+		foreach ($this->location_layer as $location_layer)
+		{
+			$this->_add_incident_to_array($incidents, $location_layer->incident);
+		}
+
+		// Media
+		foreach ($this->media as $media)
+		{
+			$this->_add_incident_to_array($incidents, $media->incident);
+		}
+
+		return array_values($incidents);
+	}
+
+	/**
+	 * Given an incident checks whether it exists in the provided buffer
+	 * and adds it (if it doesn't exist)
+	 *
+	 * @param   array          $incidents List of incidents
+	 * @param   Incident_Model $incident Incident to be added
+	 */
+	private function _add_incident_to_array(array & $incidents, $incident)
+	{
+		if ( ! array_key_exists($incident->id, $incidents))
+		{
+			$incidents[$incident->id] = $incident;
+		}
+	}
+
+	/**
+	 * Given an incident (map), checks whether the current user follows it
+	 * @param  Model_Incident $incident
+	 */
+	public function is_incident_follower($incident)
+	{
+		$where_array = array(
+			'user_id' => $this->id,
+			'incident_id' => $incident->id
+		);
+		return ORM::factory('incident_follow')->where($where_array)->count_all() > 0;
 	}
 
 } // End User_Model

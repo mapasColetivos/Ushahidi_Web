@@ -386,7 +386,6 @@ class Manage_Controller extends Admin_Controller
 							->where('parent_id','0')
 							->where('category_trusted != 1')
 							->select_list('id', 'category_title');
->>>>>>> master
 
 		// add none to the list
 		$parents_array[0] = "--- Top Level Category ---";

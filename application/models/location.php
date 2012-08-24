@@ -20,8 +20,14 @@ class Location_Model extends ORM
 	 * One-to-many relationship definition
 	 * @var array
 	 */
-	protected $has_many = array('incident', 'media', 'incident_person', 'feed_item', 'reporter', 'checkin');
+	protected $has_many = array('media', 'incident_person', 'feed_item', 'reporter', 'checkin');
 	
+	/**
+	 * Belongs-to relatioship definition
+	 * @var array
+	 */
+	protected $belongs_to = array('incident', 'user');
+
 	/**
 	 * Many-to-one relationship definition
 	 * @var array

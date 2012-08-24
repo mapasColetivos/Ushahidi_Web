@@ -11,7 +11,7 @@
  * @subpackage Controllers
  * @copyright  Ushahidi - http://www.ushahidi.com
  * @license    http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL) 
-*/
+ */
 
 class Swatch_Controller extends Controller
 {

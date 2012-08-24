@@ -54,6 +54,13 @@ class Main_Controller extends Template_Controller {
 	 */
 	protected $themes;
 
+	/**
+	 * Currently logged in user
+	 * @var Model_User
+	 */
+	protected $user = NULL;
+
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -128,11 +135,12 @@ class Main_Controller extends Template_Controller {
 		$header_nav = new View('header_nav');
 		$this->template->header->header_nav = $header_nav;
 		$this->template->header->header_nav->loggedin_user = FALSE;
-		if ( isset(Auth::instance()->get_user()->id) )
+		if (($this->user = Auth::instance()->get_user()) != FALSE)
 		{
+
 			// Load User
-			$this->template->header->header_nav->loggedin_role = Auth::instance()->get_user()->dashboard();
-			$this->template->header->header_nav->loggedin_user = Auth::instance()->get_user();
+			$this->template->header->header_nav->loggedin_role = $this->user->dashboard();
+			$this->template->header->header_nav->loggedin_user = $this->user;
 		}
 		$this->template->header->header_nav->site_name = Kohana::config('settings.site_name');
 	}
@@ -188,7 +196,7 @@ class Main_Controller extends Template_Controller {
 		// Check if there is a site message
 		$this->template->content->site_message = '';
 		$site_message = trim(Kohana::config('settings.site_message'));
-		if($site_message != '')
+		if ($site_message != '')
 		{
 			// Send the site message to both the header and the main content body
 			//   so a theme can utilize it in either spot.
@@ -232,7 +240,7 @@ class Main_Controller extends Template_Controller {
 			}
 
 			// Check for localization of parent category
-			$display_title = Category_Lang_Model::category_title($category->id,$l);
+			$display_title = Category_Lang_Model::category_title($category->id, $l);
 
 			// Put it all together
 			$ca_img = ($category->category_image != NULL)
@@ -251,7 +259,8 @@ class Main_Controller extends Template_Controller {
 		// Get all active Layers (KMZ/KML)
 		$layers = array();
 		$config_layers = Kohana::config('map.layers'); // use config/map layers if set
-		if ($config_layers == $layers) {
+		if ($config_layers == $layers)
+		{
 			foreach (ORM::factory('layer')
 					  ->where('layer_visible', 1)
 					  ->find_all() as $layer)
@@ -265,6 +274,7 @@ class Main_Controller extends Template_Controller {
 			$layers = $config_layers;
 		}
 		$this->template->content->layers = $layers;
+
 
 		// Get Default Color
 		$this->template->content->default_map_all = Kohana::config('settings.default_map_all');

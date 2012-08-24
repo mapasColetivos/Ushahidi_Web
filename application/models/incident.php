@@ -29,7 +29,12 @@ class Incident_Model extends ORM {
 		'incident_lang',
 		'form_response',
 		'cluster' => 'cluster_incident',
-		'geometry'
+		'geometry',
+		'incident_kml',
+		'location_layer',
+		'incidents_tags',
+		'location',
+		'incident_follows'
 	);
 
 	/**
@@ -37,7 +42,6 @@ class Incident_Model extends ORM {
 	 * @var array
 	 */
 	protected $has_one = array(
-		'location',
 		'incident_person',
 		'user',
 		'message',
@@ -362,8 +366,10 @@ class Incident_Model extends ORM {
 		// Normal query
 		if (! $count)
 		{
-			$sql = 'SELECT DISTINCT i.id incident_id, i.incident_title, i.incident_description, i.incident_date, i.incident_mode, i.incident_active, '
-				. 'i.incident_verified, i.location_id, l.country_id, l.location_name, l.latitude, l.longitude ';
+			$sql = 'SELECT DISTINCT i.id incident_id, i.incident_title, i.incident_description, '
+			    . 'i.incident_date, i.incident_mode, i.incident_active, '
+				. 'i.incident_verified, i.incident_default_lat latitude, i.incident_default_lon longitude, '
+				. 'c.category_color ';
 		}
 		// Count query
 		else
@@ -376,8 +382,8 @@ class Incident_Model extends ORM {
 			AND array_key_exists('distance', $radius))
 		{
 			// Calculate the distance of each point from the starting point
-			$sql .= ", ((ACOS(SIN(%s * PI() / 180) * SIN(l.`latitude` * PI() / 180) + COS(%s * PI() / 180) * "
-				. "	COS(l.`latitude` * PI() / 180) * COS((%s - l.`longitude`) * PI() / 180)) * 180 / PI()) * 60 * 1.1515) AS distance ";
+			$sql .= ", ((ACOS(SIN(%s * PI() / 180) * SIN(i.`incident_default_lat` * PI() / 180) + COS(%s * PI() / 180) * "
+				. "	COS(l.`latitude` * PI() / 180) * COS((%s - i.`incident_default_lon`) * PI() / 180)) * 180 / PI()) * 60 * 1.1515) AS distance ";
 
 			$sql = sprintf($sql, $radius['latitude'], $radius['latitude'], $radius['longitude']);
 
@@ -386,7 +392,6 @@ class Incident_Model extends ORM {
 		}
 
 		$sql .=  'FROM '.$table_prefix.'incident i '
-			. 'LEFT JOIN '.$table_prefix.'location l ON (i.location_id = l.id) '
 			. 'LEFT JOIN '.$table_prefix.'incident_category ic ON (ic.incident_id = i.id) '
 			. 'LEFT JOIN '.$table_prefix.'category c ON (ic.category_id = c.id) ';
 		
@@ -627,6 +632,95 @@ class Incident_Model extends ORM {
 		Event::run('ushahidi_action.report_delete', $incident_id);
 
 		parent::delete();
+	}
+
+	/**
+	 * Get the no. of videos associated with this incident
+	 * @return int
+	 */
+	public function count_videos()
+	{
+		return $this->count_asset_by_type(2);
+	}
+	
+	/**
+	 * Get the no. of images associated with this incident
+	 * @return int
+	 */
+	public function count_images()
+	{
+		return $this->count_asset_by_type(1);
+	}
+	
+	public function count_reports()
+	{
+		return $this->count_asset_by_type(4);
+	}
+	
+	/**
+	 * Gets the no. of media items associated with this incident
+	 *
+	 * @param  int  $type Type of media
+	 * @return int
+	 */
+	private function count_asset_by_type($type)
+	{
+		return Database::instance()
+		    ->where('media_type', $type)
+		    ->where('incident_id', $this->id)
+		    ->count_records('media');
+	}
+
+	public function share_url()
+	{
+		return url::site("reports/view".$this->id);
+	}
+
+	public function tags()
+	{
+
+	}
+
+	/**
+	 * Gets the list of users collaborating on an incident
+	 * This is the list of users that have:
+	 *     - Created a location entry
+	 *     - Uploaded a KML for the current incident
+	 *     - Uploaded media (image, video etc) for the incident
+	 * @return array
+	 */
+	public function get_collaborators()
+	{
+		$collaborators = array();
+
+		// Locations
+		foreach ($this->location as $location)
+		{
+			if ( ! array_key_exists($location->user->id, $collaborators))
+			{
+				$collaborators[$location->user->id] = $location->user;
+			}
+		}
+
+		// Media
+		foreach ($this->media as $media)
+		{
+			if ( ! array_key_exists($media->user->id, $collaborators))
+			{
+				$collaborators[$media->user->id] = $media->user;
+			}
+		}
+
+		// KMLS
+		foreach ($this->incident_kml as $kml)
+		{
+			if ( ! array_key_exists($kml->user->id, $collaborators))
+			{
+				$collaborators[$kml->user->id] = $kml->user;
+			}
+		}
+
+		return array_values($collaborators);
 	}
 
 }

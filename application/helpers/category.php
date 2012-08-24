@@ -47,7 +47,7 @@ class category_Core {
 			$disabled = " disabled=\"disabled\"";	
 		}
 
-		$html .= form::checkbox($form_field.'[]', $cid, $category_checked, ' class="check-box"'.$disabled);
+		$html .= form::radio($form_field.'[]', $cid, $category_checked, ' class="check-box"'.$disabled);
 		$html .= $category_title;
 
 		return $html;

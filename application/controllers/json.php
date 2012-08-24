@@ -125,7 +125,7 @@ class Json_Controller extends Template_Controller {
 				'name' => $item_name,
 				'link' => $link,
 				'category' => array($category_id),
-				'color' => $color,
+				'color' => $marker->category_color,
 				'icon' => $icon,
 				'thumb' => $thumb,
 				'timestamp' => strtotime($marker->incident_date)
@@ -858,5 +858,146 @@ class Json_Controller extends Template_Controller {
 		$item_name = "<a href='$url'>".$encoded_title."</a>";
 		$item_name = str_replace(array(chr(10),chr(13)), ' ', $item_name);
 		return $item_name;
+	}
+
+
+	/**
+	 * Gets the list of all locations for which an incident
+	 * has been reported
+	 *
+	 * @param int $incident_id When specified, gets all the locations in which
+	 *                         in which the specified incident has been reported
+	 * @return string
+	 */
+	public function locations($incident_id = NULL)
+	{
+		$db = Database::instance();
+
+		// Columns to select
+		$columns = array(
+			'DISTINCT location.id',
+			'location.incident_id',
+			'incident.incident_title',
+			'location.location_name',
+			'location.latitude',
+			'location.longitude',
+			'category.category_title',
+			'category.category_color'
+		);
+
+		// Build the predicate list first because the Database library
+		// doesn't 
+		$incident_where = "1=1";
+		if (Incident_Model::is_valid_incident($incident_id))
+		{
+			$incident_where = sprintf('location.incident_id = %d', $incident_id);
+		}
+
+		// Get the locations
+		$markers_result = $db->from('location')
+		    ->select($columns)
+		    ->join('incident', 'incident.id', 'location.incident_id')
+		    ->join('incident_category', 'incident_category.incident_id', 'incident.id')
+		    ->join('category', 'category.id', 'incident_category.category_id')
+		    ->where('incident.incident_active', 1)
+		    ->where($incident_where)
+		    ->get();
+
+		$markers = array();
+		foreach ($markers_result as $marker)
+		{
+			$location_item = array(
+				"type" => "Feature",
+				"properties" => array(
+					"id" => $marker->id,
+					"name" => $marker->location_name,
+					"link" => "",
+					"category" => $marker->category_title,
+					"color" => $marker->category_color,
+					"thumb" => "",
+					"icon" => "",
+				),
+				"geometry" => array(
+					"type" => "Point",
+					"coordinates" => array($marker->longitude, $marker->latitude)
+				)
+			);
+
+			$markers[] = $location_item;
+		}
+
+		header("Content-type: application/json; charset=utf-8");
+		echo json_encode(array(
+			"type" => "FeatureCollection",
+			"features" => $markers
+		));
+	}
+
+	/**
+	 * Gets all the location entries created by the specified user
+	 * and outputs them as GeoJSON for display on the map
+	 *
+	 * @param  int  $user_id ID of the user
+	 */
+	public function user_locations($user_id)
+	{
+		$markers = array();
+
+		// Verify the user exists
+		if (User_Model::get_user_by_id($user_id))
+		{
+			// Columns to select
+			$columns = array(
+				'DISTINCT location.id',
+				'location.incident_id',
+				'incident.incident_title',
+				'location.location_name',
+				'location.latitude',
+				'location.longitude',
+				'category.category_title',
+				'category.category_color'
+			);
+
+			// Get all location entries created by the user
+			$markers_result = Database::instance()
+			    ->from('location')
+			    ->select($columns)
+		        ->join('incident', 'incident.id', 'location.incident_id')
+		        ->join('incident_category', 'incident_category.incident_id', 'incident.id')
+		        ->join('category', 'category.id', 'incident_category.category_id')
+		        ->where('incident.incident_active', 1)
+		        ->where('location.user_id', $user_id)
+		        ->get();
+
+		    // Generate GeoJSON
+			foreach ($markers_result as $marker)
+			{
+				$location_item = array(
+					"type" => "Feature",
+					"properties" => array(
+						"id" => $marker->id,
+						"name" => $marker->location_name,
+						"link" => "",
+						"category" => $marker->category_title,
+						"color" => $marker->category_color,
+						"thumb" => "",
+						"icon" => "",
+					),
+					"geometry" => array(
+						"type" => "Point",
+						"coordinates" => array($marker->longitude, $marker->latitude)
+					)
+				);
+
+				$markers[] = $location_item;
+			}
+		}
+
+		// Output
+		header("Content-type: application/json; charset=utf-8");
+		echo json_encode(array(
+			"type" => "FeatureCollection",
+			"features" => $markers
+		));
 	}
 }
