@@ -13,14 +13,13 @@
  * @license    http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL) 
  * $Id: $
  */
-class Tag_Model extends ORM
-{
+class Tag_Model extends ORM {
 
 	/**
 	 * One-to-many relationship definition
 	 * @var array
 	 */
-	protected $has_many = array('incidents_tags');
+	protected $has_many = array('incident_tags');
 
 	/**
 	 * Table name

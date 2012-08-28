@@ -4,23 +4,34 @@
 
 	<title><?php echo $site_name; ?></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <script type="text/javascript" src="<?php echo url::base() ?>media/js/tailorbirds.js"></script>
-	<?php echo $header_block; ?>
-	<?php
+	<?php 
+		// Header scripts
+		echo $header_block;
+
 		echo html::stylesheet('media/css/admin/all_layer', '', TRUE);
+
+		// Action::header_scripts - Additional Inline Scripts from Plugins
+		Event::run('ushahidi_action.header_scripts');
+
+		// Facebox
+		echo html::stylesheet('media/facebox/facebox', TRUE);
+
+		// Array of JavaScript files to be included
+		$js_array = array(
+			'media/js/tailorbirds.js',
+			'media/facebox/facebox.js',
+			'media/js/selectToUISlider.jQuery',
+		);
+
+		echo html::script($js_array, TRUE);
 	?>
-	<?php
-	// Action::header_scripts - Additional Inline Scripts from Plugins
-	Event::run('ushahidi_action.header_scripts');
-	?>
-	<link href="<?php echo url::base() ?>media/facebox/facebox.css" media="screen" rel="stylesheet" type="text/css"/>
-	<script type="text/javascript" src="<?php echo url::base() ?>media/facebox/facebox.js"></script>
-    <script type="text/javascript" src="<?php echo url::base() ?>media/js/selectToUISlider.jQuery.js"></script>    	
+
     <?php if (isset($fb_title)): ?>
 	    <meta property="og:title" content="<?php echo $fb_title; ?>" />
 		<meta property="og:description" content="<?php echo $fb_description; ?>" />
 		<meta property="og:image" content="<?php echo $fb_image; ?>" />
 	<?php endif; ?>
+
 </head>
 
 <?php if (isset($_SERVER['HTTP_USER_AGENT']) AND (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== FALSE)): ?>
@@ -29,8 +40,8 @@
 	    "O mapasColetivos não pode ser visualizado corretamente em Internet Explorer. " +
 	    "Por favor, utilize umas das opções abaixo: \n\n" +
 	    "Chrome    https://www.google.com/chrome/ \n" +
-	    "Firefox       http://www.mozilla.com/firefox/ \n" + 
-	    "Safari         http://www.apple.com/br/safari/ \n\n" +
+	    "Firefox   http://www.mozilla.com/firefox/ \n" + 
+	    "Safari    http://www.apple.com/br/safari/ \n\n" +
 	    "IMPORTANTE: o IE não respeita normas da w3c e este site não funcionará corretamente nele.";
 
 	alert(alertMessage);

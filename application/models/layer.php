@@ -23,6 +23,12 @@ class Layer_Model extends ORM {
 	protected $belongs_to = array("user");
 
 	/**
+	 * One-to-many relationship definition
+	 * @var array
+	 */
+	protected $has_many = array('incident_kml');
+
+	/**
 	 * Database table name
 	 * @var string
 	 */

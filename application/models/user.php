@@ -513,4 +513,96 @@ class User_Model extends Auth_User_Model {
 		return ORM::factory('incident_follow')->where($where_array)->count_all() > 0;
 	}
 
+	/**
+	 * Unfollows the user with the specified id
+	 *
+	 * @param  int  $user_id
+	 */
+	public function unfollow_user($user_id)
+	{
+		ORM::factory('user_follower')
+		    ->where('user_id', $user_id)
+		    ->where('follower_id', $this->id)
+		    ->delete_all();
+	}
+
+	/**
+	 * Follows the user with the specified id
+	 *
+	 * @param  int $user_id
+	 */
+	public function follow_user($user_id)
+	{
+		if (self::get_user_by_id($user_id))
+		{
+			$follow_orm = new User_Followers_Model();
+			$follow_orm->user_id = $user_id;
+			$follow_orm->follower_id = $this->id;
+			$follow_orm->save();
+
+			return TRUE;
+		}
+
+		return FALSE;
+	}
+
+	/**
+	 * Adds an incident to the list of incidents followed
+	 * by the current user
+	 *
+	 * @param int $incident_id Incident to follow
+	 * @return bool
+	 */
+	public function follow_incident($incident_id)
+	{
+		if (Incident_Model::is_valid_incident($incident_id, FALSE))
+		{
+			$follow_orm = new Incident_Follow_Model();			
+			$follow_orm->user_id = $this->id;
+			$follow_orm->incident_id = $incident_id;
+			$follow_orm->save();
+
+			return TRUE;
+		}
+
+		return FALSE;
+	}
+
+	/**
+	 * Removes an incident (map) from the list of incidents that the
+	 * current user is following
+	 *
+	 * @param  int $incident_id Incident to unfollow
+	 * @return bool
+	 */
+	public function unfollow_incident($incident_id)
+	{
+		if (Incident_Model::is_valid_incident($incident_id, FALSE))
+		{
+			ORM::factory('incident_follow')
+			    ->where('incident_id', $incident_id)
+			    ->where('user_id', $this->id)
+			    ->delete_all();
+
+			return TRUE;
+		}
+
+		return FALSE;
+	}
+
+	/**
+	 * Given an incident, gets the list of all layers created
+	 * by the list
+	 *
+	 * @param  Incident_Model $incident ORM instance of the incident
+	 * @return ORM_Iterator
+	 */
+	public function get_incident_layers($incident)
+	{
+		return ORM::factory('incident_kml')
+		     ->where('incident_id', $incident->id)
+		     ->where('user_id', $this->id)
+		     ->find_all();
+	}
+
 } // End User_Model

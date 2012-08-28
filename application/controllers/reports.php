@@ -326,35 +326,21 @@ class Reports_Controller extends Main_Controller {
 			// Test to see if things passed the rule checks
 			if (reports::validate($post))
 			{
-
-				// STEP 1: SAVE LOCATION
-				$location = new Location_Model();
-				reports::save_location($post, $location);
-
-				// STEP 2: SAVE INCIDENT
+				// STEP 1: SAVE INCIDENT
 				$incident = new Incident_Model();
-				reports::save_report($post, $incident, $location->id);
+				reports::save_report($post, $incident);
 
-				// STEP 2b: SAVE INCIDENT GEOMETRIES
-				reports::save_report_geometry($post, $incident);
-
-				// STEP 3: SAVE CATEGORIES
+				// STEP 2: SAVE CATEGORIES
 				reports::save_category($post, $incident);
 
-				// STEP 4: SAVE MEDIA
-				reports::save_media($post, $incident);
-
-				// STEP 5: SAVE CUSTOM FORM FIELDS
+				// STEP 3: SAVE CUSTOM FORM FIELDS
 				reports::save_custom_fields($post, $incident);
-
-				// STEP 6: SAVE PERSONAL INFORMATION
-				reports::save_personal_info($post, $incident);
 
 				// Run evnets
 				Event::run('ushahidi_action.report_submit', $post);
 				Event::run('ushahidi_action.report_add', $incident);
 
-				url::redirect('reports/thanks');
+				url::redirect('reports/add_location/'.$incident->id);
 			}
 
 			// No! We have validation errors, we need to show the form again, with the errors
@@ -757,6 +743,72 @@ class Reports_Controller extends Main_Controller {
 
 		$form_fields = customforms::switcheroo($incident_id,$form_id);
         echo json_encode(array("status"=>"success", "response"=>$form_fields));
+    }
+
+    /**
+     * REST endpoint for report (incident) follow/unfollow 
+     */
+    public function social()
+    {
+    	$this->template = "";
+    	$this->auto_render = FALSE;
+
+    	if ($_POST AND $this->user)
+    	{
+    		// Set up validation
+    		$validation = Validation::factory($_POST)
+    		    ->add_rules('incident_id', 'required')
+    		    ->add_rules('user_id', 'required')
+    		    ->add_rules('action', 'required');
+
+    		// Validate
+    		if ($validation->validate())
+    		{
+    			if ($validation->action == 'follow')
+    			{
+    				$this->user->follow_incident($validation->incident_id);
+    			}
+    			elseif ($validation->action == 'unfollow')
+    			{
+    				$this->user->unfollow_incident($validation->incident_id);
+    			}
+    		}
+    	}
+    }
+
+    /**
+     * Displays the add location page
+     */
+    public function add_location($incident_id)
+    {
+    	// Validate the specified incident ID and ensure the
+    	// user is logged in before proceeding
+    	if ( ! Incident_Model::is_valid_incident($incident_id, FALSE) OR ! $this->user)
+    	{
+    		url::redirect('main');
+    	}
+
+    	// Load the incident
+    	$incident = ORM::factory('incident', $incident_id);
+
+    	// Set the view properties
+    	$this->template->content = new View('reports/add_location');
+    	$this->template->content->user = $this->user;
+    	$this->template->content->incident = $incident;
+    	$this->template->content->incident_layers = $incident->get_layers();
+
+    	$header_js = View::factory('reports/view_js');
+    	$header_js->latitude = $incident->incident_default_lat;
+    	$header_js->longitude = $incident->incident_default_lon;
+    	$header_js->map_zoom = $incident->incident_zoom;
+    	$header_js->layer_name = $incident->incident_title;
+    	$header_js->markers_url = "json/locations/".$incident->id;
+
+		$this->themes->map_enabled = TRUE;
+    	$this->themes->js = $header_js;
+		$this->template->header->header_block = $this->themes->header_block();
+		$this->template->footer->footer_block = $this->themes->footer_block();
+
     }
 
 }

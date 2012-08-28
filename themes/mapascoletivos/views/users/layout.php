@@ -37,14 +37,22 @@
 			<?php
 				if ( ! empty($visiting_user) AND ($visiting_user->id != $visited_user->id))
 				{
+					// Attributes for the anchor
+					$attributes = array(
+						'class' => 'user-follow',
+						'data-user-id' => $visited_user->id,
+						'data-action-name' => 'follow'
+					);
+
 					if ($visiting_user->is_following($visited_user))
 					{
-						echo html::anchor("social/unfollow/".$visited_user->id, html::image("media/img/btn_deixar_seguir_mapeador.png"));
+						// Add thefollowing class
+						$attributes['class'] = 'user-follow following';
+						$attributes['data-action-name'] = 'unfollow';
 					}
-					else
-					{
-						echo html::anchor("social/follow/".$visited_user->id, html::image("media/img/btn_seguir_mapeador.png"));
-					}
+					
+					// Display the anchor
+					echo html::anchor("#", "", $attributes);
 				}
 			?>
 			</p>
@@ -147,7 +155,6 @@
 						</tr>
 					</table>
 					<div id="maps_count_list">
-
 						<!-- List the maps (incidents) created by the visited user -->
 						<ul class="map_list" id="created_counter_list">
 						<?php foreach ($visited_user->incident as $incident): ?>
@@ -192,20 +199,38 @@
 		<div id="right_column">
 			<div id="filters_bar">
 				<h1 id="map_title">Geografia pessoal</h1>
-				<span id="hide_show" >
-					<span id="hide_show_text">legenda</span>
-					<?php echo html::image("media/img/arrow_down_gray.png", array("id" => "image_arrow_map")); ?>
-				</span> 
+
+				<div class="map-filters">
+					<div id="menu_filters">
+						<a href="#" class="filter-switch">
+							<span><?php echo Kohana::lang('ui_main.location_layers'); ?></span>
+							<?php echo html::image("media/img/arrow_down_gray.png", "", array('border'=>'0')); ?>
+						</a>
+					</div>
+				</div>
 			</div>
 
 			<!-- map display -->
 			<div id="user_map">
-				<div id="display_box">
 
-					<!-- user categories -->
-					<div id="kmls"></div>
-					<!-- /user categories -->
+				<?php if($visited_user->layer->count()): ?>
+				<!-- user layers -->
+				<div class="layers-overlay" style="display:none;">
+					<div class="map-layers">
+						<ul class="layers-listing">
+					 	<?php foreach ($visited_user->layer as $layer): ?>
+					 		<li>
+					 			<a href="#" data-layer-id="<?php echo $layer->id; ?>" data-layer-name="<?php echo $layer->layer_name; ?>">
+						 			<span class="layer-color" style="background-color: #<?php echo $layer->layer_color; ?>"></span>
+						 			<span class="user-layer-name"><?php echo $layer->layer_name; ?></span>
+					 			</a>
+					 		</li>
+					 	<?php endforeach; ?>
+						</ul>
+					</div>
 				</div>
+				<?php endif; ?>
+				<!-- /user layers -->
 			</div>
 
 		</div>
@@ -215,6 +240,49 @@
 </div>
 
 <script type="text/javascript">
-	// JavaScript for toggling the selection of the
-	// tabs under the mapasColetivos header
+$(function(){
+	$("#mapeador a.user-follow").click(function(e){
+		var data = {
+			user_id: $(this).data("user-id"),
+			action: $(this).data("action-name")
+		};
+
+		var context = this;
+
+		$.ajax({
+			type: "POST",
+			url: "<?php echo url::site("users/social"); ?>",
+			data: data,
+			success: function(response) {
+				var action = data.action === "follow" ? "unfollow" : "follow";
+				$(context).data("action-name", action);
+				$(context).toggleClass("following");
+			},
+			dataType: "json"
+		});
+		return false;
+	});
+
+	// Toggle selection of the "mapasColetivos" tabs
+	$(".maps_counter").click(function(e){
+		var targetId = "#" + $(this).attr("id") + "_list";
+
+		// Remove "active" class from all tabs
+		$(".maps_counter").each(function(i){
+			if ($(this).hasClass("active")) {
+				$(this).removeClass("active");
+			}
+		})
+
+		// Hide all lists
+		$("ul.map_list").hide();
+
+		// Show the selected list
+		$(this).addClass("active");
+		$(targetId).show();
+
+		// Prevent further event processing
+		return false;
+	});
+}); 
 </script>

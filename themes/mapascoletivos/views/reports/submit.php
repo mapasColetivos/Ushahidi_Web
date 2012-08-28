@@ -3,8 +3,8 @@
 		<!-- start report form block -->
 		
 		<?php print form::open(NULL, array('enctype' => 'multipart/form-data', 'id' => 'reportForm', 'name' => 'reportForm', 'class' => 'gen_forms')); ?>
-		<input type="hidden" name="latitude" id="latitude" value="<?php echo $form['latitude']; ?>">
-		<input type="hidden" name="longitude" id="longitude" value="<?php echo $form['longitude']; ?>">
+		<input type="hidden" name="latitude" id="latitude" value="<?php echo $form['default_lat']; ?>">
+		<input type="hidden" name="longitude" id="longitude" value="<?php echo $form['default_lon']; ?>">
 		<input type="hidden" name="country_name" id="country_name" value="<?php echo $form['country_name']; ?>" />
 		<input type="hidden" name="incident_zoom" id="incident_zoom" value="<?php echo $form['incident_zoom']; ?>" />
 		<div class="big-block">

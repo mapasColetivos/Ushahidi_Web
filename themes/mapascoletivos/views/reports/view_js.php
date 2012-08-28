@@ -9,7 +9,7 @@
  * that is available through the world-wide-web at the following URI:
  * http://www.gnu.org/copyleft/lesser.html
  * @author     Ushahidi Team <team@ushahidi.com> 
- * @package    Ushahidi - http://source.ushahididev.com
+ * @package    Ushahidi - http://github.com/ushahidi/Ushahidi_Web
  * @module     Reports Controller
  * @copyright  Ushahidi - http://www.ushahidi.com
  * @license    http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL) 
@@ -19,6 +19,7 @@
 // Set the base url
 Ushahidi.baseURL = "<?php echo url::site(); ?>";
 
+var map = null;
 jQuery(window).load(function() {
 
 	<?php echo map::layers_js(FALSE); ?>
@@ -51,52 +52,13 @@ jQuery(window).load(function() {
 
 	};
 
-
 	// Initialize the map
-	var map = new Ushahidi.Map('user_map', mapConfig);
+	map = new Ushahidi.Map('user_map', mapConfig);
 	map.addLayer(Ushahidi.GEOJSON, {
 		name: "<?php echo $layer_name; ?>",
 		url: "<?php echo $markers_url; ?>",
 	});
-	
-	// Ajax Validation for the comments
-	$("#commentForm").validate({
-		rules: {
-			comment_author: {
-				required: true,
-				minlength: 3
-			},
-			comment_email: {
-				required: true,
-				email: true
-			},
-			comment_description: {
-				required: true,
-				minlength: 3
-			},
-			captcha: {
-				required: true
-			}
-		},
-		messages: {
-			comment_author: {
-				required: "Please enter your Name",
-				minlength: "Your Name must consist of at least 3 characters"
-			},
-			comment_email: {
-				required: "Please enter an Email Address",
-				email: "Please enter a valid Email Address"
-			},
-			comment_description: {
-				required: "Please enter a Comment",
-				minlength: "Your Comment must be at least 3 characters long"
-			},
-			captcha: {
-				required: "Please enter the Security Code"
-			}
-		}
-	});
-	
+
 	// Handles the functionality for changing the size of the map
 	// TODO: make the CSS widths dynamic... instead of hardcoding, grab the width's
 	// from the appropriate parent divs
@@ -134,37 +96,50 @@ jQuery(window).load(function() {
 		return false;
 	});
 
-}); // END jQuery(window).load();
+	// When the display of the layers listing is toggled
+	$("a.filter-switch").toggle(
+		function(e){
+			$(".layers-overlay").slideDown();
+			$("img", this).attr("src", "<?php echo url::site("media/img/arrow_up_gray.png"); ?>");
+			return false;
+		}, 
 
-jQuery(window).bind("load", function() {
-	jQuery("div#slider1").codaSlider()
-	// jQuery("div#slider2").codaSlider()
-	// etc, etc. Beware of cross-linking difficulties if using multiple sliders on one page.
-});
+		function(e){
+			$(".layers-overlay").slideUp();
+			$("img", this).attr("src", "<?php echo url::site("media/img/arrow_down_gray.png"); ?>");
+			return false;
+		}
+	);
 
+	// Layer selection
+	$("ul.layers-listing li > a").click(function(e) {
+		// Get the layer id
+		var layerId = $(this).data("layer-id");
 
-function rating(id,action,type,loader) {
-	$('#' + loader).html('<img src="<?php echo url::file_loc('img')."media/img/loading_g.gif"; ?>">');
-	$.post("<?php echo url::site().'reports/rating/' ?>" + id, { action: action, type: type },
-		function(data){
-			if (data.status == 'saved'){
-				if (type == 'original') {
-					$('#oup_' + id).attr("src","<?php echo url::file_loc('img').'media/img/'; ?>gray_up.png");
-					$('#odown_' + id).attr("src","<?php echo url::file_loc('img').'media/img/'; ?>gray_down.png");
-					$('#orating_' + id).html(data.rating);
+		var isCurrentLayer = false;
+		var context = this;
+
+		// Remove all actively selected layers
+		$(".layers-listing a").each(function(i) {
+			if ($(this).hasClass("active")) {
+				if ($(this).data("layer-id") == $(context).data("layer-id")) {
+					isCurrentLayer = true;
 				}
-				else if (type == 'comment')
-				{
-					$('#cup_' + id).attr("src","<?php echo url::file_loc('img').'media/img/'; ?>gray_up.png");
-					$('#cdown_' + id).attr("src","<?php echo url::file_loc('img').'media/img/'; ?>gray_down.png");
-					$('#crating_' + id).html(data.rating);
-				}
-			} else {
-				if(typeof(data.message) != 'undefined') {
-					alert(data.message);
-				}
+				map.trigger("deletelayer", $(this).data("layer-name"));
+				$(this).removeClass("active");
 			}
-			$('#' + loader).html('');
-	  	}, "json");
-}
-		
+		});
+
+		// Was a different layer selected?
+		if (!isCurrentLayer) {
+			// Set the currently selected layer as the active one
+			$(this).addClass("active");
+			map.addLayer(Ushahidi.KML, {
+				name: $(this).data("layer-name"),
+				url: "json/layer/" + layerId
+			});
+		}
+
+		return false;
+	});
+});

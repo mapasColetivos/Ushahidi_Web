@@ -220,11 +220,23 @@ jQuery(function() {
 	}
 
 
+	// When the category switcher is selected
+	$("#category_switch_link").toggle(
+		function(e){
+			$("#category_column").slideDown();
+			$("img", this).attr("src", "<?php echo url::site("media/img/arrow_up_gray.png"); ?>");
+			return false;
+		},
+		function(e){
+			$("#category_column").slideUp();
+			$("img", this).attr("src", "<?php echo url::site("media/img/arrow_down_gray.png"); ?>");
+			return false;
+		}
+	);
+
 	// Category Switch Action
-	$("ul#category_switch li > a").click(function(e) {
-		
-		var categoryId = this.id.substring(4);
-		var catSet = 'cat_' + this.id.substring(4);
+	$("ul#category_switch li > a").click(function(e) {		
+		var categoryId = $(this).data("category-id");
 
 		// Remove All active
 		$("a[id^='cat_']").removeClass("active");
@@ -233,7 +245,7 @@ jQuery(function() {
 		$("[id^='child_']").hide();
 
 		// Add Highlight
-		$("#cat_" + categoryId).addClass("active"); 
+		$(this).addClass("active"); 
 
 		// Show children DIV
 		$("#child_" + categoryId).show();
@@ -242,73 +254,6 @@ jQuery(function() {
 		// Update report filters
 		map.updateReportFilters({c: categoryId});
 
-		e.stopPropagation();
-		return false;
-	});
-
-	// Layer selection
-	$("ul#kml_switch li > a").click(function(e) {
-		// Get the layer id
-		var layerId = this.id.substring(6);
-
-		var isCurrentLayer = false;
-		var context = this;
-
-		// Remove all actively selected layers
-		$("#kml_switch a").each(function(i) {
-			if ($(this).hasClass("active")) {
-				if (this.id == context.id) {
-					isCurrentLayer = true;
-				}
-				map.trigger("deletelayer", $(".layer-name", this).html());
-				$(this).removeClass("active");
-			}
-		});
-
-		// Was a different layer selected?
-		if (!isCurrentLayer) {
-			// Set the currently selected layer as the active one
-			$(this).addClass("active");
-			map.addLayer(Ushahidi.KML, {
-				name: $(".layer-name", this).html(),
-				url: "json/layer/" + layerId
-			});
-		}
-
-		return false;
-	});
-		
-	// Timeslider and date change actions
-	$("select#startDate, select#endDate").selectToUISlider({
-		labels: 4,
-		labelSrc: 'text',
-		sliderOptions: {
-			change: function(e, ui) {
-				var from = $("#startDate").val();
-				var to = $("#endDate").val();
-
-				if (to > from && (from != startTime || to != endTime)) {
-					// Update the report filters
-					startTime = from;
-					endTime = to;
-					map.updateReportFilters({s: from, e: to});
-				}
-
-				e.stopPropagation();
-			}
-		}
-	});
-	
-	// Media Filter Action
-	$('.filters li a').click(function() {
-		var mediaType = parseFloat(this.id.replace('media_', '')) || 0;
-		
-		$('.filters li a').attr('class', '');
-		$(this).addClass('active');
-
-		// Update the report filters
-		map.updateReportFilters({m: mediaType});
-		
 		return false;
 	});
 	

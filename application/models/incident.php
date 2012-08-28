@@ -32,9 +32,9 @@ class Incident_Model extends ORM {
 		'geometry',
 		'incident_kml',
 		'location_layer',
-		'incidents_tags',
+		'incident_tags',
 		'location',
-		'incident_follows'
+		'incident_follows',
 	);
 
 	/**
@@ -676,11 +676,6 @@ class Incident_Model extends ORM {
 		return url::site("reports/view".$this->id);
 	}
 
-	public function tags()
-	{
-
-	}
-
 	/**
 	 * Gets the list of users collaborating on an incident
 	 * This is the list of users that have:
@@ -721,6 +716,42 @@ class Incident_Model extends ORM {
 		}
 
 		return array_values($collaborators);
+	}
+
+	/**
+	 * Creates entries in the tags and incident_tags tables
+	 * from the form response of the current incident
+	 */
+	public function generate_tags()
+	{
+		// TODO - write the code
+	}
+
+	/**
+	 * Gets the layers associated with the incident via incident_kml
+	 *
+	 * @return array
+	 */
+	public function get_layers()
+	{
+		$layers = array();
+		foreach ($this->incident_kml as $kml)
+		{
+			$layers[] = $kml->layer;
+		}
+		return $layers;
+	}
+
+	/**
+	 * Determines whether a given owner is the owner of the current
+	 * incident. By default, the "admin" user is an owner of all incidents
+	 *
+	 * @param  User_Model ORM instance of the user
+	 * @return bool
+	 */
+	public function is_owner($user)
+	{
+		return ($this->user_id == $user->id) OR $user->username == "admin";
 	}
 
 }

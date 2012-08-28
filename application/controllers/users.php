@@ -31,13 +31,13 @@ class Users_Controller extends Main_Controller {
 		$this->template->content->visited_user = $visited_user;	
 		$this->template->content->visiting_user = $this->user;
         $this->template->content->users_following = $visited_user->get_following();
-		
+
 		// Javascript Header
 		$this->themes->map_enabled = TRUE;
 
         $this->themes->js = new View('reports/view_js');
         $this->themes->js->markers_url = sprintf("json/user_locations/%d", $visited_user->id);
-        $this->themes->js->layer_name = $visited_user->username;
+        $this->themes->js->layer_name = $visited_user->username."'s Pontos";
         $this->themes->js->map_zoom = NULL;
         $this->themes->js->latitude = Kohana::config('settings.default_lat');
         $this->themes->js->longitude = Kohana::config('settings.default_lon');
@@ -245,5 +245,34 @@ class Users_Controller extends Main_Controller {
         $this->template->content->form_saved = $form_saved;
         $this->template->header->header_block = $this->themes->header_block();
     }
+
+    /**
+     * REST endpoint for user follow/unfollow requests
+     */
+    public function social()
+    {
+        $this->template = "";
+        $this->auto_render = FALSE;
+
+        if ($_POST)
+        {
+            // Set up validation
+            $validation = Validation::factory($_POST)
+                ->add_rules('user_id', 'required')
+                ->add_rules('action', 'required');
+
+            if ($validation->validate())
+            {
+                if ($validation->action == 'follow')
+                {
+                    $this->user->follow_user($validation->user_id);
+                }
+                elseif ($validation->action == 'unfollow')
+                {
+                    $this->user->unfollow_user($validation->user_id);
+                }
+            }
+        }
+    }    
 
 }

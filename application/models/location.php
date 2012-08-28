@@ -14,13 +14,18 @@
  * @license    http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL) 
  */
 
-class Location_Model extends ORM
-{
+class Location_Model extends ORM {
 	/**
 	 * One-to-many relationship definition
 	 * @var array
 	 */
-	protected $has_many = array('media', 'incident_person', 'feed_item', 'reporter', 'checkin');
+	protected $has_many = array(
+		'media',
+		'incident_person',
+		'feed_item',
+		'reporter',
+		'checkin'
+	);
 	
 	/**
 	 * Belongs-to relatioship definition

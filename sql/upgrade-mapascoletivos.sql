@@ -10,10 +10,16 @@ DROP TABLE IF EXISTS `mhi_users`;
 -- Change `owner_id` columns to `user_id` for consistency
 UPDATE `incident` SET `user_id` = `owner_id`;
 ALTER TABLE `incident` DROP COLUMN `owner_id`;
+
 ALTER TABLE `incident_kml` CHANGE `owner_id` `user_id` INT(11);
+ALTER TABLE `incident_kml` CHANGE `kml_id` `layer_id` INT(11) NOT NULL;
+
 ALTER TABLE `layer` CHANGE `owner_id` `user_id` INT(11);
+
 ALTER TABLE `location` CHANGE `owner_id` `user_id` INT(11);
+
 ALTER TABLE `location_layer` CHANGE `owner_id` `user_id` INT(11);
+
 ALTER TABLE `media` CHANGE `owner_id` `user_id` INT(11);
 
 -- Rename the `users_users` table to `user_followers`

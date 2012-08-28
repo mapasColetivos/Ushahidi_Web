@@ -36,14 +36,15 @@
 			<div id='box_search_btn'>
 				<div id="menu_filters">
 					<?php echo Kohana::lang('ui_main.category_filter'); ?>
-					<a href="javascript:switchImage('#image_arrow', 'category_switch')" id="category_switch_link">
-						<?php echo html::image('media/img/arrow_down_gray.png', array('id'=> 'image_arrow', 'data-current-src'=>'down')); ?>
+					<a href="#" id="category_switch_link">
+						<?php echo html::image('media/img/arrow_down_gray.png'); ?>
 					</a>
 				</div>
 				<div class="submit submit_geocode"></div>
 				<div class="search">
 					<p>
-						<input type="text" id="location_find_main" name="location_find" value="" title="buscar local" class="findtext">
+						<input type="text" id="location_find_main" name="location_find"
+						    value="" title="buscar local" class="findtext" placeholder="digitar endereÃ§o, SÃ£o Paulo, SP">
 						<span id="find_loading" class="report-find-loading"></span>								
 					</p>
 				</div>				    
@@ -52,11 +53,11 @@
 		
 		<div>
 			<!-- right column -->
-			<div id="category_column" class="clearingfix">
+			<div id="category_column" class="clearingfix" style="display:none;">
 				<!-- category filters -->
-				<ul id="category_switch" class="category-filters" style="display:none;">
+				<ul id="category_switch" class="category-filters">
 					<li>
-						<a class="active" id="cat_0" href="#">
+						<a class="active" id="cat_0" href="#" data-category-id="0">
 							<span class="swatch">
 								<img id="cat_x" src="<?php echo url::base(); ?>/media/img/cat_x.png" alt="x" style="vertical-align:middle" />
 							</span>
@@ -64,85 +65,33 @@
 						</a>
 					</li>
           		<?php
-					foreach ($categories as $category => $category_info)
+					foreach ($categories as $category)
 					{
-						$category_title = $category_info[0];
-						$category_color = $category_info[1];
 						$category_image = '';
-						$color_css = 'class="swatch" style="background-color:#'.$category_color.'"';
+						$color_css = 'class="swatch" style="background-color:#'.$category->category_color.'"';
 						
-						if ($category_info[2] != NULL AND file_exists(Kohana::config('upload.relative_directory').'/'.$category_info[2]))
+						// Check if the category image thumb exists
+						if
+						(
+							$category->category_image_thumb != NULL AND
+							file_exists(Kohana::config('upload.relative_directory').'/'.$category->category_image_thumb)
+						)
 						{
 							$category_image = html::image(array(
-							    'src'=>Kohana::config('upload.relative_directory').'/'.$category_info[2],
+							    'src'=>Kohana::config('upload.relative_directory').'/'.$category->category_image_thumb,
 							    'style'=>'float:left;padding-right:5px;'
 							));
 							
 							$color_css = '';
 						}
 						
-						$li = '<li><a href="#" id="cat_%s"><span %s>%s</span><span class="category-title">%s</span></a>';
-						echo sprintf($li, $category, $color_css, $category_image, $category_title);
-						
-						// Get Children
-						echo '<div class="hide" id="child_'. $category .'">';
-						if( sizeof($category_info[3]) != 0)
-						{
-							echo '<ul>';
-							foreach ($category_info[3] as $child => $child_info)
-							{
-								$child_title = $child_info[0];
-								$child_color = $child_info[1];
-								$child_image = '';
-								$color_css = 'class="swatch" style="background-color:#'.$child_color.'"';
-								
-								if($child_info[2] != NULL AND file_exists(Kohana::config('upload.relative_directory').'/'.$child_info[2]))
-								{
-									$child_image = html::image(array(
-									    'src'=>Kohana::config('upload.relative_directory').'/'.$child_info[2],
-									    'style'=>'float:left;padding-right:5px;'
-									));
-									
-									$color_css = '';
-								}
-
-								echo '<li style="padding-left:20px;">'
-								    . '<a href="#" id="cat_'. $child .'">'
-								    . '<span '.$color_css.'>'.$child_image.'</span>'
-								    . '<span class="category-title">'.$child_title.'</span>'
-								    . '</a></li>';
-							}
-							echo '</ul>';
-						}
-						echo '</div></li>';
+						$li = '<li>'
+						    . '<a href="#" id="cat_%s" data-category-id="'.$category->id.'">'
+						    . '<span %s>%s</span><span class="category-title">%s</span>'
+						    . '</a>';
+						echo sprintf($li, $category->id, $color_css, $category_image, $category->category_title);						
 					}
 				?>
-
-          		<?php if ($layers): ?>
-				<!-- Layers (KML/KMZ) -->
-				<div class="cat-filters clearingfix" style="margin-top:20px;">
-					<strong><?php echo Kohana::lang('ui_main.layers_filter');?></strong>
-				</div>
-				<?php
-					foreach ($layers as $layer => $layer_info)
-					{
-          				$layer_name = $layer_info[0];
-          				$layer_color = $layer_info[1];
-          				$layer_url = $layer_info[2];
-          				$layer_file = $layer_info[3];
-
-						$layer_link = ( ! $layer_url)
-						    ? url::base().Kohana::config('upload.relative_directory').'/'.$layer_file
-						    : $layer_url;
-						
-						echo '<li><a href="#" id="layer_'. $layer .'"'
-						    . 'onclick="switchLayer(\''.$layer.'\',\''.$layer_link.'\',\''.$layer_color.'\'); return false;">'
-						    . '<div class="swatch" style="background-color:#'.$layer_color.'"></div>'
-						    . '<div>'.$layer_name.'</div></a></li>';
-					}
-				?>
-				<!-- /Layers -->
-				<?php endif; ?>
 			</ul>
 			
           	<br />
@@ -173,14 +122,9 @@
 
 	</div>
 
-<!-- / main body
-</div>
-<div id="black-separator">
-</div> -->
+<!-- / main body -->
 
 <!-- left content block -->
 <div>
-  <!--
   <iframe id="news_iframe" frameborder="0" width="100%" height="700px" overflow-y="auto" src="http://mapascoletivos.com.br/noticias"></iframe>
-  -->
 </div>

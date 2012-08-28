@@ -208,52 +208,12 @@ class Main_Controller extends Template_Controller {
 		$l = Kohana::config('locale.language.0');
 
         // Get all active top level categories
-		$parent_categories = array();
-		$all_parents = ORM::factory('category')
-		    ->where('category_visible', '1')
-		    ->where('id != 5')
-		    ->where('parent_id', '0')
+		$parent_categories = ORM::factory('category')
+		    ->where('category_visible', 1)
+		    ->where('parent_id', 0)
+		    ->where('id !=', 5)
 		    ->find_all();
 
-		foreach ($all_parents as $category)
-		{
-			// Get The Children
-			$children = array();
-			foreach ($category->children as $child)
-			{
-				$child_visible = $child->category_visible;
-				if ($child_visible)
-				{
-					// Check for localization of child category
-					$display_title = Category_Lang_Model::category_title($child->id,$l);
-
-					$ca_img = ($child->category_image != NULL)
-					    ? url::convert_uploaded_to_abs($child->category_image)
-					    : NULL;
-					
-					$children[$child->id] = array(
-						$display_title,
-						$child->category_color,
-						$ca_img
-					);
-				}
-			}
-
-			// Check for localization of parent category
-			$display_title = Category_Lang_Model::category_title($category->id, $l);
-
-			// Put it all together
-			$ca_img = ($category->category_image != NULL)
-			    ? url::convert_uploaded_to_abs($category->category_image)
-			    : NULL;
-
-			$parent_categories[$category->id] = array(
-				$display_title,
-				$category->category_color,
-				$ca_img,
-				$children
-			);
-		}
 		$this->template->content->categories = $parent_categories;
 
 		// Get all active Layers (KMZ/KML)

@@ -46,23 +46,13 @@ class reports_Core {
 		$post = Validation::factory($post)
 				->pre_filter('trim', TRUE)
 				->add_rules('incident_title','required', 'length[3,200]')
-				->add_rules('incident_description','required')
-				->add_rules('incident_date','required','date_mmddyyyy')
-				->add_rules('incident_hour','required','between[1,12]')
-				->add_rules('incident_minute','required','between[0,59]')
-				->add_rules('incident_ampm','required');
-			
-		if (isset($post->incident_ampm) AND $post->incident_ampm != "am" AND $post->incident_ampm != "pm")
-		{
-			$post->add_error('incident_ampm','values');
-		}
-			
+				->add_rules('incident_description','required');
+						
 		// Validate for maximum and minimum latitude values
-		$post->add_rules('latitude','required','between[-90,90]');
+		$post->add_rules('default_lat','required','between[-90,90]');
 		
 		// Validate for maximum and minimum longitude values		
-		$post->add_rules('longitude','required','between[-180,180]');	
-		$post->add_rules('location_name','required', 'length[3,200]');
+		$post->add_rules('default_lon','required','between[-180,180]');
 
 		//XXX: Hack to validate for no checkboxes checked
 		if ( ! isset($post->incident_category))
@@ -141,10 +131,10 @@ class reports_Core {
 			$post->person_email = '';
 		}
 		
-		$post->add_rules('location_id','numeric');
 		$post->add_rules('incident_active', 'between[0,1]');
 		$post->add_rules('incident_verified', 'between[0,1]');
 		$post->add_rules('incident_zoom', 'numeric');
+		$post->add_rules('incident_privacy', 'between[0,1]');
 		
 		// Custom form fields validation
 		$errors = customforms::validate_custom_form_fields($post);
@@ -198,11 +188,10 @@ class reports_Core {
 	 *
 	 * @param Validation $post Validation object with the data to be saved
 	 * @param Incident_Model $incident Incident_Model instance to be modified
-	 * @param Location_Model $location_model Location to be attached to the incident
 	 * @param int $id ID no. of the report
 	 *
 	 */
-	public static function save_report($post, $incident, $location_id)
+	public static function save_report($post, $incident)
 	{
 		// Exception handling
 		if ( ! $post instanceof Validation_Core AND  ! $incident instanceof Incident_Model)
@@ -210,13 +199,7 @@ class reports_Core {
 			// Throw exception
 			throw new Kohana_Exception('Invalid parameter types');
 		}
-		
-		// Verify that the location id exists
-		if ( ! Location_Model::is_valid_location($location_id))
-		{
-			throw new Kohana_Exception(sprintf('Invalid location id specified: ', $location_id));
-		}
-		
+
 		// Is this new or edit?
 		if ($incident->loaded)	
 		{
@@ -229,8 +212,9 @@ class reports_Core {
 			$incident->incident_dateadd = date("Y-m-d H:i:s",time());
 		}
 		
-		$incident->location_id = $location_id;
-		//$incident->locale = $post->locale;
+		$incident->incident_default_lon = $post->default_lon;
+		$incident->incident_default_lat = $post->default_lat;
+
 		if (isset($post->form_id))
 		{
 			$incident->form_id = $post->form_id;
@@ -294,6 +278,8 @@ class reports_Core {
 		if ( ! empty($post->incident_zoom))
 		{
 			$incident->incident_zoom = intval($post->incident_zoom);
+			$incident->incident_default_zoom = $incident->incident_zoom;
+
 		}
 		// Tag this as a report that needs to be sent out as an alert
 		if ($incident->incident_active == 1 AND $incident->incident_alert_status != 2)

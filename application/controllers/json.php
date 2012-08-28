@@ -888,9 +888,20 @@ class Json_Controller extends Template_Controller {
 		// Build the predicate list first because the Database library
 		// doesn't 
 		$incident_where = "1=1";
-		if (Incident_Model::is_valid_incident($incident_id))
+		if (Incident_Model::is_valid_incident($incident_id, FALSE))
 		{
-			$incident_where = sprintf('location.incident_id = %d', $incident_id);
+			$incident_where = array();
+			$incident_where['location.incident_id'] = $incident_id;
+		}
+
+		if (isset($_GET['c']) AND Category_Model::is_valid_category(intval($_GET['c'])))
+		{
+			if ( ! is_array($incident_where))
+			{
+				$incident_where = array();
+			}
+
+			$incident_where['category.id'] = intval($_GET['c']);
 		}
 
 		// Get the locations
