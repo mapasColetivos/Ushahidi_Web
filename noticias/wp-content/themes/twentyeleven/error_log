@@ -1,6 +1,0 @@
-[30-Jan-2012 11:23:35] PHP Fatal error:  Call to undefined function  get_header() in /home/mapascol/public_html/noticias/wp-content/themes/twentyeleven/index.php on line 15
-[31-Jan-2012 09:45:42] PHP Fatal error:  Call to undefined function  get_header() in /home/mapascol/public_html/noticias/wp-content/themes/twentyeleven/index.php on line 15
-[01-Feb-2012 20:42:49] PHP Fatal error:  Call to undefined function  get_header() in /home/mapascol/public_html/noticias/wp-content/themes/twentyeleven/index.php on line 15
-[03-Feb-2012 18:11:21] PHP Fatal error:  Call to undefined function  get_header() in /home/mapascol/public_html/noticias/wp-content/themes/twentyeleven/index.php on line 15
-[05-Feb-2012 17:03:50] PHP Fatal error:  Call to undefined function  get_header() in /home/mapascol/public_html/noticias/wp-content/themes/twentyeleven/index.php on line 15
-[08-Feb-2012 08:25:38] PHP Fatal error:  Call to undefined function  get_header() in /home/mapascol/public_html/noticias/wp-content/themes/twentyeleven/index.php on line 15

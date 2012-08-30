@@ -1,6 +1,0 @@
-[30-Jan-2012 08:41:50] PHP Fatal error:  Call to undefined function  get_header() in /home/mapascol/public_html/noticias/wp-content/themes/f8-lite/index.php on line 1
-[31-Jan-2012 09:34:25] PHP Fatal error:  Call to undefined function  get_header() in /home/mapascol/public_html/noticias/wp-content/themes/f8-lite/index.php on line 1
-[01-Feb-2012 20:40:14] PHP Fatal error:  Call to undefined function  get_header() in /home/mapascol/public_html/noticias/wp-content/themes/f8-lite/index.php on line 1
-[03-Feb-2012 17:16:28] PHP Fatal error:  Call to undefined function  get_header() in /home/mapascol/public_html/noticias/wp-content/themes/f8-lite/index.php on line 1
-[05-Feb-2012 15:12:39] PHP Fatal error:  Call to undefined function  get_header() in /home/mapascol/public_html/noticias/wp-content/themes/f8-lite/index.php on line 1
-[08-Feb-2012 06:28:08] PHP Fatal error:  Call to undefined function  get_header() in /home/mapascol/public_html/noticias/wp-content/themes/f8-lite/index.php on line 1
