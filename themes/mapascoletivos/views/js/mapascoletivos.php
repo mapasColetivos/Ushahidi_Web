@@ -48,10 +48,6 @@ if (window.Ushahidi) {
 		// Close all popups
 		this.closePopups();
 
-		// Simulate 1500ms delay
-		var _start = new Date().getTime();
-		// while ((new Date().getTime() - _start) < 1500){ }
-
 		// Cache the currently selected feature
 		this._selectedFeature = event.feature;
 
@@ -83,9 +79,6 @@ if (window.Ushahidi) {
 					event.feature.popup = popup;
 					context._olMap.addPopup(popup);
 					popup.show();
-
-					// Close any popups
-					// context.closePopups();
 
 					// Register the popup
 					context.registerPopup(popup);
