@@ -263,16 +263,13 @@ class reports_Core {
 			}
 		}
 		
-		// Approval Status: Only set if user has permission
-		if (isset($post->incident_active) AND Auth::instance()->has_permission('reports_approve'))
-		{
-			$incident->incident_active = $post->incident_active;
-		}
-		// Verification status:  Only set if user has permission
-		if (isset($post->incident_verified) AND Auth::instance()->has_permission('reports_verify'))
-		{
-			$incident->incident_verified = $post->incident_verified;
-		}
+		// Automatically verify all incidents and allow them to be
+		// visible on the map
+		$incident->incident_active = 1;
+		$incident->incident_verified = 1;
+
+		// Privacy of the incident
+		$incident->incident_privacy = $post->incident_privacy;
 		
 		// Incident zoom
 		if ( ! empty($post->incident_zoom))

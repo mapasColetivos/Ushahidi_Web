@@ -754,4 +754,18 @@ class Incident_Model extends ORM {
 		return ($this->user_id == $user->id) OR $user->username == "admin";
 	}
 
+	/**
+	 * Gets the category IDs associated with the current incident
+	 * @return array
+	 */
+	public function get_categories_array()
+	{
+		$categories = array();
+		foreach ($this->incident_category as $category)
+		{
+			$categories[] = $category->category_id;
+		}
+		return $categories;
+	}
+
 }

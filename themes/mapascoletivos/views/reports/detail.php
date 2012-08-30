@@ -35,10 +35,10 @@
 		<div id="left_column">
 			<!-- TODO Finish up the email button -->
 			<div id="convidar">
-				<?php echo html::anchor("", "Convidar"); ?>
+				<?php echo html::anchor("#", "Convidar", array('class'=>'btn_convidar')); ?>
 			</div>
 			<div class="links">
-				<?php echo html::anchor("locations/submit/".$incident->id, "Colobar", array('class' => 'btn_collaborate')); ?>
+				<?php echo html::anchor("locations/create/".$incident->id, "Colobar", array('class' => 'btn_collaborate')); ?>
 			</div>
 			<!-- /TODO -->
 
@@ -175,12 +175,12 @@
 
 			<!-- map display -->
 			<div id="user_map">
-				<?php if($incident->incident_kml->count()): ?>
+				<?php if ($incident->incident_kml->count()): ?>
 				<!-- incident layers -->
 				<div class="layers-overlay" style="display:none;">
 					<div class="map-layers">
 						<ul class="layers-listing">
-					 	<?php foreach ($incident->incient_kml as $kml): ?>
+					 	<?php foreach ($incident->incident_kml as $kml): ?>
 					 	<?php if ($kml->layer->loaded): ?>
 					 		<li>
 					 			<a href="#" data-layer-id="<?php echo $kml->layer_id; ?>" data-layer-name="<?php echo $kml->layer->layer_name; ?>">

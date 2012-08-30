@@ -158,7 +158,7 @@
 						<!-- List the maps (incidents) created by the visited user -->
 						<ul class="map_list" id="created_counter_list">
 						<?php foreach ($visited_user->incident as $incident): ?>
-							<?php if ( ! $incident->incident_privacy): ?>
+							<?php if ( ! $incident->incident_privacy OR $has_view_access): ?>
 							<li>
 								<?php echo html::anchor("reports/view/".$incident->id, $incident->incident_title); ?>
 							</li>
@@ -169,7 +169,7 @@
 						<!-- List the maps being collaborated on -->
 						<ul class="map_list" id="available_counter_list" style='display:none'>
 						<?php foreach ($visited_user->get_incidents_collaborated_on() as $incident): ?>
-							<?php if ( ! $incident->incident_privacy): ?>
+							<?php if ( ! $incident->incident_privacy OR $has_view_access): ?>
 							<li>
 								<?php echo html::anchor("reports/view/".$incident->id, $incident->incident_title); ?>
 							</li>
@@ -181,7 +181,7 @@
 						<ul class="map_list" id="following_counter_list" style='display:none'>
 						<?php foreach ($visited_user->incident_follows as $follow): ?>
 							<?php $incident = $follow->incident; ?>
-							<?php if ( ! $incident->incident_privacy): ?>
+							<?php if ( ! $incident->incident_privacy OR $has_view_access): ?>
 							<li>
 								<?php echo html::anchor("reports/view/".$incident->id, $incident->incident_title); ?>
 							</li>
@@ -201,19 +201,21 @@
 				<h1 id="map_title">Geografia pessoal</h1>
 
 				<div class="map-filters">
+					<?php if ($visited_user->layer->count()): ?>
 					<div id="menu_filters">
 						<a href="#" class="filter-switch">
 							<span><?php echo Kohana::lang('ui_main.location_layers'); ?></span>
 							<?php echo html::image("media/img/arrow_down_gray.png", "", array('border'=>'0')); ?>
 						</a>
 					</div>
+					<?php endif; ?>
 				</div>
 			</div>
 
 			<!-- map display -->
 			<div id="user_map">
 
-				<?php if($visited_user->layer->count()): ?>
+				<?php if ($visited_user->layer->count()): ?>
 				<!-- user layers -->
 				<div class="layers-overlay" style="display:none;">
 					<div class="map-layers">

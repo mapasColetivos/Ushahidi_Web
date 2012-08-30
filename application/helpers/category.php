@@ -240,16 +240,30 @@ class category_Core {
 		foreach ($category_data as $id => $category)
 		{
 			// Determine the category class
-			$category_class = ($category['parent_id'] > 0)? " class=\"report-listing-category-child\"" : "";
+			$category_class = ($category['parent_id'] > 0) ? " class=\"report-listing-category-child\"" : "";
 			
-			$category_image = $category['category_image_thumb'] ? html::image(array('src'=> url::convert_uploaded_to_abs($category['category_image_thumb']), 'style'=>'float:left;padding-right:5px;')) : NULL;
-			
-			$tree_html .= "<li".$category_class.">"
-							. "<a href=\"#\" class=\"cat_selected\" id=\"filter_link_cat_".$id."\">"
-							. "<span class=\"item-swatch\" style=\"background-color: #".$category['category_color']."\">$category_image</span>"
-							. "<span class=\"item-title\">".strip_tags($category['category_title'])."</span>"
-							. "<span class=\"item-count\">".$category['report_count']."</span>"
-							. "</a></li>";
+			$category_image = "";
+			$color_css = 'class="item-swatch" style="background-color: #"'.$category['category_color'].'"';
+
+			if ( ! empty($category['category_image_thumb']))
+			{
+				$category_image = html::image(
+					array('src'=> url::convert_uploaded_to_abs($category['category_image_thumb']),
+						'style'=>'float:left;padding-right:5px;'));
+				$color_css = "";
+			}
+
+			// Template for the category item listing
+			$tree_html .= '<li %s>'
+			    . '<a href="#" class="cat_selected" id="filter_link_cat_%s">'
+			    . '<span %s>%s</span>'
+			    . '<span class="title-title">%s</span>'
+			    . '<span class="item-count">%s</span>'
+			    . '</a>'
+			    . '</li>';
+
+			$tree_html = sprintf($tree_html, $category_class, $id, $color_css, $category_image,
+			    strip_tags($category['category_title']), $category['report_count']);
 							
 			$tree_html .= self::_generate_treeview_html($category['children']);
 		}

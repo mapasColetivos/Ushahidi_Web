@@ -53,7 +53,7 @@ jQuery(window).load(function() {
 	};
 
 	// Initialize the map
-	map = new Ushahidi.Map('user_map', mapConfig);
+	map = new mapasColetivos.Map('user_map', mapConfig);
 	map.addLayer(Ushahidi.GEOJSON, {
 		name: "<?php echo $layer_name; ?>",
 		url: "<?php echo $markers_url; ?>",

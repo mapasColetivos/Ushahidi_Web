@@ -236,16 +236,15 @@ class Reports_Controller extends Main_Controller {
 
 	/**
 	 * Submits a new report.
+	 * @param  int  $incident_id When specified, loads an incident to be edited
 	 */
-	public function submit($id = FALSE, $saved = FALSE)
+	public function submit($incident_id = FALSE)
 	{
 		// User must be logged in order to submit a report
 		if ( ! $this->user OR ! Kohana::config('settings.allow_reports'))
 		{
 			url::redirect('login');
 		}
-
-		$db = new Database();
 
 		$this->template->header->this_page = 'reports_submit';
 		$this->template->content = new View('reports/submit');
@@ -258,27 +257,19 @@ class Reports_Controller extends Main_Controller {
 
 		// Setup and initialize form field names
 		$form = array(
+			'incident_id' => '',
 			'incident_title' => '',
 			'incident_description' => '',
-			'incident_date' => '',
-			'incident_hour' => '',
-			'incident_minute' => '',
-			'incident_ampm' => '',
-			'latitude' => '',
-			'longitude' => '',
+			'incident_date' => date("m/d/Y",time()),
+			'incident_hour' => date('g'),
+			'incident_minute' => date('i'),
+			'incident_ampm' => date('a'),
 			'geometry' => array(),
-			'location_name' => '',
-			'country_id' => '',
-			'country_name'=>'',
+			'country_id' => Kohana::config('settings.default_country'),
+			'country_name' => '',
 			'incident_category' => array(),
-			'incident_news' => array(),
-			'incident_video' => array(),
-			'incident_photo' => array(),
 			'incident_zoom' => '',
-			'person_first' => '',
-			'person_last' => '',
-			'person_email' => '',
-			'form_id'	  => '',
+			'form_id' => '',
 			'tags' => '',
 			'custom_field' => array(),
 			'default_zoom' => Kohana::config('settings.default_zoom'),
@@ -287,17 +278,17 @@ class Reports_Controller extends Main_Controller {
 			'incident_privacy' => FALSE
 		);
 
+		// Check if the incident
+		$incident = NULL;
+		if (Incident_Model::is_valid_incident($incident_id))
+		{
+			$incident = ORM::factory('incident', $incident_id);
+			$this->_populate_form_fields($form, $incident);
+		}
+
 		// Copy the form as errors, so the errors will be stored with keys corresponding to the form field names
 		$errors = $form;
 		$form_error = FALSE;
-		$form_saved = ($saved == 'saved');
-
-		// Initialize Default Values
-		$form['incident_date'] = date("m/d/Y",time());
-		$form['incident_hour'] = date('g');
-		$form['incident_minute'] = date('i');
-		$form['incident_ampm'] = date('a');
-		$form['country_id'] = Kohana::config('settings.default_country');
 
 		// Initialize Default Value for Hidden Field Country Name, just incase Reverse Geo coding yields no result
 		$country_name = ORM::factory('country',$form['country_id']);
@@ -306,7 +297,7 @@ class Reports_Controller extends Main_Controller {
 		// Initialize custom field array
 		$form['form_id'] = 1;
 		$form_id = $form['form_id'];
-		$form['custom_field'] = customforms::get_custom_form_fields($id,$form_id,true);
+		$form['custom_field'] = customforms::get_custom_form_fields($incident_id, $form_id, TRUE);
 
 		// GET custom forms
 		$forms = array();
@@ -314,8 +305,8 @@ class Reports_Controller extends Main_Controller {
 		{
 			$forms[$custom_forms->id] = $custom_forms->form_title;
 		}
-		$this->template->content->forms = $forms;
 
+		$this->template->content->forms = $forms;
 
 		// Check, has the form been submitted, if so, setup validation
 		if ($_POST)
@@ -327,7 +318,11 @@ class Reports_Controller extends Main_Controller {
 			if (reports::validate($post))
 			{
 				// STEP 1: SAVE INCIDENT
-				$incident = new Incident_Model();
+				if ( ! $incident instanceof Incident_Model)
+				{
+					$incident = new Incident_Model();
+				}
+
 				reports::save_report($post, $incident);
 
 				// STEP 2: SAVE CATEGORIES
@@ -336,11 +331,11 @@ class Reports_Controller extends Main_Controller {
 				// STEP 3: SAVE CUSTOM FORM FIELDS
 				reports::save_custom_fields($post, $incident);
 
-				// Run evnets
+				// Run events
 				Event::run('ushahidi_action.report_submit', $post);
 				Event::run('ushahidi_action.report_add', $incident);
 
-				url::redirect('reports/add_location/'.$incident->id);
+				url::redirect('locations/create/'.$incident->id);
 			}
 
 			// No! We have validation errors, we need to show the form again, with the errors
@@ -355,12 +350,7 @@ class Reports_Controller extends Main_Controller {
 			}
 		}
 
-		// Retrieve Country Cities
-		$default_country = Kohana::config('settings.default_country');
-		$this->template->content->cities = $this->_get_cities($default_country);
-		$this->template->content->multi_country = Kohana::config('settings.multi_country');
-
-		$this->template->content->id = $id;
+		$this->template->content->form_id = $form_id;
 		$this->template->content->form = $form;
 		$this->template->content->errors = $errors;
 		$this->template->content->form_error = $form_error;
@@ -376,7 +366,7 @@ class Reports_Controller extends Main_Controller {
 
 		// Retrieve Custom Form Fields Structure
 		$this->template->content->custom_forms = new View('reports/submit_custom_forms');
-		$disp_custom_fields = customforms::get_custom_form_fields($id, $form_id, FALSE);
+		$disp_custom_fields = customforms::get_custom_form_fields($incident_id, $form_id, FALSE);
 		$this->template->content->disp_custom_fields = $disp_custom_fields;
 		$this->template->content->stroke_width_array = $this->_stroke_width_array();
 		$this->template->content->custom_forms->disp_custom_fields = $disp_custom_fields;
@@ -393,15 +383,15 @@ class Reports_Controller extends Main_Controller {
 		$this->themes->js->incident_zoom = FALSE;
 		$this->themes->js->default_map = Kohana::config('settings.default_map');
 		$this->themes->js->default_zoom = Kohana::config('settings.default_zoom');
-		if ( ! $form['latitude'] OR ! $form['latitude'])
+		if ( ! $form['default_lat'] OR ! $form['default_lon'])
 		{
 			$this->themes->js->latitude = Kohana::config('settings.default_lat');
 			$this->themes->js->longitude = Kohana::config('settings.default_lon');
 		}
 		else
 		{
-			$this->themes->js->latitude = $form['latitude'];
-			$this->themes->js->longitude = $form['longitude'];
+			$this->themes->js->latitude = $form['default_lat'];
+			$this->themes->js->longitude = $form['default_lon'];
 		}
 		$this->themes->js->geometries = $form['geometry'];
 
@@ -732,6 +722,25 @@ class Reports_Controller extends Main_Controller {
 	}
 
 	/**
+	 * Populates the form fields with the values of the specified
+	 * incident
+	 *
+	 * @param  array  $form  Memory reference for the form fields
+	 * @param  Model_Incident $incident ORM reference for the incident
+	 */
+	private function _populate_form_fields(array & $form, $incident)
+	{
+		$form['incident_id'] = $incident->id;
+		$form['incident_title'] = $incident->incident_title;
+		$form['incident_description'] = $incident->incident_description;
+		$form['incident_privacy'] = $incident->incident_privacy;
+		$form['default_lon'] = $incident->incident_default_lon;
+		$form['default_lat'] = $incident->incident_default_lat;
+		$form['default_zoom'] = $incident->incident_default_zoom;
+		$form['incident_category'] = $incident->get_categories_array();
+	}
+
+	/**
 	 * Ajax call to update Incident Reporting Form
     */
     public function switch_form()
@@ -777,38 +786,12 @@ class Reports_Controller extends Main_Controller {
     }
 
     /**
-     * Displays the add location page
+     * Displays the incident submit page in edit mode
+     * This is an alias for the submit() method
      */
-    public function add_location($incident_id)
+    public function edit($incident_id)
     {
-    	// Validate the specified incident ID and ensure the
-    	// user is logged in before proceeding
-    	if ( ! Incident_Model::is_valid_incident($incident_id, FALSE) OR ! $this->user)
-    	{
-    		url::redirect('main');
-    	}
-
-    	// Load the incident
-    	$incident = ORM::factory('incident', $incident_id);
-
-    	// Set the view properties
-    	$this->template->content = new View('reports/add_location');
-    	$this->template->content->user = $this->user;
-    	$this->template->content->incident = $incident;
-    	$this->template->content->incident_layers = $incident->get_layers();
-
-    	$header_js = View::factory('reports/view_js');
-    	$header_js->latitude = $incident->incident_default_lat;
-    	$header_js->longitude = $incident->incident_default_lon;
-    	$header_js->map_zoom = $incident->incident_zoom;
-    	$header_js->layer_name = $incident->incident_title;
-    	$header_js->markers_url = "json/locations/".$incident->id;
-
-		$this->themes->map_enabled = TRUE;
-    	$this->themes->js = $header_js;
-		$this->template->header->header_block = $this->themes->header_block();
-		$this->template->footer->footer_block = $this->themes->footer_block();
-
+    	$redirect_uri = sprintf("reports/submit/%s", $incident_id);
+    	url::redirect($redirect_uri);
     }
-
 }

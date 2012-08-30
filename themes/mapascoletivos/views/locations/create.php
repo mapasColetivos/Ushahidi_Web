@@ -23,26 +23,33 @@
 						<ul id="controlToggle"> 
 							<li>
 								<input style="display:none;" type="radio" name="type" value="none" 
-								    id="noneToggle" data-image="arrow"
-								    onclick="toggleControl('select');andControl('navigation');" checked="checked" />
+								    id="noneToggle" data-image="arrow" checked="checked" />
 								<label for="noneToggle">
-									<img title="clique com o cursor sobre o ponto para editá-lo" id="img_arrow"
-									    src="<?php echo url::base() ?>media/img/toolbar/arrow.png" />
+								<?php 
+									echo html::image("media/img/toolbar/arrow.png", "clique com o cursor sobre o ponto para editá-lo", 
+									    array('id'=>'img_arrow'));
+								?>
 								</label>
 							</li>
 							<li> 
 								<input style="display:none;" type="radio" name="type" 
-								    value="point" id="pointToggle" onclick="toggleControl('point');" data-image="location"  />
+								    value="point" id="pointToggle" data-image="location"  />
 								<label for="pointToggle">
-									<img title="criar novo ponto" for="pointToggle"
-									    id="img_location" src="<?php echo url::site() ?>media/img/toolbar/location.png" />
+								<?php
+									echo html::image("media/img/toolbar/location.png", "criar novo ponto", 
+										array('for'=>"pointToggle", 'id'=>'img_location'));
+								?>
 								</label> 
 							</li>
 							<li>
-								<a rel="layer" href="<?php echo url::site().'index.php/kml/index/'.$incident->id; ?>">
-									<img src="<?php echo url::base() ?>/media/img/toolbar/upload.png"
-									    data-image="upload" title="importar camadas (.KML, .KMZ)"/>
-								</a>
+							<?php 
+								echo html::anchor("index.php/kml/index/".$incident->id,
+									// Image
+									html::image("media/img/toolbar/upload.png", "importar camadas (.KML, .KMZ)", 
+										array('data-image'=>'upload')),
+									// Anchor attributes
+									array('rel'=>'layer'));
+							?>
 							</li>
 							<li>
 								<a href="<?php echo url::site().'index.php/locations/export/'.$incident->id; ?>" class="save-rep-btn">
@@ -61,7 +68,7 @@
 
 				<div id="user_map" class="report_map">
 
-					<?php if($incident->incident_kml->count()): ?>
+					<?php if ($incident->incident_kml->count()): ?>
 					<!-- incident layers -->
 					<div class="layers-overlay" style="display:none;">
 						<div class="map-layers">
@@ -88,3 +95,9 @@
 		</div>
 	</div>
 </div>
+
+<script type="text/javascript">
+$(function(){
+	$("#controlToggle")
+});
+</script>

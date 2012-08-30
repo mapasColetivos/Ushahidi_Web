@@ -16,7 +16,7 @@
  * @license    http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL)
  */
 
-class User_Followers_Model extends ORM {
+class User_Follower_Model extends ORM {
 
 	/**
 	 * Database table name

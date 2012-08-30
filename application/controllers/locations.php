@@ -1,25 +1,53 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-
+/**
+ * This controller is used to create/edit/delete/export locations
+ *
+ * PHP version 5
+ * LICENSE: This source file is subject to LGPL license
+ * that is available through the world-wide-web at the following URI:
+ * http://www.gnu.org/copyleft/lesser.html
+ * @author     Ushahidi Team <team@ushahidi.com>
+ * @package    Ushahidi - http://github.com/ushahidi/Ushahidi_Web
+ * @copyright  Ushahidi - http://www.ushahidi.com
+ * @license    http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL)
+ */
 class Locations_Controller extends Main_Controller {
 
-	function is_ajax(){
-		return (isset($_SERVER['HTTP_X_REQUESTED_WITH']) AND 
-          strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest');
-	}
-	
-	function __construct()
+	/**
+	 * Loads the create location page
+	 */ 
+	public function create($incident_id = FALSE)
 	{
-		parent::__construct();
-		$this->user = Session::instance()->get('auth_user',FALSE);
+    	// Validate the specified incident ID and ensure the
+    	// user is logged in before proceeding
+    	if ( ! Incident_Model::is_valid_incident($incident_id, FALSE) OR ! $this->user)
+    	{
+    		url::redirect('main');
+    	}
+
+    	// Load the incident
+    	$incident = ORM::factory('incident', $incident_id);
+
+    	// Set the view properties
+    	$this->template->content = new View('locations/create');
+    	$this->template->content->user = $this->user;
+    	$this->template->content->incident = $incident;
+    	$this->template->content->incident_layers = $incident->get_layers();
+
+    	$header_js = View::factory('reports/view_js');
+    	$header_js->latitude = $incident->incident_default_lat;
+    	$header_js->longitude = $incident->incident_default_lon;
+    	$header_js->map_zoom = $incident->incident_zoom;
+    	$header_js->layer_name = $incident->incident_title;
+    	$header_js->markers_url = "json/locations/".$incident->id;
+
+		$this->themes->map_enabled = TRUE;
+    	$this->themes->js = $header_js;
+		$this->template->header->header_block = $this->themes->header_block();
+		$this->template->footer->footer_block = $this->themes->footer_block();
 	}
 
-	
-	public function index()
-	{
-
-	}
-	
 	public function popup($id = FALSE)
 	{
 		$this->template->header = new View('header_clean');
@@ -66,7 +94,7 @@ class Locations_Controller extends Main_Controller {
 		$this->template->header = '';
 		$this->template->footer = '';	
 		$this->template->content = '';
-		
+
 		if ($_POST)
 		{
 			$layer_id = null;
@@ -74,21 +102,23 @@ class Locations_Controller extends Main_Controller {
 			{
 				$layer_id = $_POST["layer_id"];
 			}
-		
+
 			if ($id == 0)
 			{
 				if ( ! $layer_id)
 				{
 					$layer_id = ORM::factory("location_layer")
-								->where("incident_id",$incident_id)
-								->find()->id;
+					    ->where("incident_id", $incident_id)
+					    ->find()->id;
 				}
+
 				$new_location = $this->_save_new_location(
 					$_POST["location_name"],
 					$_POST["location_lat"],
 					$_POST["location_lon"],
 					$layer_id,
 					$incident_id);
+
 				$id = $new_location->id;
 			}
 		
@@ -292,78 +322,6 @@ class Locations_Controller extends Main_Controller {
 			$this->template->content->post = 0;			
 		}
 	}
-	
-	public function submit($id = FALSE, $umessage = FALSE){
-		// First, are we allowed to submit new reports?
-		if ( ! Kohana::config('settings.allow_reports') or ! $this->user)
-		{
-			url::redirect('login');
-		}
-
-		$this->template->header->this_page = 'reports_submit';
-		$this->template->header->explode_content = TRUE;
-		$this->template->content = new View('locations_submit');
-		$this->template->content->ajax_request = "NO";
-
-		if ($umessage)
-		{
-			$this->template->content->umessage = $umessage;
-		}
-		else
-		{
-			$this->template->content->umessage = false;
-		}
-
-	    $this->template->content->layers = ORM::factory('location_layer')->where('incident_id',$id)->find_all();
-	    $this->template->content->user = $this->user;
-	    $incident = ORM::factory('location_layer')->where('incident_id',$id)->find();
-		
-		// setup and initialize form field names
-		$form = array(
-			'latitude' => '',
-			'longitude' => '',
-			'zoom' => '',
-			'location_name' => '',
-			'country_id' => '',
-			'incident_category' => array(),
-			'incident_news' => array(),
-			'incident_video' => array(),
-			'incident_photo' => array(),
-			'form_id'	  => '',
-			'custom_field' => array(),
-			'points' => array()
-		);
-		
-		//	copy the form as errors, so the errors will be stored with keys corresponding to the form field names
-		$errors = $form;
-		$form_error = FALSE;
-		$form_saved = FALSE;
-		// check, has the form been submitted, if so, setup validation	
-		$this->template->content->form = $form;
-
-		$incident = ORM::factory('incident')->where('id',$id)->find();
-		$this->template->content->incident = $incident;
-
-		// Javascript Header
-		$this->themes->map_enabled = TRUE;
-		$this->themes->datepicker_enabled = TRUE;
-		$this->themes->treeview_enabled = TRUE;
-		$this->themes->js = new View('locations_submit_js');
-		$this->themes->js->incident = $incident;
-		$this->themes->js->default_map = Kohana::config('settings.default_map');
-		
-		$this->themes->js->latitude = $incident->incident_default_lat;
-		$this->themes->js->longitude = $incident->incident_default_lon;
-		$this->themes->js->zoom = $incident->incident_default_zoom;
-		
-		$this->themes->js->markers = $incident->locations;
-		$this->themes->js->user_id = $this->user->id;		
-
-		// Rebuild Header Block
-		$this->template->header->header_block = $this->themes->header_block();
-		$this->template->content->can_edit = ($this->user->id == $incident->owner_id);
-	}
-
 
     function export($id = false)
     {

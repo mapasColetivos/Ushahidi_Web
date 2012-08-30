@@ -88,7 +88,8 @@
 						$li = '<li>'
 						    . '<a href="#" id="cat_%s" data-category-id="'.$category->id.'">'
 						    . '<span %s>%s</span><span class="category-title">%s</span>'
-						    . '</a>';
+						    . '</a>'
+						    . '</li>';
 						echo sprintf($li, $category->id, $color_css, $category_image, $category->category_title);						
 					}
 				?>

@@ -91,47 +91,24 @@
 			map.addControl(new OpenLayers.Control.Scale('mapScale'));
 			
 			// Vector/Drawing Layer Styles
-			style1 = new OpenLayers.Style({
+			style = new OpenLayers.Style({
 				pointRadius: "8",
 				fillColor: "#ffcc66",
 				fillOpacity: "0.7",
 				strokeColor: "#CC0000",
 				strokeWidth: 2.5,
 				graphicZIndex: 1,
-				externalGraphic: "<?php echo url::file_loc('img').'media/img/openlayers/marker.png' ;?>",
-				graphicOpacity: 1,
-				graphicWidth: 21,
-				graphicHeight: 25,
+				externalGraphic: "<?php echo url::file_loc('img').'media/img/openlayers/location-pin.png' ;?>",
+				graphicOpacity: 0.8,
+				graphicWidth: 19,
+				graphicHeight: 35,
 				graphicXOffset: -14,
 				graphicYOffset: -27
-			});
-			style2 = new OpenLayers.Style({
-				pointRadius: "8",
-				fillColor: "#30E900",
-				fillOpacity: "0.7",
-				strokeColor: "#197700",
-				strokeWidth: 2.5,
-				graphicZIndex: 1,
-				externalGraphic: "<?php echo url::file_loc('img').'media/img/openlayers/marker-green.png' ;?>",
-				graphicOpacity: 1,
-				graphicWidth: 21,
-				graphicHeight: 25,
-				graphicXOffset: -14,
-				graphicYOffset: -27
-			});
-			style3 = new OpenLayers.Style({
-				pointRadius: "8",
-				fillColor: "#30E900",
-				fillOpacity: "0.7",
-				strokeColor: "#197700",
-				strokeWidth: 2.5,
-				graphicZIndex: 1
 			});
 			
 			var vlayerStyles = new OpenLayers.StyleMap({
-				"default": style1,
-				"select": style2,
-				"temporary": style3
+				"default": style,
+				"select": style,
 			});
 			
 			// Create Vector/Drawing layer
@@ -585,36 +562,6 @@
 					selectCtrl.unselect(selectedFeatures[f]);
 				}
 				selectCtrl.activate();
-			});
-
-			// Detect Dropdown Select
-			$("#select_city").change(function() {
-				var lonlat = $(this).val().split(",");
-				if ( lonlat[0] && lonlat[1] )
-				{
-					// Clear the map first
-					vlayer.removeFeatures(vlayer.features);
-					$('input[name="geometry[]"]').remove();
-
-					point = new OpenLayers.Geometry.Point(lonlat[0], lonlat[1]);
-					OpenLayers.Projection.transform(point, proj_4326,proj_900913);
-
-					f = new OpenLayers.Feature.Vector(point);
-					vlayer.addFeatures(f);
-
-					// create a new lat/lon object
-					myPoint = new OpenLayers.LonLat(lonlat[0], lonlat[1]);
-					myPoint.transform(proj_4326, map.getProjectionObject());
-
-					// display the map centered on a latitude and longitude
-					map.setCenter(myPoint, <?php echo $default_zoom; ?>);
-
-					// Update form values (jQuery)
-					$("#location_name").attr("value", $('#select_city :selected').text());
-
-					$("#latitude").attr("value", lonlat[1]);
-					$("#longitude").attr("value", lonlat[0]);
-				}
 			});
 
 		});

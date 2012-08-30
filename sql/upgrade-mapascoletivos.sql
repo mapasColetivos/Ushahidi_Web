@@ -9,6 +9,7 @@ DROP TABLE IF EXISTS `mhi_users`;
 
 -- Change `owner_id` columns to `user_id` for consistency
 UPDATE `incident` SET `user_id` = `owner_id`;
+UPDATE `incident` SET `incident_zoom` = `incident_default_zoom`;
 ALTER TABLE `incident` DROP COLUMN `owner_id`;
 
 ALTER TABLE `incident_kml` CHANGE `owner_id` `user_id` INT(11);

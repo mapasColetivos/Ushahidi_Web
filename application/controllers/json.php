@@ -8,7 +8,7 @@
  * that is available through the world-wide-web at the following URI:
  * http://www.gnu.org/copyleft/lesser.html
  * @author	   Ushahidi Team <team@ushahidi.com>
- * @package	   Ushahidi - http://source.ushahididev.com
+ * @package	   Ushahidi - https://github.com/ushahidi/Ushahidi_Web
  * @subpackage Controllers
  * @copyright  Ushahidi - http://www.ushahidi.com
  * @license	   http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL)
@@ -871,8 +871,6 @@ class Json_Controller extends Template_Controller {
 	 */
 	public function locations($incident_id = NULL)
 	{
-		$db = Database::instance();
-
 		// Columns to select
 		$columns = array(
 			'DISTINCT location.id',
@@ -882,7 +880,9 @@ class Json_Controller extends Template_Controller {
 			'location.latitude',
 			'location.longitude',
 			'category.category_title',
-			'category.category_color'
+			'category.category_color',
+			'category.category_image',
+			'category.category_image_thumb'
 		);
 
 		// Build the predicate list first because the Database library
@@ -894,6 +894,7 @@ class Json_Controller extends Template_Controller {
 			$incident_where['location.incident_id'] = $incident_id;
 		}
 
+		// Category ID
 		if (isset($_GET['c']) AND Category_Model::is_valid_category(intval($_GET['c'])))
 		{
 			if ( ! is_array($incident_where))
@@ -904,8 +905,20 @@ class Json_Controller extends Template_Controller {
 			$incident_where['category.id'] = intval($_GET['c']);
 		}
 
+		// User ID
+		if (isset($_GET['uid']) AND User_Model::get_user_by_id($_GET['uid']))
+		{
+			if ( ! is_array($incident_where))
+			{
+				$incident_where = array();				
+			}
+
+			$incident_where['location.user_id'] = intval($_GET['uid']);
+		}
+
 		// Get the locations
-		$markers_result = $db->from('location')
+		$markers_result = Database::instance()
+		    ->from('location')
 		    ->select($columns)
 		    ->join('incident', 'incident.id', 'location.incident_id')
 		    ->join('incident_category', 'incident_category.incident_id', 'incident.id')
@@ -917,6 +930,14 @@ class Json_Controller extends Template_Controller {
 		$markers = array();
 		foreach ($markers_result as $marker)
 		{
+			$icon = ! empty($marker->category_image)
+			    ? url::file_loc('img').'media/uploads/'.$marker->category_image
+			    : "";
+
+			$thumb = ! empty($marker->category_image_thumb)
+			    ? url::file_loc('img').'media/uploads/'.$marker->category_image_thumb
+			    : "";
+
 			$location_item = array(
 				"type" => "Feature",
 				"properties" => array(
@@ -925,8 +946,8 @@ class Json_Controller extends Template_Controller {
 					"link" => "",
 					"category" => $marker->category_title,
 					"color" => $marker->category_color,
-					"thumb" => "",
-					"icon" => "",
+					"thumb" => $thumb,
+					"icon" => $icon,
 				),
 				"geometry" => array(
 					"type" => "Point",
@@ -945,70 +966,26 @@ class Json_Controller extends Template_Controller {
 	}
 
 	/**
-	 * Gets all the location entries created by the specified user
-	 * and outputs them as GeoJSON for display on the map
+	 * Generates and outputs the HTML for the popup window
+	 * of the specified location. If the specified location is
+	 * invalid, a 404 status code is returned
 	 *
-	 * @param  int  $user_id ID of the user
+	 * @param  int  $location_id
 	 */
-	public function user_locations($user_id)
+	public function location_popup($location_id)
 	{
-		$markers = array();
-
-		// Verify the user exists
-		if (User_Model::get_user_by_id($user_id))
+		if (Location_Model::is_valid_location($location_id))
 		{
-			// Columns to select
-			$columns = array(
-				'DISTINCT location.id',
-				'location.incident_id',
-				'incident.incident_title',
-				'location.location_name',
-				'location.latitude',
-				'location.longitude',
-				'category.category_title',
-				'category.category_color'
-			);
-
-			// Get all location entries created by the user
-			$markers_result = Database::instance()
-			    ->from('location')
-			    ->select($columns)
-		        ->join('incident', 'incident.id', 'location.incident_id')
-		        ->join('incident_category', 'incident_category.incident_id', 'incident.id')
-		        ->join('category', 'category.id', 'incident_category.category_id')
-		        ->where('incident.incident_active', 1)
-		        ->where('location.user_id', $user_id)
-		        ->get();
-
-		    // Generate GeoJSON
-			foreach ($markers_result as $marker)
-			{
-				$location_item = array(
-					"type" => "Feature",
-					"properties" => array(
-						"id" => $marker->id,
-						"name" => $marker->location_name,
-						"link" => "",
-						"category" => $marker->category_title,
-						"color" => $marker->category_color,
-						"thumb" => "",
-						"icon" => "",
-					),
-					"geometry" => array(
-						"type" => "Point",
-						"coordinates" => array($marker->longitude, $marker->latitude)
-					)
-				);
-
-				$markers[] = $location_item;
-			}
+			$popup = View::factory('locations/popup');
+			$popup->location = ORM::factory('location', $location_id);
+			$popup->video_embeder = new VideoEmbed();
+			
+			$popup->render(TRUE);
 		}
-
-		// Output
-		header("Content-type: application/json; charset=utf-8");
-		echo json_encode(array(
-			"type" => "FeatureCollection",
-			"features" => $markers
-		));
+		else
+		{
+			// Send a 404 - location not found
+			throw new Kohana_404_Exception;
+		}
 	}
 }

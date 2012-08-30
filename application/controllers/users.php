@@ -27,16 +27,24 @@ class Users_Controller extends Main_Controller {
             url::redirect('main');
         }
 
+        // Check for view access to private incidents (maps)
+        $has_view_access = FALSE;
+        if ($this->user)
+        {
+            $has_view_access = ($this->user->username == "admin" OR $this->user->user_id = $visited_user->id);
+        }
+
 		$this->template->content = new View('users/layout');
 		$this->template->content->visited_user = $visited_user;	
 		$this->template->content->visiting_user = $this->user;
         $this->template->content->users_following = $visited_user->get_following();
+        $this->template->content->has_view_access = $has_view_access;
 
 		// Javascript Header
 		$this->themes->map_enabled = TRUE;
 
         $this->themes->js = new View('reports/view_js');
-        $this->themes->js->markers_url = sprintf("json/user_locations/%d", $visited_user->id);
+        $this->themes->js->markers_url = sprintf("json/locations?uid=%d", $visited_user->id);
         $this->themes->js->layer_name = $visited_user->username."'s Pontos";
         $this->themes->js->map_zoom = NULL;
         $this->themes->js->latitude = Kohana::config('settings.default_lat');
@@ -232,13 +240,27 @@ class Users_Controller extends Main_Controller {
             // Set up validation
             $validation = Validation::factory($_POST)
                 ->pre_filter('trim')
-                ->add_rules('username', 'required')
+                ->add_rules('username', 'required', 'length[6,200]')
                 ->add_rules('email', 'required', 'email')
                 ->add_rules('password', 'required', 'length['.Kohana::config('auth.password_length').']')
                 ->add_callbacks('email', 'User_Model::unique_value_exists');
+
+            if ($validation->validate())
+            {
+                // Create the entry
+
+                // Send email
+
+                // Show message that an email has been sent
+            }
+            else
+            {
+                $form_error = TRUE;
+                $form = arr::overwrite($form, $validation->as_array());
+                $errors = arr::overwrite($errors, $validation->errors());
+            }
         }
-        
-		
+
         $this->template->content->form = $form;
         $this->template->content->errors = $errors;
         $this->template->content->form_error = $form_error;

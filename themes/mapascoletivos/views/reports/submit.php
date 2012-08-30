@@ -3,14 +3,14 @@
 		<!-- start report form block -->
 		
 		<?php print form::open(NULL, array('enctype' => 'multipart/form-data', 'id' => 'reportForm', 'name' => 'reportForm', 'class' => 'gen_forms')); ?>
-		<input type="hidden" name="latitude" id="latitude" value="<?php echo $form['default_lat']; ?>">
-		<input type="hidden" name="longitude" id="longitude" value="<?php echo $form['default_lon']; ?>">
-		<input type="hidden" name="country_name" id="country_name" value="<?php echo $form['country_name']; ?>" />
+		<input type="hidden" name="latitude" id="latitude" value="<?php echo $form['default_lat']; ?>" />
+		<input type="hidden" name="longitude" id="longitude" value="<?php echo $form['default_lon']; ?>" />
+		<input type="hidden" name="country_name" id="country_name" value="<?php echo $form['country_name']; ?>" />		
 		<input type="hidden" name="incident_zoom" id="incident_zoom" value="<?php echo $form['incident_zoom']; ?>" />
 		<div class="big-block">
 			<h1 style="margin-top:36px;"><?php echo Kohana::lang('ui_main.reports_submit_new'); ?></h1>
 			<div class="row">
-				<input type="hidden" name="form_id" id="form_id" value="<?php echo $id?>">
+				<input type="hidden" name="form_id" id="form_id" value="<?php echo $form_id?>">
 			</div>
 			<div class="report_left">
 				<div id="space"></div>

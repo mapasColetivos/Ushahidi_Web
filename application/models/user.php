@@ -406,7 +406,7 @@ class User_Model extends Auth_User_Model {
 	 */
 	public function is_following($user)
 	{
-		return ORM::factory('user_followers')
+		return ORM::factory('user_follower')
 		    ->where('user_id', $user->id)
 		    ->where('follower_id', $this->id)
 		    ->find()
