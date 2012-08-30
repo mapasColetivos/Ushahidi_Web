@@ -15,18 +15,17 @@ html {
     margin-bottom: 1px;
 }
 
-body {
+body{
     position: relative;
 }
 
 /* links */
-a {
-    color: #3764aa;
+a{
+    color: #066;
     text-decoration: none;
 }
 
-a:hover {
-    color: #008cff;
+a:hover{
     text-decoration: underline;
 }
 
@@ -355,11 +354,6 @@ div#mainmenu a{
     text-transform: uppercase;
     font-weight: bold;
     font-size: 120%;
-}
-
-div#mainmenu a:hover, div#mainmenu a.active{
-    text-decoration: none;
-    background: #2E8AB8;
 }
 
 /* Filters */
@@ -1308,7 +1302,6 @@ a.rem { background:url(../images/icon-minus.gif) no-repeat;}
     position:relative;
 }
 .report-find-location {
-    margin-right:1px;
     padding:10px 9px 9px 9px;
     background-color:#eee;
     border:1px solid #ccc;

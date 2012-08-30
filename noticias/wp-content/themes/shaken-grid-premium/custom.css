@@ -1,0 +1,178 @@
+/* Any styles you write here will overwrite those of the original stylesheet */
+
+
+/* ----------------------------------------------------
+		1 - Reset
+---------------------------------------------------- */
+
+	html, body, div, span, object, iframe,
+	h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+	abbr, address, cite, code,
+	del, dfn, em, img, ins, kbd, q, samp,
+	small, strong, sub, sup, var,
+	a, b, i,
+	dl, dt, dd, ol, ul, li,
+	fieldset, form, label, legend,
+	input, textarea, button,
+	table, caption, tbody, tfoot, thead, tr, th, td {
+	  background: transparent;
+	  border: 0;
+	  font-size: 100%;
+	  margin: 0;
+	  outline: 0;
+	  padding: 0;
+	  vertical-align: baseline;
+	}
+	
+	body{
+		background:#f7f7f7;
+		font-family: Myriad Pro, Helvetica Neue, Arial, sans-serif;
+		font-size:12px;
+	}
+	
+
+/* ----------------------------------------------------
+		2 - Typography
+---------------------------------------------------- */
+a, a.more-link p{
+	color:#5096cb;
+}
+
+.box h2 a{  		 /* título-link dos posts */
+	font-size:14px;
+	font-weight:bold;
+	color:#5096cb; 
+	margin-bottom:10px;
+}
+
+
+#header h1 a,
+.menu li a,
+#page h2,
+#page h3{
+	font-family: Myriad Pro, Helvetica Neue, Arial, sans-serif;
+}
+
+#header h1 a{
+	font-size: 30px;
+	color:#333;
+	display:block;
+	margin: 0;
+	text-decoration:none;
+}
+	.wf-active #header h1 a{
+		font-weight:normal;
+		font-size:36px;
+		text-transform:uppercase;
+		word-spacing:5px;
+		margin:0;
+	}
+
+
+#header h1 a:hover{
+		color: #5096cb; /*#00657e*/
+	}
+
+h1{	
+	font-family: Myriad Pro, Helvetica Neue, Arial, sans Serif;	
+	margin-bottom: 0px; 
+}
+h1.post-title{
+	font-size:22px;
+	margin-bottom: 5px;
+}	
+
+h5{
+	font-size:22px;
+	text-transform:uppercase;
+	margin-top:20px;
+	margin-bottom:0px;
+	padding-bottom:0px;
+}
+
+.header-nav li{           /* >>> itens menu do header */
+	display: inline;
+	float: left;
+	font-size: 18px;
+	text-transform: uppercase;
+	margin-left: 40px;
+	margin-bottom: 0;
+	position: relative;
+}
+
+header-nav li a:hover{  
+color: #333;
+text-decoration: underline;	
+}
+
+#header{
+	margin-bottom:0;
+	background:#FFF;
+	padding:20px 20px 20px 40px;
+	border-bottom:1px solid rgba(0,0,0,0.15);
+}
+
+#site-info a {
+	font-family: Myriad Pro, Helvetica Neue, Aria, sans-serif;
+	font-size: 36px;
+	font-weight: normal;
+	word-spacing:5px;
+	color: #333;
+	margin: 0;
+	text-decoration: none;
+	text-transform: uppercase;
+}
+
+#site-info a:hover {
+	color:#5096cb; 
+}
+
+/* =======================================================================
+					Isotope Grid
+======================================================================= */
+
+.box, .box p, .box ul, .box ol {
+    font-size: 12px;
+}
+
+.box-content{
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+	background: #fff;
+	padding: 5px;
+	overflow: hidden;
+}
+
+.col2 .box-content{
+	width:300px;
+
+.col4 .box-content, .content .box-content{
+	width:724px;
+}
+
+#sidebar {
+float: none;
+width: 300px;
+margin: 20px 0 0 800px;
+}
+
+.img-container{
+	position: relative;
+	background: #fff;
+	margin-bottom: 0px;
+	line-height: 0;
+	-moz-border-radius:0px;
+	border-radius:0px;
+}
+
+
+/* =======================================================================
+						  	Common Styles
+======================================================================= */
+
+#social-networks, a.filter-btn, #filtering-nav li a, input, textarea, .navigation a, .postmetadata, .author-avatar img, .slider-container, .gallery-thumb img, .feat-img{
+	-moz-border-radius: 0px;
+	-webkit-border-radius: 0px;
+	border-radius: 0px;
+}
+

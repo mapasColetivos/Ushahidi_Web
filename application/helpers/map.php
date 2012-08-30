@@ -465,7 +465,6 @@ class map_Core {
 		if ($address)
 		{
 			$map_object = new GoogleMapAPI;
-
 			// Get the full address data
 			$payload = $map_object->geoGetCoordsFull($address);
 

@@ -603,7 +603,6 @@ class Manage_Controller extends Admin_Controller
 			'feed_id' => '',
 			'feed_name' => '',
 			'feed_url' => '',
-			'feed_active' => ''
 		);
 		//	copy the form as errors, so the errors will be stored with keys corresponding to the form field names
 		$errors = $form;

@@ -64,7 +64,10 @@ class Reports_Controller extends Main_Controller {
 		if (Kohana::config('settings.default_map_all_icon_id'))
 		{
 			$icon_object = ORM::factory('media')->find(Kohana::config('settings.default_map_all_icon_id'));
-			$this->themes->js->default_map_all_icon = $this->template->content->default_map_all_icon = Kohana::config('upload.relative_directory')."/".$icon_object->media_thumb;
+			$default_map_icon = Kohana::config('upload.relative_directory')."/".$icon_object->media_thumb;
+
+			$this->themes->js->default_map_all_icon = $default_map_icon;
+			$this->template->content->default_map_all_icon = $default_map_icon;
 		}
 
 		// Load the alert radius view
@@ -105,7 +108,7 @@ class Reports_Controller extends Main_Controller {
 		$total_reports = Incident_Model::get_total_reports(TRUE);
 
 		// Get the date of the oldest report
-		if (isset($_GET['s']) AND !empty($_GET['s']) AND intval($_GET['s']) > 0)
+		if (isset($_GET['s']) AND ! empty($_GET['s']) AND intval($_GET['s']) > 0)
 		{
 			$oldest_timestamp =  intval($_GET['s']);
 		}
@@ -233,15 +236,14 @@ class Reports_Controller extends Main_Controller {
 
 	/**
 	 * Submits a new report.
+	 * @param  int  $incident_id When specified, loads an incident to be edited
 	 */
-	public function submit($id = FALSE, $saved = FALSE)
+	public function submit($incident_id = FALSE)
 	{
-		$db = new Database();
-
-		// First, are we allowed to submit new reports?
-		if ( ! Kohana::config('settings.allow_reports'))
+		// User must be logged in order to submit a report
+		if ( ! $this->user OR ! Kohana::config('settings.allow_reports'))
 		{
-			url::redirect(url::site().'main');
+			url::redirect('login');
 		}
 
 		$this->template->header->this_page = 'reports_submit';
@@ -255,41 +257,38 @@ class Reports_Controller extends Main_Controller {
 
 		// Setup and initialize form field names
 		$form = array(
+			'incident_id' => '',
 			'incident_title' => '',
 			'incident_description' => '',
-			'incident_date' => '',
-			'incident_hour' => '',
-			'incident_minute' => '',
-			'incident_ampm' => '',
-			'latitude' => '',
-			'longitude' => '',
+			'incident_date' => date("m/d/Y",time()),
+			'incident_hour' => date('g'),
+			'incident_minute' => date('i'),
+			'incident_ampm' => date('a'),
 			'geometry' => array(),
-			'location_name' => '',
-			'country_id' => '',
-			'country_name'=>'',
+			'country_id' => Kohana::config('settings.default_country'),
+			'country_name' => '',
 			'incident_category' => array(),
-			'incident_news' => array(),
-			'incident_video' => array(),
-			'incident_photo' => array(),
 			'incident_zoom' => '',
-			'person_first' => '',
-			'person_last' => '',
-			'person_email' => '',
-			'form_id'	  => '',
-			'custom_field' => array()
+			'form_id' => '',
+			'tags' => '',
+			'custom_field' => array(),
+			'default_zoom' => Kohana::config('settings.default_zoom'),
+			'default_lat' => Kohana::config('settings.default_lat'),
+			'default_lon' => Kohana::config('settings.default_lon'),
+			'incident_privacy' => FALSE
 		);
+
+		// Check if the incident
+		$incident = NULL;
+		if (Incident_Model::is_valid_incident($incident_id))
+		{
+			$incident = ORM::factory('incident', $incident_id);
+			$this->_populate_form_fields($form, $incident);
+		}
 
 		// Copy the form as errors, so the errors will be stored with keys corresponding to the form field names
 		$errors = $form;
 		$form_error = FALSE;
-		$form_saved = ($saved == 'saved');
-
-		// Initialize Default Values
-		$form['incident_date'] = date("m/d/Y",time());
-		$form['incident_hour'] = date('g');
-		$form['incident_minute'] = date('i');
-		$form['incident_ampm'] = date('a');
-		$form['country_id'] = Kohana::config('settings.default_country');
 
 		// Initialize Default Value for Hidden Field Country Name, just incase Reverse Geo coding yields no result
 		$country_name = ORM::factory('country',$form['country_id']);
@@ -298,7 +297,7 @@ class Reports_Controller extends Main_Controller {
 		// Initialize custom field array
 		$form['form_id'] = 1;
 		$form_id = $form['form_id'];
-		$form['custom_field'] = customforms::get_custom_form_fields($id,$form_id,true);
+		$form['custom_field'] = customforms::get_custom_form_fields($incident_id, $form_id, TRUE);
 
 		// GET custom forms
 		$forms = array();
@@ -306,8 +305,8 @@ class Reports_Controller extends Main_Controller {
 		{
 			$forms[$custom_forms->id] = $custom_forms->form_title;
 		}
-		$this->template->content->forms = $forms;
 
+		$this->template->content->forms = $forms;
 
 		// Check, has the form been submitted, if so, setup validation
 		if ($_POST)
@@ -318,35 +317,25 @@ class Reports_Controller extends Main_Controller {
 			// Test to see if things passed the rule checks
 			if (reports::validate($post))
 			{
+				// STEP 1: SAVE INCIDENT
+				if ( ! $incident instanceof Incident_Model)
+				{
+					$incident = new Incident_Model();
+				}
 
-				// STEP 1: SAVE LOCATION
-				$location = new Location_Model();
-				reports::save_location($post, $location);
+				reports::save_report($post, $incident);
 
-				// STEP 2: SAVE INCIDENT
-				$incident = new Incident_Model();
-				reports::save_report($post, $incident, $location->id);
-
-				// STEP 2b: SAVE INCIDENT GEOMETRIES
-				reports::save_report_geometry($post, $incident);
-
-				// STEP 3: SAVE CATEGORIES
+				// STEP 2: SAVE CATEGORIES
 				reports::save_category($post, $incident);
 
-				// STEP 4: SAVE MEDIA
-				reports::save_media($post, $incident);
-
-				// STEP 5: SAVE CUSTOM FORM FIELDS
+				// STEP 3: SAVE CUSTOM FORM FIELDS
 				reports::save_custom_fields($post, $incident);
 
-				// STEP 6: SAVE PERSONAL INFORMATION
-				reports::save_personal_info($post, $incident);
-
-				// Run evnets
+				// Run events
 				Event::run('ushahidi_action.report_submit', $post);
 				Event::run('ushahidi_action.report_add', $incident);
 
-				url::redirect('reports/thanks');
+				url::redirect('locations/create/'.$incident->id);
 			}
 
 			// No! We have validation errors, we need to show the form again, with the errors
@@ -361,12 +350,7 @@ class Reports_Controller extends Main_Controller {
 			}
 		}
 
-		// Retrieve Country Cities
-		$default_country = Kohana::config('settings.default_country');
-		$this->template->content->cities = $this->_get_cities($default_country);
-		$this->template->content->multi_country = Kohana::config('settings.multi_country');
-
-		$this->template->content->id = $id;
+		$this->template->content->form_id = $form_id;
 		$this->template->content->form = $form;
 		$this->template->content->errors = $errors;
 		$this->template->content->form_error = $form_error;
@@ -382,7 +366,7 @@ class Reports_Controller extends Main_Controller {
 
 		// Retrieve Custom Form Fields Structure
 		$this->template->content->custom_forms = new View('reports/submit_custom_forms');
-		$disp_custom_fields = customforms::get_custom_form_fields($id, $form_id, FALSE);
+		$disp_custom_fields = customforms::get_custom_form_fields($incident_id, $form_id, FALSE);
 		$this->template->content->disp_custom_fields = $disp_custom_fields;
 		$this->template->content->stroke_width_array = $this->_stroke_width_array();
 		$this->template->content->custom_forms->disp_custom_fields = $disp_custom_fields;
@@ -399,15 +383,15 @@ class Reports_Controller extends Main_Controller {
 		$this->themes->js->incident_zoom = FALSE;
 		$this->themes->js->default_map = Kohana::config('settings.default_map');
 		$this->themes->js->default_zoom = Kohana::config('settings.default_zoom');
-		if ( ! $form['latitude'] OR ! $form['latitude'])
+		if ( ! $form['default_lat'] OR ! $form['default_lon'])
 		{
 			$this->themes->js->latitude = Kohana::config('settings.default_lat');
 			$this->themes->js->longitude = Kohana::config('settings.default_lon');
 		}
 		else
 		{
-			$this->themes->js->latitude = $form['latitude'];
-			$this->themes->js->longitude = $form['longitude'];
+			$this->themes->js->latitude = $form['default_lat'];
+			$this->themes->js->longitude = $form['default_lon'];
 		}
 		$this->themes->js->geometries = $form['geometry'];
 
@@ -427,305 +411,50 @@ class Reports_Controller extends Main_Controller {
 		$this->template->header->this_page = 'reports';
 		$this->template->content = new View('reports/detail');
 
-		// Load Akismet API Key (Spam Blocker)
-		$api_akismet = Kohana::config('settings.api_akismet');
 
 		// Sanitize the report id before proceeding
 		$id = intval($id);
 
-		if ($id > 0 AND Incident_Model::is_valid_incident($id,TRUE))
-		{
-			$incident = ORM::factory('incident')
-				->where('id',$id)
-				->where('incident_active',1)
-				->find();
-				
-			// Not Found
-			if ( ! $incident->loaded) 
-			{
-				url::redirect('reports/view/');
-			}
-
-			// Comment Post?
-			// Setup and initialize form field names
-
-			$form = array(
-				'comment_author' => '',
-				'comment_description' => '',
-				'comment_email' => '',
-				'comment_ip' => '',
-				'captcha' => ''
-			);
-
-			$captcha = Captcha::factory();
-			$errors = $form;
-			$form_error = FALSE;
-
-			// Check, has the form been submitted, if so, setup validation
-
-			if ($_POST AND Kohana::config('settings.allow_comments') )
-			{
-				// Instantiate Validation, use $post, so we don't overwrite $_POST fields with our own things
-				$post = Validation::factory($_POST);
-
-				// Add some filters
-				$post->pre_filter('trim', TRUE);
-
-				// Add some rules, the input field, followed by a list of checks, carried out in order
-				if ( ! $this->user)
-				{
-					$post->add_rules('comment_author', 'required', 'length[3,100]');
-					$post->add_rules('comment_email', 'required','email', 'length[4,100]');
-				}
-				$post->add_rules('comment_description', 'required');
-				$post->add_rules('captcha', 'required', 'Captcha::valid');
-
-				// Test to see if things passed the rule checks
-				if ($post->validate())
-				{
-					// Yes! everything is valid
-					if ($api_akismet != "")
-					{
-						// Run Akismet Spam Checker
-						$akismet = new Akismet();
-
-						// Comment data
-						$comment = array(
-							'website' => "",
-							'body' => $post->comment_description,
-							'user_ip' => $_SERVER['REMOTE_ADDR']
-						);
-
-						if ($this->user)
-						{
-							$comment['author'] = $this->user->name;
-							$comment['email'] = $this->user->email;
-						}
-						else
-						{
-							$comment['author'] = $post->comment_author;
-							$comment['email'] = $post->comment_email;
-						}
-
-						$config = array(
-							'blog_url' => url::site(),
-							'api_key' => $api_akismet,
-							'comment' => $comment
-						);
-
-						$akismet->init($config);
-
-						if ($akismet->errors_exist())
-						{
-							if ($akismet->is_error('AKISMET_INVALID_KEY'))
-							{
-								// throw new Kohana_Exception('akismet.api_key');
-							}
-							elseif ($akismet->is_error('AKISMET_RESPONSE_FAILED'))
-							{
-								// throw new Kohana_Exception('akismet.server_failed');
-							}
-							elseif ($akismet->is_error('AKISMET_SERVER_NOT_FOUND'))
-							{
-								// throw new Kohana_Exception('akismet.server_not_found');
-							}
-
-							$comment_spam = 0;
-						}
-						else
-						{
-							$comment_spam = ($akismet->is_spam()) ? 1 : 0;
-						}
-					}
-					else
-					{
-						// No API Key!!
-						$comment_spam = 0;
-					}
-
-					$comment = new Comment_Model();
-					$comment->incident_id = $id;
-					if ($this->user)
-					{
-						$comment->user_id = $this->user->id;
-						$comment->comment_author = $this->user->name;
-						$comment->comment_email = $this->user->email;
-					}
-					else
-					{
-						$comment->comment_author = strip_tags($post->comment_author);
-						$comment->comment_email = strip_tags($post->comment_email);
-					}
-					$comment->comment_description = strip_tags($post->comment_description);
-					$comment->comment_ip = $_SERVER['REMOTE_ADDR'];
-					$comment->comment_date = date("Y-m-d H:i:s",time());
-
-					// Activate comment for now
-					if ($comment_spam == 1)
-					{
-						$comment->comment_spam = 1;
-						$comment->comment_active = 0;
-					}
-					else
-					{
-						$comment->comment_spam = 0;
-						$comment->comment_active = (Kohana::config('settings.allow_comments') == 1)? 1 : 0;
-					}
-					$comment->save();
-
-					// Event::comment_add - Added a New Comment
-					Event::run('ushahidi_action.comment_add', $comment);
-
-					// Notify Admin Of New Comment
-					$send = notifications::notify_admins(
-						"[".Kohana::config('settings.site_name')."] ".
-							Kohana::lang('notifications.admin_new_comment.subject'),
-							Kohana::lang('notifications.admin_new_comment.message')
-							."\n\n'".utf8::strtoupper($incident->incident_title)."'"
-							."\n".url::base().'reports/view/'.$id
-						);
-
-					// Redirect
-					url::redirect('reports/view/'.$id);
-
-				}
-				else
-				{
-					// No! We have validation errors, we need to show the form again, with the errors
-					// Repopulate the form fields
-					$form = arr::overwrite($form, $post->as_array());
-
-					// Populate the error fields, if any
-					$errors = arr::overwrite($errors, $post->errors('comments'));
-					$form_error = TRUE;
-				}
-			}
-
-			// Filters
-			$incident_title = $incident->incident_title;
-			$incident_description = $incident->incident_description;
-			Event::run('ushahidi_filter.report_title', $incident_title);
-			Event::run('ushahidi_filter.report_description', $incident_description);
-
-			$this->template->header->page_title .= $incident_title.Kohana::config('settings.title_delimiter');
-
-			// Add Features
-			$this->template->content->features_count = $incident->geometry->count();
-			$this->template->content->features = $incident->geometry;
-			$this->template->content->incident_id = $incident->id;
-			$this->template->content->incident_title = $incident_title;
-			$this->template->content->incident_description = $incident_description;
-			$this->template->content->incident_location = $incident->location->location_name;
-			$this->template->content->incident_latitude = $incident->location->latitude;
-			$this->template->content->incident_longitude = $incident->location->longitude;
-			$this->template->content->incident_date = date('M j Y', strtotime($incident->incident_date));
-			$this->template->content->incident_time = date('H:i', strtotime($incident->incident_date));
-			$this->template->content->incident_category = $incident->incident_category;
-
-			// Incident rating
-			$rating = ORM::factory('rating')
-					->join('incident','incident.id','rating.incident_id','INNER')
-					->where('rating.incident_id',$incident->id)
-					->find();
-					
-			$this->template->content->incident_rating = ($rating->rating == '')
-				? 0
-				: $rating->rating;
-
-			// Retrieve Media
-			$incident_news = array();
-			$incident_video = array();
-			$incident_photo = array();
-
-			foreach ($incident->media as $media)
-			{
-				if ($media->media_type == 4)
-				{
-					$incident_news[] = $media->media_link;
-				}
-				elseif ($media->media_type == 2)
-				{
-					$incident_video[] = $media->media_link;
-				}
-				elseif ($media->media_type == 1)
-				{
-					$incident_photo[] = array(
-						'large' => url::convert_uploaded_to_abs($media->media_link),
-						'thumb' => url::convert_uploaded_to_abs($media->media_thumb)
-						);
-				}
-			}
-
-			$this->template->content->incident_verified = $incident->incident_verified;
-
-			// Retrieve Comments (Additional Information)
-			$this->template->content->comments = "";
-			if (Kohana::config('settings.allow_comments'))
-			{
-				$this->template->content->comments = new View('reports/comments');
-				$incident_comments = array();
-				if ($id)
-				{
-					$incident_comments = Incident_Model::get_comments($id);
-				}
-				$this->template->content->comments->incident_comments = $incident_comments;
-			}
-		}
-		else
+		if ( ! Incident_Model::is_valid_incident($id, TRUE))
 		{
 			url::redirect('main');
 		}
 
-		// Add Neighbors
-		$this->template->content->incident_neighbors = Incident_Model::get_neighbouring_incidents($id, TRUE, 0, 5);
+		$incident = ORM::factory('incident')
+			->where('id',$id)
+			->where('incident_active',1)
+			->find();
+			
+		// Not Found
+		if ( ! $incident->loaded) 
+		{
+			url::redirect('reports/');
+		}
+		// Filters
+		$incident_title = $incident->incident_title;
+		$incident_description = $incident->incident_description;
+		Event::run('ushahidi_filter.report_title', $incident_title);
+		Event::run('ushahidi_filter.report_description', $incident_description);
 
-		// News Source links
-		$this->template->content->incident_news = $incident_news;
+		$this->template->header->page_title .= $incident_title.Kohana::config('settings.title_delimiter');
 
-
-		// Video links
-		$this->template->content->incident_videos = $incident_video;
-
-		// Images
-		$this->template->content->incident_photos = $incident_photo;
-
-		// Create object of the video embed class
-		$video_embed = new VideoEmbed();
-		$this->template->content->videos_embed = $video_embed;
+		// Set view properties
+		$this->template->content->incident = $incident;
+		$this->template->content->user = $this->user;
+		$this->template->content->collaborators = $incident->get_collaborators();
 
 		// Javascript Header
 		$this->themes->map_enabled = TRUE;
-		$this->themes->photoslider_enabled = TRUE;
-		$this->themes->videoslider_enabled = TRUE;
+
 		$this->themes->js = new View('reports/view_js');
-		$this->themes->js->incident_id = $incident->id;
-		$this->themes->js->default_map = Kohana::config('settings.default_map');
-		$this->themes->js->default_zoom = Kohana::config('settings.default_zoom');
-		$this->themes->js->latitude = $incident->location->latitude;
-		$this->themes->js->longitude = $incident->location->longitude;
-		$this->themes->js->incident_zoom = $incident->incident_zoom;
-		$this->themes->js->incident_photos = $incident_photo;
-
-		// Initialize custom field array
-		$this->template->content->custom_forms = new View('reports/detail_custom_forms');
-		$form_field_names = customforms::get_custom_form_fields($id, $incident->form_id, FALSE, "view");
-		$this->template->content->custom_forms->form_field_names = $form_field_names;
-
-		// Are we allowed to submit comments?
-		$this->template->content->comments_form = "";
-		if (Kohana::config('settings.allow_comments'))
-		{
-			$this->template->content->comments_form = new View('reports/comments_form');
-			$this->template->content->comments_form->user = $this->user;
-			$this->template->content->comments_form->form = $form;
-			$this->template->content->comments_form->form_field_names = $form_field_names;
-			$this->template->content->comments_form->captcha = $captcha;
-			$this->template->content->comments_form->errors = $errors;
-			$this->template->content->comments_form->form_error = $form_error;
-		}
+		$this->themes->js->markers_url = sprintf("json/locations/%d", $incident->id);
+		$this->themes->js->layer_name = $incident->incident_title;
+		$this->themes->js->latitude = $incident->incident_default_lat;
+		$this->themes->js->longitude = $incident->incident_default_lon;
+		$this->themes->js->map_zoom = $incident->incident_zoom;
 
 		// If the Admin is Logged in - Allow for an edit link
-		$this->template->content->logged_in = $this->logged_in;
+		// $this->template->content->logged_in = $this->logged_in;
 
 		// Rebuild Header Block
 		$this->template->header->header_block = $this->themes->header_block();
@@ -993,6 +722,25 @@ class Reports_Controller extends Main_Controller {
 	}
 
 	/**
+	 * Populates the form fields with the values of the specified
+	 * incident
+	 *
+	 * @param  array  $form  Memory reference for the form fields
+	 * @param  Model_Incident $incident ORM reference for the incident
+	 */
+	private function _populate_form_fields(array & $form, $incident)
+	{
+		$form['incident_id'] = $incident->id;
+		$form['incident_title'] = $incident->incident_title;
+		$form['incident_description'] = $incident->incident_description;
+		$form['incident_privacy'] = $incident->incident_privacy;
+		$form['default_lon'] = $incident->incident_default_lon;
+		$form['default_lat'] = $incident->incident_default_lat;
+		$form['default_zoom'] = $incident->incident_default_zoom;
+		$form['incident_category'] = $incident->get_categories_array();
+	}
+
+	/**
 	 * Ajax call to update Incident Reporting Form
     */
     public function switch_form()
@@ -1006,4 +754,44 @@ class Reports_Controller extends Main_Controller {
         echo json_encode(array("status"=>"success", "response"=>$form_fields));
     }
 
+    /**
+     * REST endpoint for report (incident) follow/unfollow 
+     */
+    public function social()
+    {
+    	$this->template = "";
+    	$this->auto_render = FALSE;
+
+    	if ($_POST AND $this->user)
+    	{
+    		// Set up validation
+    		$validation = Validation::factory($_POST)
+    		    ->add_rules('incident_id', 'required')
+    		    ->add_rules('user_id', 'required')
+    		    ->add_rules('action', 'required');
+
+    		// Validate
+    		if ($validation->validate())
+    		{
+    			if ($validation->action == 'follow')
+    			{
+    				$this->user->follow_incident($validation->incident_id);
+    			}
+    			elseif ($validation->action == 'unfollow')
+    			{
+    				$this->user->unfollow_incident($validation->incident_id);
+    			}
+    		}
+    	}
+    }
+
+    /**
+     * Displays the incident submit page in edit mode
+     * This is an alias for the submit() method
+     */
+    public function edit($incident_id)
+    {
+    	$redirect_uri = sprintf("reports/submit/%s", $incident_id);
+    	url::redirect($redirect_uri);
+    }
 }
