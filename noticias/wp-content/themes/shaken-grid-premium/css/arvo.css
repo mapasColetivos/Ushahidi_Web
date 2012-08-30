@@ -1,0 +1,8 @@
+h1, h2, h3, h4, h5, .format-quote p, .quote .entry p, .menu li a{
+	font-family:'Arvo', Arial, Helvetica, sans-serif;
+	font-weight: 400;
+}
+
+.wf-active .header-nav li{
+	font-size: 12px;
+}

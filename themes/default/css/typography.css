@@ -1,0 +1,465 @@
+/* links */
+a{
+	text-decoration: none;
+}
+
+a:hover{
+	text-decoration: underline;
+}
+
+/* header elements */
+h1, h2, h3, h4, h5, h6{
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+}
+
+h1{
+	font-size: 150%;
+}
+
+h2{
+	font-size: 125%;
+}
+
+h3{
+	font-size: 150%;
+}
+
+h4{
+    font-size: 175%;
+}
+
+h5{
+    font-size: 150%;
+}
+
+h6{
+    font-size: 125%;
+}
+
+/* page setup */
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+}
+
+/* wrapper setup */
+
+div#logo h1{
+	font-size: 20px;
+}
+div#logo span{
+	font-size:14px;
+}
+
+div#middle .background{
+    min-height: 140px;
+}
+
+/* clearing & floating */
+.clearingfix:after{
+    content: ".";
+    line-height: 0px;
+}
+
+div.language-box select{
+	font-size: 11px;
+}
+
+div.search-form input.text{
+    font-size: 13px;
+}
+
+
+div.submit-incident a{
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+div.submit-incident a:hover{
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+
+div#mainmenu a{
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 120%;
+}
+
+div#mainmenu a:hover{
+    text-decoration: none;
+}
+
+div#mainmenu a.active{
+    text-transform: uppercase;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/* filters */
+div.filters{
+    font-size: 85%;
+    text-transform: uppercase;
+}
+
+div.filters ul li a{
+    text-decoration: none;
+}
+
+div.filters ul li a:hover, div.filters ul li a.active{
+    text-decoration: none;
+}
+
+#mapStatus
+{
+	font-size: 10px;
+}
+
+#mapOutput sup {
+	font-size: 8px;
+}
+
+
+div.slider-holder {
+	font-size:70%;
+}
+
+
+/* category filters */
+div.cat-filters{
+	font-size: 85%;
+	text-transform: uppercase;
+
+}
+
+
+ul.category-filters li a{
+    font-size: 15px;
+    text-transform: uppercase;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+div.content-block-left h5 span {
+    font-size: 75%;
+}
+
+div.footermenu ul li a{
+    text-decoration: underline;
+}
+
+div.footermenu ul li a:hover{
+    text-decoration: none;
+}
+
+/* footer credits */
+div.footer-credits{
+    font-size: 70%;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+div.verified{
+    text-transform: uppercase;
+    font-size: 10px;
+    font-weight: bold;
+    text-align: center;
+}
+
+div.verified span{
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+div.report-details ul.details li{
+    font-size: 11px;
+}
+
+div.report-details ul.details li small{
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 11px;
+
+}
+
+div.report-details ul.details li a{
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 10px;
+    text-decoration: underline;
+}
+
+div.report-details ul.details li a:hover{
+    text-decoration: none;
+}
+
+.photos {
+    font-size: 40px;
+}
+
+.photos img {
+    vertical-align: bottom;
+}
+
+div.report-description div.content{
+    font-size: 14px;
+}
+
+
+div.report-description div.additional-reports a{
+    text-decoration: underline;
+}
+
+
+
+table.table-list thead th{
+    text-transform: uppercase;
+    font-size: 11px;
+}
+
+table.table-list tbody tr td{
+    font-size: 11px;
+}
+
+div.incident-notation ul li{
+    text-transform: uppercase;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+/* media files */
+
+.more{
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.ui-slider .ui-state-active .ui-slider-tooltip, .ui-slider .ui-state-focus .ui-slider-tooltip, .ui-slider .ui-state-hover .ui-slider-tooltip {	font-size: .9em;
+
+}
+
+.ui-slider a {
+	text-decoration: none;
+}
+
+.slider-holder .play{
+	font-size:1.2em;
+}
+.slider-holder .play a{
+	text-decoration:none;
+}
+
+.slider-holder .play a:hover{
+	text-decoration:underline;
+}
+
+/* Stylized Forms */
+
+.text, .textarea, .select, .file {
+	font-size:120%;
+}
+label.error {
+	font-style: italic;
+}
+
+.btn_submit {
+	font-size:14px;
+}
+.btn_find {
+	font-size:14px;	
+}
+
+.hide {display:none;}
+
+/* report */
+#report_stats{
+	font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+}
+#report_stats th{
+	font-size:12px;
+}
+#report_stats td{
+	font-size:16px;
+}
+
+.report_row h4{
+	font-size:120%;
+	font-weight:bold;
+}
+.report_row h4 .example{
+	font-weight: normal;
+	font-size: 10px;
+	line-height: 12px;
+}
+.report_category {
+	clear:both;
+	overflow:hidden;
+	font-size:90%;
+}
+.report_optional h3 {
+	font-size:130%;
+	font-weight:bold;
+}
+.report_rating{
+	font-size:90%;	
+}
+.rating_value{
+	font-weight:bold;
+	text-align:center;
+}
+
+span.dots {
+	font-size:18px;
+	font-weight:bold;
+}
+.report-find-location {
+	margin-right:1px;
+	padding:10px 9px 9px 9px;
+	border-width:0 1px 1px 1px;
+	font-size:90%;
+}
+.report-find-location input.findtext {
+	font-size:14px;
+	font-weight:bold;
+}
+a.show-more {
+	text-decoration:underline;
+	font-size:10px;
+}
+
+.report_row1 h3, .report_row2 h3, .org_row1 h3, .org_row2 h3{
+	font-size:13px;
+}
+.report_yes, .report_no{
+	font-weight:bold;
+}
+
+.org_contact h4{
+	font-weight:bold;
+}
+/*---New Reports Styles CB:10.14.10 ---*/
+.r_video a {font-size:11px;}
+
+.r_categories h4 { font-size:10px text-transform: uppercase; }	
+.r_cat_tooltip a {text-transform:uppercase; font-size:10px; }
+.r_cat_tooltip a:hover { text-decoration:none;}
+
+.r_details h3 a.r_title { font-size:14px; } 
+	.r_details h3 a.r_comments { font-size:11px;}
+	/*verified/unverified*/
+.r_details h3 span {  
+	font-size:9px; font-weight:normal; text-transform:uppercase;
+}
+		
+p.r_location a { font-size:11px; line-height:11px; }
+
+/*---alerts-block---*/
+
+.step-1 .map p {
+	font:12px/15px Arial, Helvetica, sans-serif;
+}
+.step-1 .map .map-holder {
+	overflow:hidden;
+	width:387px;
+	height:325px;
+}
+
+.step-1 .alert_slider .ui-slider span.ui-slider-label{
+	font-size:8px;
+}
+
+.step-2 .box label {
+	font:12px/15px Arial, Helvetica, sans-serif;
+}
+
+ul.pager li{
+	font-size:10px;
+	font-weight:bold;
+}
+ul.pager li a{
+	text-decoration:none;
+
+}
+ul.pager li a:hover,
+
+/*-- feedback --*/
+
+
+.or_txt {
+	font:14px/17px Arial, Helvetica, sans-serif;
+}
+
+.detailed_feedback {
+	text-align : center;
+}
+
+.detailed_feedback a {
+	font:14px/17px Arial, Helvetica, sans-serif;
+	text-decoration :none;
+}
+
+/*-search-*/
+.search_highlight{
+	font-weight:bold;
+}
+.search_result{
+	font-size:13px;
+}
+.search_result h3{
+	font-weight:normal;
+	font-size:16px;
+}
+.search_date{
+	font-size:12px;
+	font-style: italic;
+}
+/*-gallery-*/
+.report-description .orig-report .report h4 {
+	font:bold 12px/17px Arial, Helvetica, sans-serif;
+	text-transform:uppercase;
+}
+.report-description .orig-report .report p {
+	font:12px/17px Arial, Helvetica, sans-serif;
+}
+.report-description .orig-report .report a.lnk {
+	font:10px/13px Arial, Helvetica, sans-serif;
+	text-decoration:none;
+	text-transform:uppercase;
+}
+.report-description .orig-report .report a.lnk:hover,
+.report-description .orig-report .report a.lnk:hover span {text-decoration:underline;}
+
+.report-description .orig-report .discussion h5 {
+	font:bold 12px/17px Arial, Helvetica, sans-serif;
+	text-transform:uppercase;
+}
+.discussion h5 a, .discussion h5 a:visited{
+	text-transform:none;
+}
+.report-description .orig-report .discussion .discussion-box p {
+	font:12px/17px Arial, Helvetica, sans-serif;
+}
+.report-description .orig-report .discussion .discussion-box a.lnk {
+	font:10px/13px Arial, Helvetica, sans-serif;
+	text-decoration:none;
+	text-transform:uppercase;
+}
+.report-description .orig-report .discussion .discussion-box a.lnk:hover,
+.report-description .orig-report .discussion .discussion-box a.lnk:hover span {text-decoration:underline;}
+
+/*---blocks-holder---*/
+
+div.green-box h3, div.red-box h3{
+	font-size:14px;
+}
+/*--Alerts Messages--*/
+.alert_response, .thanks_msg {
+	font:14px/17px Arial, Helvetica, sans-serif;
+}

@@ -1,0 +1,14 @@
+/* ----------- Regular ----------- */
+.menu li a, h1, h2, h3, h4, h5{
+	font-family: "Myriad Pro", "Helvetica Neue", Arial, sans-serif; /* 'PT Sans' */
+	font-weight: normal; /* '700;' */
+
+}
+
+/* ----------- Light ----------- */
+#site-description, .format-quote p, .quote .entry p{
+	font-family: "Myriad Pro", "Helvetica Neue", Arial, sans-serif;
+	font-weight: 400;
+}
+
+.wf-active .box h2{ font-size: 13px; }

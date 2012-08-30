@@ -57,6 +57,18 @@
 		DEFAULT: "default",
 
 		/**
+		 * Default width for any external graphics to be
+		 * used for styling the markers
+		 */
+		graphicWidth: 21,
+
+		/**
+		 * Default height for any external graphics to be
+		 * used for styling the markers
+		 */
+		graphicHeight: 25,
+
+		/**
 		 * APIProperty: baseURL
 		 * Base URL for the application
 		 */
@@ -71,6 +83,8 @@
 	 	 	var style = new OpenLayers.Style({
 	 	 		'externalGraphic': "${icon}",
 	 	 		'graphicTitle': "${cluster_count}",
+	 	 		graphicHeight: Ushahidi.graphicHeight,
+	 	 		graphicWidth: Ushahidi.graphicWidth,
 				pointRadius: "${radius}",
 				fillColor: "${color}",
 				fillOpacity: "${opacity}",
@@ -338,6 +352,12 @@
 	 	// Tracks the current marker position
 	 	this._currentMarkerPosition = {};
 
+	 	// Enables/disables feature selection on hover
+	 	this._selectOnHover = false;
+
+	 	// Internal registry for all popups
+	 	this._popupRegistry = {};
+
 	 	// Check for the mapDiv
 	 	if (div == undefined) {
 	 		throw "The element or id of an element that will contain the map must be specified";
@@ -362,7 +382,7 @@
 		// Map options
 		var mapOptions = {
 			units: "dd",
-			numZoomLevels: 18,
+			numZoomLevels: 19,
 			theme: false,
 			controls: [],
 			projection: Ushahidi.proj_900913,
@@ -578,8 +598,19 @@
 				params.push(_key + '=' + this._reportFilters[_key]);
 			}
 
+			if (fetchURL.indexOf("?") !== -1) {
+				var index = fetchURL.indexOf("?");
+				var args = fetchURL.substr(index+1, fetchURL.length).split("&");
+				fetchURL = fetchURL.substring(0, index);
+
+				for (var i=0; i<args.length; i++) {
+					params.push(args[i]);
+				}
+			}
+
 			// Update the fetch URL witht parameters
 			fetchURL += (params.length > 0) ? '?' + params.join('&') : '';
+
 			// Get the styling to use
 			var styleMap = null;
 			if (options.styleMap !== undefined) {
@@ -631,7 +662,10 @@
 		setTimeout(function(){ context._olMap.addLayer(layer); }, 1500);
 
 		// Select Feature control
-		this._selectControl = new OpenLayers.Control.SelectFeature(layer);
+		this._selectControl = new OpenLayers.Control.SelectFeature(layer,{
+			hover: this._selectOnHover
+		});
+
 		this._olMap.addControl(this._selectControl);
 		this._selectControl.activate();
 		layer.events.on({
@@ -746,7 +780,7 @@
 		var image = "";
 		if (event.feature.attributes.thumb !== undefined && event.feature.attributes.thumb != '') {
 			image = "<div class=\"infowindow_image\"><a href='"+event.feature.attributes.link+"'>";
-			image += "<img src=\""+event.feature.attributes.thumb+"\" height=\"59\" width=\"89\" /></a></div>";
+			image += "<img src=\""+event.feature.attributes.thumb+"\" /></a></div>";
 		} else if (event.feature.attributes.image !== undefined && event.feature.attributes.image != '') {
 			image = "<div class=\"infowindow_image\">";
 			image += "<a href=\""+event.feature.attributes.link+"\" title=\""+event.feature.attributes.name+"\">";
@@ -795,6 +829,9 @@
 		this._olMap.addPopup(popup);
 		popup.show();
 
+		// Register the popup
+		this.registerPopup(popup);
+
 		// Register zoom in/out events
 		$("#zoomIn", popup.contentDiv).click(
 			{context: this, latitude: lat, longitude: lon, zoomFactor: 1}, 
@@ -836,6 +873,14 @@
 		if (this._selectedFeature !== undefined && this._selectedFeature != null) {
 			this._selectControl.unselect(this._selectedFeature);
 			this._selectedFeature = null;
+		}
+
+		for (var popupId in this._popupRegistry) {
+			var popup = this._popupRegistry[popupId];
+			this._olMap.removePopup(popup);
+
+			// Delete the popup from the registry
+			delete this._popupRegistry[popupId];
 		}
 	}
 
@@ -1094,6 +1139,16 @@
 			// The assumption here is that this method is only called
 			// when we're using the default layer
 			this.addLayer(Ushahidi.DEFAULT);
+		}
+	}
+
+	/**
+	 * APIMethod: registerPopup
+	 * Registers a popup
+	 */
+	Ushahidi.Map.prototype.registerPopup = function(popup) {
+		if (this._popupRegistry[popup.id] == undefined) {
+			this._popupRegistry[popup.id] = popup;
 		}
 	}
 
