@@ -1,4 +1,4 @@
-<div class="popup">
+<div class="popup" id="location_popup_<?php echo $location->id; ?>">
 	<?php echo html::image("media/img/close.png", array("title"=>"close", "class" => "close_image_popup")); ?>
 	<h1><?php echo $location->location_name; ?></h1>
 	<h3><?php echo html::anchor("reports/view/".$location->incident_id, $location->incident->incident_title); ?></h3>

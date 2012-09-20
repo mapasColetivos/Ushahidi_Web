@@ -28,15 +28,14 @@ if (window.Ushahidi) {
 
 		if (layerType === Ushahidi.GEOJSON) {
 			// Enable layer selection on hover
-			this._selectOnHover = true;
+			options.selectOnHover = true;
 
 		} else if (layerType === Ushahidi.KML) {
-			this._selectOnHover = false;
+			options.selectOnHover = false;
 
 			// Delegate feature selection to the parent function
 			mapasColetivos.Map.prototype.onFeatureSelect = Ushahidi.Map.prototype.onFeatureSelect;
 		}
-
 		Ushahidi.Map.prototype.addLayer.call(this, layerType, options, save);
 		return this;
 	}
@@ -44,15 +43,15 @@ if (window.Ushahidi) {
 	/**
 	 * Overrides the default feature selection behaviour
 	 */
-	mapasColetivos.Map.prototype.onFeatureSelect = function(event) {
-		// Close all popups
+	mapasColetivos.Map.prototype.onFeatureSelect = function(feature) {
+		// Close all open popups
 		this.closePopups();
 
 		// Cache the currently selected feature
-		this._selectedFeature = event.feature;
+		this._selectedFeature = feature;
 
 		// Get the location id of the selected feature
-		var locationId = event.feature.attributes.id;
+		var locationId = feature.attributes.id;
 		var context = this;
 
 		// Check if we have a timeout to clear
@@ -67,7 +66,7 @@ if (window.Ushahidi) {
 				url: Ushahidi.baseURL + "json/location_popup/" + locationId,
 				success: function(response) {
 					var popup = new OpenLayers.Popup.Anchored("chicken",
-						event.feature.geometry.getBounds().getCenterLonLat(),
+						feature.geometry.getBounds().getCenterLonLat(),
 						new OpenLayers.Size(372, 310),
 						response,
 						null,
@@ -76,7 +75,6 @@ if (window.Ushahidi) {
 					);
 
 					// Display the popup
-					event.feature.popup = popup;
 					context._olMap.addPopup(popup);
 					popup.show();
 
@@ -84,73 +82,86 @@ if (window.Ushahidi) {
 					context.registerPopup(popup);
 
 					// Register click events for the popup
-					$(".close_image_popup").click(context.onPopupClose);
+					var responseDOM = $("#location_popup_"+locationId);
+					$(".close_image_popup", responseDOM).click(context.onPopupClose);
 
-					// Get total no. of assets then hide them
-					var assets = $(".asset_area div.assets");
-					var assetCount = assets.size();
-					var idx = 0;
-
-					// Show the first element
-					$(".asset_area div.assets").remove();
-					$(".asset_area").append($(assets[idx]).fadeIn());
-
-					// Next button clicked
-					$("#asset_nav_next").click(function(e) {
-						$(".asset_area div.assets").fadeOut().remove();
-						if ((idx + 1) == assetCount) {
-							// We're already on the last item
-							idx = 0;
-							$(".asset_area").append($(assets[idx]).fadeIn());						
-						} else {
-							idx += 1;
-							$(".asset_area").append($(assets[idx]).fadeIn());
-						}
-
-						$("#current_asset_pos").html((idx+1));
-
-						return false;
-					});
-
-					// Previous button clicked
-					$("#asset_nav_previous").click(function(e){
-						$(".asset_area div.assets").fadeOut().remove();
-						if (idx == 0) {
-							// We're already on the first item
-							idx = assetCount - 1;
-							$(".asset_area").append($(assets[idx]).fadeIn());
-						} else {
-							idx -= 1;
-							$(".asset_area").append($(assets[idx]).fadeIn());
-						}
-						$("#current_asset_pos").html((idx+1));
-						return false;
-					});
-
-					// Mouseover events
-					$(".hooverable").mouseover(function(e){
-						var overlayWidth = $("img.delimiter", this).width();
-						var margin = $("img.delimiter", this).position().left;
-
-						if (overlayWidth < 100) {
-							overlayWidth = $("div.assets", this).width();
-							margin = 0;
-						}
-
-						// Attributes for the overlay
-						var attrs = {
-							"margin-left": margin  + "px",
-							"width": overlayWidth + "px"
-						};
-						$(".asset-overlay").css(attrs).show();
-					});
-
-					$(".hooverable").mouseout(function(e){
-						$(".asset-overlay").hide();
-					});
+					// Attach events to the popup DOM
+					attachEvents2Popup(responseDOM);
 				}
 			});
 		}, 500);
+	}
+
+	/**
+	 * Attaches events to the popup DOM
+	 */
+	attachEvents2Popup = function(dom) {
+		// Get total no. of assets then hide them
+		var assets = $(".asset_area div.assets", dom);
+		var assetCount = assets.size();
+		var idx = 0;
+
+		// Show the first element
+		$(".asset_area div.assets", dom).remove();
+		$(".asset_area").append($(assets[idx]).fadeIn());
+
+		// Next button clicked
+		$("#asset_nav_next", dom).click(function(e) {
+			$(".asset_area div.assets", dom).fadeOut().remove();
+			if ((idx + 1) == assetCount) {
+				// We're already on the last item
+				idx = 0;
+				$(".asset_area", dom).append($(assets[idx]).fadeIn("slow"));						
+			} else {
+				idx += 1;
+				$(".asset_area", dom).append($(assets[idx]).fadeIn("slow"));
+			}
+
+			$("#current_asset_pos", dom).html((idx+1));
+
+			return false;
+		});
+
+		// Previous button clicked
+		$("#asset_nav_previous", dom).click(function(e){
+			$(".asset_area div.assets", dom).fadeOut().remove();
+			if (idx == 0) {
+				// We're already on the first item
+				idx = assetCount - 1;
+				$(".asset_area", dom).append($(assets[idx]).fadeIn("slow"));
+			} else {
+				idx -= 1;
+				$(".asset_area", dom).append($(assets[idx]).fadeIn("slow"));
+			}
+			$("#current_asset_pos", dom).html((idx+1));
+			return false;
+		});
+
+		// Mouseover events
+		$(".hooverable", dom).mouseover(function(e){
+			var overlayWidth = $("img.delimiter", this).width();
+			var imgNode = $("img.delimiter", this); 
+			var margin = (imgNode.position() !== null) ? $(imgNode).position().left : 0;
+
+			if (overlayWidth < 100 || margin == 0) {
+				overlayWidth = $("div.assets", this).width();
+				margin = 0;
+			}
+
+			// Attributes for the overlay
+			var attrs = {
+				"margin-left": margin  + "px",
+				"width": overlayWidth + "px"
+			};
+			$(".asset-overlay", dom).css(attrs).show();
+			e.stopPropagation();
+		});
+
+		// Hide the overlay on mouseout
+		$(".hooverable", dom).mouseout(function(e){
+			$(".asset-overlay", dom).hide();
+			e.stopPropagation();
+		});
 	}
 
 }

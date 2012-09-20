@@ -3,7 +3,7 @@
 	<?php if ($form_error): ?>
 		<!-- red-box -->
 		<div class="red-box">
-			<h3><?php echo Kohana::lang('ui_main.error');?></h3>
+			<h4><?php echo Kohana::lang('ui_main.error');?></h4>
 			<ul>
 			<?php foreach ($errors as $error_item => $error_description): ?>
 			<?php if ($error_description): ?>
@@ -14,32 +14,22 @@
 		</div>
 	<?php endif; ?>
 
-	<?php if ($form_saved): ?>
-		<!-- green-box -->
-		<div class="green-box">
-			<h3><?php echo Kohana::lang('ui_main.profile_saved');?></h3>
-		</div>
-	<?php endif; ?>
-	
 	<?php print form::open(); ?>
 	<div class="report-form">
 		<!-- column -->		
 		<div class="sms_holder">
 			<div class="row">
-				<h4><?php echo Kohana::lang('ui_main.username');?></h4>
-				<?php print form::input('username', $form['username'], ' class="text long2"'); ?>
-			</div>
-			<div class="row">
-				<h4><?php echo Kohana::lang('ui_main.full_name');?></h4>
-				<?php print form::input('name', $form['name'], ' class="text long2"'); ?>
-			</div>
-			<div class="row">
 				<h4><?php echo Kohana::lang('ui_main.email');?></h4>
 				<?php print form::input('email', $form['email'], ' class="text long2"'); ?>
 			</div>
 			<div class="row">
-				<h4><?php echo Kohana::lang('ui_main.password');?></h4>
-				<?php print form::password('password', $form['password'], ' class="text long2"'); ?>
+				<h4><?php echo Kohana::lang('ui_main.security_code'); ?></h4>
+				<?php echo $captcha->render();  ?>
+				<br>
+				<?php print form::input('security_code', '', ' class="text long2"'); ?>
+			</div>
+			<div class="row">
+				<input name="submit" type="submit" value="<?php echo Kohana::lang('ui_main.reports_btn_submit'); ?>" class="btn_submit" />
 			</div>
 		</div>
 	</div>

@@ -2010,13 +2010,13 @@ ul.tabset li a {
 
 
 .asset-overlay {
-	height: 208px;
+	height: 190px;
 	margin: 0;
 	color: white;
 	background-color: rgba(0,0,0,0.5);
 	position: absolute;
 	overflow-y: auto;
-	font-size:15px;
+	font-size: 15px;
 }
 
 .asset-overlay p { padding: 5px;}
@@ -2769,9 +2769,7 @@ div.red-box {
 	overflow:hidden;
 }
 div.green-box h3, div.red-box h3{
-	margin:0;
-	padding:0 0 0 15px; 
-	font-size:128px;
+	font-size: 18px;
 	color:#555;
 	font-weight:normal;
 }

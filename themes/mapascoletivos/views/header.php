@@ -13,13 +13,9 @@
 		// Action::header_scripts - Additional Inline Scripts from Plugins
 		Event::run('ushahidi_action.header_scripts');
 
-		// Facebox
-		echo html::stylesheet('media/facebox/facebox', TRUE);
-
 		// Array of JavaScript files to be included
 		$js_array = array(
 			'media/js/tailorbirds.js',
-			'media/facebox/facebox.js',
 			'media/js/selectToUISlider.jQuery',
 		);
 

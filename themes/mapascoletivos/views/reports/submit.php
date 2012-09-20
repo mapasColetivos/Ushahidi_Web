@@ -139,5 +139,6 @@
 				<div style="margin-top:25px" id="map_loaded"></div>
 			</div>
 		</div>
+		<?php echo form::close(); ?>
 	</div>
 </div>

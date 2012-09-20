@@ -40,39 +40,23 @@ class User_Model extends Auth_User_Model {
 	/**
 	 * Creates a basic user and assigns to login and member roles
 	 * 
+	 * @param   string  usename
+	 * @param   string  name
 	 * @param   string  email
 	 * @param   string  password
-	 * @param   string  riverid user id
 	 * @return  object  ORM object from saving the user
 	 */
-	public static function create_user($email, $password, $riverid=false, $name=false)
+	public static function create_user($username, $name, $email, $password)
 	{
 		$user = ORM::factory('user');
 
 		$user->email = $email;
-		$user->username = User_Model::random_username();
+		$user->username = $username;
 		$user->password = $password;
+		$user->name = $name;
+		$user->confirmed = 1;
 
-		if ($name != false)
-		{
-			$user->name = $name;
-		}
-
-		if ($riverid != false)
-		{
-			$user->riverid = $riverid;
-		}
-
-		// Add New Roles if:
-		//    1. We don't require admin to approve users (will be added when admin approves)
-		//    2. We don't require users to first confirm their email address (will be added
-		//       when user confirms if the admin doesn't have to first approve the user)
-		if (Kohana::config('settings.manually_approve_users') == 0
-			AND Kohana::config('settings.require_email_confirmation') == 0)
-		{
-			$user->add(ORM::factory('role', 'login'));
-			$user->add(ORM::factory('role', 'member'));
-		}
+		$user->add(ORM::factory('role', 'login'));
 
 		return $user->save();
 	}
@@ -160,7 +144,7 @@ class User_Model extends Auth_User_Model {
 			$auth = new Auth;
 		}
 
-		$post->add_rules('username','required','length[3,100]', 'alpha_numeric');
+		$post->add_rules('username','required','length[3,100]');
 		$post->add_rules('name','required','length[3,100]');
         $post->add_rules('email','required','email','length[4,64]');
 
@@ -172,27 +156,48 @@ class User_Model extends Auth_User_Model {
 		}
 
 		// Only check for the password if the user id has been specified and we are passing a pw
-		if (isset($post->user_id) AND isset($post->password))
+		if (isset($post->user_id) AND ! empty($post->password))
 		{
 			$post->add_rules('password','required', 'length['.Kohana::config('auth.password_length').']');
 			$post->add_callbacks('password' ,'User_Model::validate_password');
 		}
 
 		// If Password field is not blank and is being passed
-		if ( isset($post->password) AND
-			(! empty($post->password) OR (empty($post->password) AND ! empty($post->password_again))))
+		if
+		(
+			! isset($post->user_id) OR
+			(isset($post->user_id) AND (! empty($post->password) OR ! empty($post->password_again))))
 		{
 			$post->add_rules('password','required','length['.Kohana::config('auth.password_length').']', 'matches[password_again]');
 			$post->add_callbacks('password' ,'User_Model::validate_password');
 		}
 
-		$post->add_rules('role','required','length[3,30]', 'alpha_numeric');
-		$post->add_rules('notify','between[0,1]');
-
-		if ( ! $auth->logged_in('superadmin'))
+		// 
+		// Additional validation rules - for mapasColetivos
+		// 
+		if ( ! empty($post->web))
 		{
-			$post->add_callbacks('role', array('User_Model', 'prevent_superadmin_modification'));
+			$post->add_rules('web', 'url');
 		}
+
+		if ( ! empty($post->localization))
+		{
+			$post->add_rules('localizaton', 'standard_text');
+		}
+
+		if ( ! empty($post->bio))
+		{
+			$post->add_rules('bio', 'standard_text');
+		}
+
+
+		// $post->add_rules('role','required','length[3,30]', 'alpha_numeric');
+		// $post->add_rules('notify','between[0,1]');
+
+		// if ( ! $auth->logged_in('superadmin'))
+		// {
+		// 	$post->add_callbacks('role', array('User_Model', 'prevent_superadmin_modification'));
+		// }
 
 		// Additional validation checks
 		Event::run('ushahidi_action.user_submit_admin', $post);

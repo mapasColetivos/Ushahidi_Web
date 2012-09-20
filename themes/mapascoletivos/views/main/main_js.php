@@ -173,9 +173,6 @@ jQuery(function() {
 		// Zoom level at which to display the map
 		zoom: <?php echo Kohana::config('settings.default_zoom'); ?>,
 
-		// Redraw the layers when the zoom level changes
-		redrawOnZoom: true,
-
 		// Center of the map
 		center: {
 			latitude: <?php echo Kohana::config('settings.default_lat'); ?>,

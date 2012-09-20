@@ -34,3 +34,14 @@ ALTER TABLE `maps_users` CHANGE `map_id` `incident_id` INT(11) NOT NULL;
 -- Rename the table `maps_users` to `incident_follows`
 RENAME TABLE `maps_users` TO `incident_follows`;
 ALTER TABLE `incident_follows` ADD UNIQUE INDEX `incident_subscribe_unique_idx` (`user_id`, `incident_id`);
+
+CREATE TABLE IF NOT EXISTS `auth_tokens` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `token` varchar(40) NOT NULL DEFAULT '',
+  `type` varchar(20) DEFAULT NULL,
+  `data` text,
+  `created_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `expire_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `auth_tokens_un_token` (`token`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

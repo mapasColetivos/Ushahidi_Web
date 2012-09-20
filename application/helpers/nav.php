@@ -56,7 +56,7 @@ class nav_Core {
 		else 
 		{	 		
 			$menu .= "<li><a href='".url::site()."users/index/".$user->id."' class='active_user first'>".$user->username."</a></li>";
-			$menu .= "<li><a class='first' href=\"".url::site()."logout\" ";
+			$menu .= "<li><a class='first' href=\"".url::site()."login/logout\" ";
 			$menu .= ">".Kohana::lang('ui_main.logout')."</a></li></ul>";	 		
 		}
 

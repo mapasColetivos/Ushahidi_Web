@@ -52,6 +52,10 @@
 		'required' => 'You must define at least one role.',
 		'values' => 'You must select either ADMIN or USER role.',
 	),
+	'security_code' => array(
+		'required' => 'You must specify the security code',
+		'valid' => 'The security code you have specified is invalid'
+	),
 	'username' => array(
 		'admin' => 'The admin user role cannot be modified.',
 		'alpha_numeric' => 'The public profile URL field must only contain numbers and letters.',

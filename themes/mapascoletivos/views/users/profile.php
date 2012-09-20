@@ -5,7 +5,9 @@
 		<h3><?php echo Kohana::lang('ui_main.error');?></h3>
 		<ul>
 			<?php foreach ($errors as $error_item => $error_description): ?>
-			<li><?php echo (!$error_description) ? '' : $error_description; ?> </li>
+			<?php if ($error_description): ?>
+			<li><?php echo $error_description; ?> </li>
+			<?php endif; ?>			
 			<?php endforeach; ?>
 			</ul>
 		</div>
@@ -41,7 +43,7 @@
 			</div>
 			<div class="row">
 				<h4>Photo</h4>
-				<img src="<?php echo $user->photo(154) ?>" />
+				<?php echo html::image($user->gravatar(150)); ?>
 				<br/>
 				Para alterar sua imagem, acesse ou crie sua conta no <a href="http://en.gravatar.com/" target="_blank" >Gravatar</a> usando o mesmo e-mail cadastrado (<?php echo $user->email ?>). <br>
                 Assegure-se de que a foto esteja classificada no gravatar como "G".
@@ -56,7 +58,7 @@
 			</div>
 			<div class="row">
 				<h4>Bio</h4>
-				<?php print form::textarea('bio', $form['bio'], ' class="text long2"'); ?>
+				<?php print form::textarea('bio', $form['bio'], ' cols="40" class="text long2"'); ?>
 			</div>
 			<div class="row">
 				<h4>Localização</h4>
