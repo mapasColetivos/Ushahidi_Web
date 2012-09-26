@@ -96,7 +96,6 @@ $config['log_directory'] = APPPATH.'logs';
 
 if ( ! @is_writable($config["log_directory"]))
 {
->>>>>>> master
 	$config["log_threshold"] = 0;
 }
 
@@ -107,7 +106,6 @@ if ( ! @is_writable($config["log_directory"]))
 $config['log_cleanup_days_old'] = 7;
 
 /**
->>>>>>> master
  * Enable or disable displaying of Kohana error pages. This will not affect
  * logging. Turning this off will disable ALL error pages.
  */

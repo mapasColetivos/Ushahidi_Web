@@ -22,28 +22,24 @@
 					<div class="toolbox">
 						<ul id="controlToggle"> 
 							<li>
-								<input style="display:none;" type="radio" name="type" value="none" 
-								    id="noneToggle" data-image="arrow" checked="checked" />
-								<label for="noneToggle">
+								<a href="#" data-image="arrow" class="default">
 								<?php 
 									echo html::image("media/img/toolbar/arrow.png", "clique com o cursor sobre o ponto para editá-lo", 
 									    array('id'=>'img_arrow'));
 								?>
-								</label>
+								</a>
 							</li>
 							<li> 
-								<input style="display:none;" type="radio" name="type" 
-								    value="point" id="pointToggle" data-image="location"  />
-								<label for="pointToggle">
+								<a href="#" data-image="location" data-control="point">
 								<?php
 									echo html::image("media/img/toolbar/location.png", "criar novo ponto", 
 										array('for'=>"pointToggle", 'id'=>'img_location'));
 								?>
-								</label> 
+								</a> 
 							</li>
 							<li>
 							<?php 
-								echo html::anchor("index.php/kml/index/".$incident->id,
+								echo html::anchor("kml/index/".$incident->id,
 									// Image
 									html::image("media/img/toolbar/upload.png", "importar camadas (.KML, .KMZ)", 
 										array('data-image'=>'upload')),
@@ -52,8 +48,8 @@
 							?>
 							</li>
 							<li>
-								<a href="<?php echo url::site().'index.php/locations/export/'.$incident->id; ?>" class="save-rep-btn">
-								<img src="<?php echo url::site().'/media/img/toolbar/download.png'; ?>" 
+								<a href="<?php echo url::site('locations/export/'.$incident->id); ?>" class="save-rep-btn">
+								<img src="<?php echo url::site('media/img/toolbar/download.png'); ?>" 
 								    data-image="download" title="exportar dados (.CSV)" /></a>
 							</li>
 						</ul>
@@ -96,8 +92,94 @@
 	</div>
 </div>
 
-<script type="text/javascript">
-$(function(){
-	$("#controlToggle")
-});
+
+<?php 
+	// Include the backbone JS scripts
+	$scripts = array('media/js/underscore-min', 'media/js/backbone-min');
+	echo html::script($scripts, TRUE); 
+?>
+
+<script type="text/template" id="add-location-template">
+	<div class="dialog-close"><a href="#" title="<?php echo Kohana::lang('ui_main.close'); ?>">X</a></div>
+
+	<div class="report_map">
+		<div class="green-box" style="display:none;">
+			<h3>A localização foi salvo com sucesso.</h3>
+		</div>
+		<h2>Editar Ponto</h2>
+		<?php 
+			echo form::open("locations/manage/".$incident->id, array(
+			    'enctype' => 'multipart/form-data',
+			    'target' => 'location_submit_target'
+			)); 
+		?>
+		<input type="hidden" name="id" value="<%= id %>" />
+		<input type="hidden" name="latitude" value="<%= latitude %>" />
+		<input type="hidden" name="longitude" value="<%= longitude %>" />
+
+		<div class="report_row">
+			<h4><?php echo Kohana::lang('ui_main.reports_location_name'); ?><br /></h4>
+			<input type="text" name="location_name" value="<%= location_name %>" class="text long2">
+		</div>
+		<div class="report_row">
+			<h4><?php echo Kohana::lang('ui_main.reports_location_description'); ?></h4>
+			<span class="box_edit_span">
+				os primeiros 200 caracteres serão visualizados no balão de informações de cada ponto. Use ENTER para separar as linhas
+			</span>
+			<textarea name="location_description" rows="10" class="textarea long"><%= location_description %></textarea>
+		</div>
+
+		<div id="divNews" class="report_row">
+			<h4>
+				<?php echo Kohana::lang('ui_main.reports_news'); ?> 
+				<span class="box_edit_span">link http://www.url.com</span>
+			</h4>
+		</div>
+		<div id="divVideo" class="report_row">
+			<h4>
+				<?php echo Kohana::lang('ui_main.reports_video'); ?> 
+				<span class="box_edit_span">link para youtube</span>
+			</h4>
+		</div>
+
+		<div id="divPhoto" class="report_row">
+			<h4>
+				<?php echo Kohana::lang('ui_main.reports_photos'); ?> 
+				<span class="box_edit_span">extensões permitidas: .jpg,.png,.gif || max 2MB</span>
+			</h4>
+		</div>
+
+		<div id="divLegends" class="report_row">
+		</div>
+
+		<div style="clear: both;"></div>
+		<div class="location_buttons">
+			<a href="#" class="btn_cancel" ><?php echo Kohana::lang('ui_main.reports_btn_cancel'); ?></a>
+			<input type='submit' class="btn_submit_location" value='<?php echo Kohana::lang('ui_main.reports_btn_submit'); ?>'/>
+		</div>
+
+		<div style="clear: both;"></div>
+		<div id="save_progress_bar" style="display:none;" align="center">
+			<?php echo html::image('media/img/loading_g.gif'); ?>
+		</div>
+
+		<?php echo form::close(); ?>
+	</div>
+	<iframe name="location_submit_target" id="location_submit_target" src=""style="width:0;height:0;border:none;"></iframe>
 </script>
+
+<script type="text/template" id="add-input-field-template">
+	<% if (input_type === "file") { %>
+		<input type="file" name="<%= field_name %>" class="file long2"/>
+	<% } else { %>
+		<input type="<%= input_type %>" name="<%= field_name %>" value="<%= value %>" class="<%= input_type %> long2">
+	<% } %>
+
+	<a href="#" class="add">add</a>
+	<% if (show_remove) { %>
+		<a href="#" class="rem">remove</>
+	<% } %>
+</script>
+
+
+<?php echo $javascript; ?>

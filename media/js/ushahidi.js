@@ -310,8 +310,10 @@
 	  * mapControls - {Array(OpenLayers.Control)} The list of controls to add to the map
 	  */
 	 Ushahidi.Map = function(div, config) {
-	 	// Internal registry for the maker layers
+	 	// Internal registry for the marker layers
 	 	this._registry = [];
+
+	 	this._overlays = [];
 
 	 	// Markers are not yet loaded on the map
 	 	this._isLoaded = 0;
@@ -660,16 +662,20 @@
 
 		// Select Feature control
 		var selectOnHover = (options.selectOnHover === undefined) ? false : options.selectOnHover;
+		var featureSelectCallback = (options.onFeatureSelect === undefined) ? this.onFeatureSelect : options.onFeatureSelect;
 		this._selectControl = new OpenLayers.Control.SelectFeature(layer,{
 			hover: selectOnHover,
 			beforeSelect: this.closePopups,
-			onSelect: this.onFeatureSelect,
+			onSelect: featureSelectCallback,
 			onUnselect: this.onFeatureUnselect,
 			scope: this
 		});
 
 		this._olMap.addControl(this._selectControl);
 		this._selectControl.activate();
+
+		// Store the newly created layer object
+		this._overlays[options.name] = layer;
 
 		this._isLoaded = 1;
 
@@ -904,6 +910,7 @@
 	 */
 	Ushahidi.Map.prototype.onPopupClose = function(e) {
 		Ushahidi._currentMap.closePopups();
+		return false;
 	}
 
 	/**
@@ -1200,6 +1207,26 @@
 	Ushahidi.Map.prototype.registerPopup = function(popup) {
 		if (this._popupRegistry[popup.id] == undefined) {
 			this._popupRegistry[popup.id] = popup;
+		}
+	}
+
+	/**
+	 * APIMethod: addMarker
+	 * Adds a single marker to an existing layer
+	 */
+	Ushahidi.Map.prototype.addLocationMarker = function(layerName, geojson) {
+		if (layerName in this._overlays) {
+			var layer = this._overlays[layerName];
+
+			// Create an OpenLayers.Feature object from the geojson
+			// then apply the default GeoJSON style
+			var feature = new OpenLayers.Format.GeoJSON().read(geojson);
+			feature.style = Ushahidi.GeoJSONStyle();
+
+			// Add the feature to the layer and force a refresh
+			// on the layer for the feature to appear
+			layer.addFeatures(feature);
+			layer.refresh({force: true});
 		}
 	}
 

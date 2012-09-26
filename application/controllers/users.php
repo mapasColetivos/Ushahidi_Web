@@ -92,7 +92,7 @@ class Users_Controller extends Main_Controller {
 		if ($_POST)
 		{
 			// Get the submitted data
-            $post = array(
+			$post = array(
 			    'user_id' => $this->user->id,
 			    'username' => $this->input->post('username'),
 			    'email' => $this->input->post('email'),
@@ -104,6 +104,7 @@ class Users_Controller extends Main_Controller {
 			    'bio' => $this->input->post('bio')
 			);
 
+			// Validate
 			if (User_Model::custom_validate($post))
 			{
 				// Set the user properties
@@ -226,8 +227,8 @@ class Users_Controller extends Main_Controller {
 		{
 			// Set up validation
 			$validation = Validation::factory($_POST)
-                ->add_rules('user_id', 'required')
-                ->add_rules('action', 'required');
+			    ->add_rules('user_id', 'required')
+			    ->add_rules('action', 'required');
 
 			if ($validation->validate())
 			{

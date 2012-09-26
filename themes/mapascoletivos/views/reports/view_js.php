@@ -59,43 +59,6 @@ jQuery(window).load(function() {
 		url: "<?php echo $markers_url; ?>",
 	});
 
-	// Handles the functionality for changing the size of the map
-	// TODO: make the CSS widths dynamic... instead of hardcoding, grab the width's
-	// from the appropriate parent divs
-	$('.map-toggles a').click(function() {
-		var action = $(this).attr("class");
-		$('ul.map-toggles li').hide();
-		switch(action)
-		{
-			case "wider-map":
-				$('.report-map').insertBefore($('.left-col'));
-				$('.map-holder').css({"height":"350px", "width": "900px"});
-				$('a[href=#report-map]').parent().hide();
-				$('a.taller-map').parent().show();
-				$('a.smaller-map').parent().show();
-				break;
-			case "taller-map":
-				$('.map-holder').css("height","600px");
-				$('a.shorter-map').parent().show();
-				$('a.smaller-map').parent().show();
-				break;
-			case "shorter-map":
-				$('.map-holder').css("height","350px");
-				$('a.taller-map').parent().show();
-				$('a.smaller-map').parent().show();
-				break;
-			case "smaller-map":
-				$('.report-map').hide().prependTo($('.report-media-box-content'));
-				$('.map-holder').css({"height":"350px", "width": "348px"});
-				$('a.wider-map').parent().show();
-				$('.report-map').show();
-				break;
-		};
-		
-		map.trigger("resize");
-		return false;
-	});
-
 	// When the display of the layers listing is toggled
 	$("a.filter-switch").toggle(
 		function(e){

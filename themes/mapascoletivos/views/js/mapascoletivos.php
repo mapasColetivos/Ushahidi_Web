@@ -71,7 +71,7 @@ if (window.Ushahidi) {
 						response,
 						null,
 						false,
-						this.onPopupClose
+						context.onPopupClose
 					);
 
 					// Display the popup
@@ -83,7 +83,9 @@ if (window.Ushahidi) {
 
 					// Register click events for the popup
 					var responseDOM = $("#location_popup_"+locationId);
-					$(".close_image_popup", responseDOM).click(context.onPopupClose);
+					$(".close_image_popup", responseDOM).click(function(){
+						popup.destroy();
+					});
 
 					// Attach events to the popup DOM
 					attachEvents2Popup(responseDOM);

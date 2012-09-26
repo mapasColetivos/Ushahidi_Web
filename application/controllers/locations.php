@@ -30,283 +30,74 @@ class Locations_Controller extends Main_Controller {
     	$incident = ORM::factory('incident', $incident_id);
 
     	// Set the view properties
-    	$this->template->content = new View('locations/create');
-    	$this->template->content->user = $this->user;
-    	$this->template->content->incident = $incident;
-    	$this->template->content->incident_layers = $incident->get_layers();
+    	$this->template->content = View::factory('locations/create')
+    	    ->set('user', $this->user)
+    	    ->set('incident', $incident)
+    	    ->set('incident_layers', $incident->get_layers())
+    	    ->bind('javascript', $javascript);
 
-    	$header_js = View::factory('reports/view_js');
-    	$header_js->latitude = $incident->incident_default_lat;
-    	$header_js->longitude = $incident->incident_default_lon;
-    	$header_js->map_zoom = $incident->incident_zoom;
-    	$header_js->layer_name = $incident->incident_title;
-    	$header_js->markers_url = "json/locations/".$incident->id;
+    	// Set the properties for the JavaScript
+    	$javascript = View::factory('locations/js/location')
+    	    ->set('latitude', $incident->incident_default_lat)
+    	    ->set('longitude', $incident->incident_default_lon)
+    	    ->set('map_zoom', $incident->incident_zoom)
+    	    ->set('layer_name', $incident->incident_title)
+    	    ->set('incident_id',  $incident->id)
+    	    ->set('markers_url', "json/locations/".$incident->id)
+    	    ->set('action_url', url::site('locations/manage/'.$incident->id))
+    	    ->set('locations', json_encode($incident->get_locations_array()));
 
 		$this->themes->map_enabled = TRUE;
-    	$this->themes->js = $header_js;
 		$this->template->header->header_block = $this->themes->header_block();
 		$this->template->footer->footer_block = $this->themes->footer_block();
 	}
 
-	public function popup($id = FALSE)
+	/**
+	 * REST endpoint for managing locations and their metadata
+	 */
+	public function manage($incident_id)
 	{
-		$this->template->header = new View('header_clean');
-		$this->template->footer = NULL;	
-		$this->template->content = new View("location_popup");	
-		
-		$location = ORM::factory("location")->where("id",$id)->find();
-		$incident = ORM::factory("incident")->join('location','location.incident_id','incident.id')->where("incident_id",$location->incident_id)->find();
+		$this->template = "";
+		$this->auto_render = FALSE;
 
-		$this->template->content->location = $location;
-		$this->template->content->incident = $incident;		
-		$this->template->content->user = $this->user;		
-		$this->template->header->header_block = $this->themes->header_block();
-	}
-
-	public function popupkml()
-	{
-		$this->template->header = new View('header_clean');
-		$this->template->footer = NULL;	
-		$this->template->content = new View("location_popupkml");	
-
-//		$this->template->content->render(TRUE);
-
-		
-// 		$location = ORM::factory("location")->where("id",$id)->find();
-// 		$incident = ORM::factory("incident")->join('location','location.incident_id','incident.id')->where("incident_id",$location->incident_id)->find();
-
-// 		$this->template->content->location = $location;
-// 		$this->template->content->incident = $incident;		
-		$this->template->content->user = $this->user;		
-		$this->template->header->header_block = $this->themes->header_block();
-	}
-   
-	public function destroy($id = FALSE)
-	{
-		$this->template->header = NULL;
-		$this->template->footer = NULL;	
-		$this->template->content = NULL;
-		ORM::factory('location')->where('id',$id)->find()->delete();
-	}
-	
-	public function edit($id = FALSE, $incident_id = FALSE)
-	{
-		$this->template->header = '';
-		$this->template->footer = '';	
-		$this->template->content = '';
-
-		if ($_POST)
+		// Check if the incident is valid
+		if (! Incident_Model::is_valid_incident($incident_id, FALSE))
 		{
-			$layer_id = null;
-			if (isset($_POST["layer_id"]))
+			header("Status: 404 The specified incident does not exist");
+			return;
+		}
+
+		// Check the request type
+		switch (request::method())
+		{
+			case "post":
+			$post = array_merge($_POST, $_FILES);
+			// Save the basic location
+			if (location::validate($post))
 			{
-				$layer_id = $_POST["layer_id"];
+				// Save the location
+				$location_orm = location::save_location($post, $incident_id, $this->user->id);
+
+				// Save the media
+				location::save_media($post, $location_orm->id, $incident_id, $this->user->id);
+
+				// Echo the newly added location
+				echo json_encode(array(
+					"status" => "OK",
+					"location" => $location_orm->as_geojson_feature()
+				));
+			}
+			else
+			{
+				echo json_encode(array(
+				    "status" => "error",
+				    "message" => $post->errors()
+				));
 			}
 
-			if ($id == 0)
-			{
-				if ( ! $layer_id)
-				{
-					$layer_id = ORM::factory("location_layer")
-					    ->where("incident_id", $incident_id)
-					    ->find()->id;
-				}
-
-				$new_location = $this->_save_new_location(
-					$_POST["location_name"],
-					$_POST["location_lat"],
-					$_POST["location_lon"],
-					$layer_id,
-					$incident_id);
-
-				$id = $new_location->id;
-			}
-		
-			$location = ORM::factory("location")->where("id",$id)->find();
-			$incident = ORM::factory("incident")
-			    ->join('location','location.incident_id','incident.id')
-			    ->where("incident_id", $location->incident_id)
-			    ->find();
-		
-			$location->location_name = $_POST['location_name'];
-			$location->location_description = $_POST['location_description'];
-			$location->layer_id = $layer_id;
-			$location->owner_id = $this->user->id;		
-
-			// a. News
-			foreach ($_POST['incident_news'] as $item)
-			{
-				if (!empty($item))
-				{
-					$news = new Media_Model();
-					$news->location_id = $location->id;
-					$news->incident_id = $incident->id;
-					$news->media_type = 4;		// News
-					$news->media_link = $item;
-					$news->media_date = date("Y-m-d H:i:s",time());
-					$news->owner_id = $this->user->id;
-					$news->save();
-				}
-			}
-
-			// b. Video
-			foreach ($_POST['incident_video'] as $item)
-			{
-				if (!empty($item))
-				{
-					$video = new Media_Model();
-					$video->location_id = $location->id;
-					$video->incident_id = $incident->id;
-					$video->media_type = 2;		// Video
-					$video->media_link = $item;
-					$video->media_date = date("Y-m-d H:i:s",time());
-					$video->owner_id = $this->user->id;				
-					$video->save();
-				}
-			}
-
-			// c. Photos
-			$filenames = upload::save('incident_photo');
-			$i = 1;
-
-			foreach ($filenames as $filename)
-			{
-				$new_filename = $incident->id."_".$i."_".time();
-			
-				$file_type = strrev(substr(strrev($filename),0,4));
-			
-				// IMAGE SIZES: 800X600, 400X300, 89X59
-			
-				// Large size
-				Image::factory($filename)->resize(800,600,Image::AUTO)
-					->save(Kohana::config('upload.directory', TRUE).$new_filename.$file_type);
-
-				// Medium size
-				Image::factory($filename)->resize(400,300,Image::HEIGHT)
-					->save(Kohana::config('upload.directory', TRUE).$new_filename."_m".$file_type);
-			
-				// Thumbnail
-				Image::factory($filename)->resize(178,118,Image::HEIGHT)
-					->save(Kohana::config('upload.directory', TRUE).$new_filename."_t".$file_type);	
-			
-				// PopUpThumbnail
-				Image::factory($filename)->resize(251,208,Image::HEIGHT)
-					->save(Kohana::config('upload.directory', TRUE).$new_filename."_p".$file_type);	
-
-
-				// Remove the temporary file
-				unlink($filename);
-
-				// Save to DB
-				$photo = new Media_Model();
-				$photo->location_id = $location->id;
-				$photo->incident_id = $incident->id;
-				$photo->media_type = 1; // Images
-				$photo->media_link = $new_filename.$file_type;
-				$photo->media_medium = $new_filename."_m".$file_type;
-				$photo->media_thumb = $new_filename."_t".$file_type;
-				$photo->media_date = date("Y-m-d H:i:s",time());
-				$photo->owner_id = $this->user->id;			
-				$photo->save();
-				$i++;
-			}
-
-			$location->save();
-			url::redirect(url::site().'locations/submit/'.$incident->id);
-		}
-		else
-		{
-			url::redirect(url::site());
 		}
 	}
-	
-	public function kml($layer_id = FALSE, $incident_id = FALSE)
-	{
-		$incident = ORM::factory('incident')->where('id',$incident_id)->find();
-		$incident->add_kml_layer($layer_id,$this->user->id);
-		
-		url::redirect(url::site().'locations/submit/'.$incident->id);	
-	}
-	
-	public function kml_delete($layer_id = FALSE, $incident_id = FALSE)
-	{
-		ORM::factory('incident_kml')
-		    ->where('incident_id', $incident_id)
-		    ->where('kml_id', $layer_id)
-		    ->delete_all();
-		
-		url::redirect(url::site().'locations/submit/'.$incident_id);	
-	}
 
-	
-	public function show($id = FALSE, $incident_id = FALSE)
-	{
-		if ( ! Kohana::config('settings.allow_reports'))
-		{
-			url::redirect(url::site().'main');
-		}
-		$this->template->header = new View('header_clean');
-		$this->template->footer = NULL;
-		$this->template->content = new View('location_edit');
-
-		// setup and initialize form field names
-		$this->template->header->header_block = $this->themes->header_block();
-
-		$location = ORM::factory('location')->where('id',$id)->find();
-
-
-		$this->template->content->location = $location;
-		$form = array(
-			'latitude' => $location->latitude,
-			'longitude' => $location->longitude,
-			'location_name' => $location->location_name,
-			'location_description'=> $location->location_description,
-			'country_id' => '',
-			'incident_category' => array(),
-			'incident_news' => array(),
-			'incident_video' => $location->incident_video,
-			'incident_photo' => $location->incident_photo,
-			'form_id'	  => '',
-			'custom_field' => array(),
-			'points' => array()
-		);
-		
-		$this->template->content->form = $form;
-		$this->template->content->incident_id = $incident_id;		
-		$this->template->content->layers = ORM::factory('location_layer')->where('incident_id',$incident_id)->find_all();
-		$this->template->content->layer = $location->layer();
-		$this->template->content->photos = $location->incident_photo;
-		$this->template->content->videos = $location->incident_videos;
-		$this->template->content->user = $this->user;		
-	}
-	
-	public function add_location()
-	{
-		$this->template->header = NULL;
-		$this->template->footer = NULL;
-		$this->template->content = new View('location_ajax_js');
-		
-		$location = $this->_save_new_location($_POST["name"], $_POST['latitude'], 
-		    $_POST['longitude'], $_POST['layer_id'], $_POST['incident_id']);
-		
-		$this->template->content->post = $location->id;
-	}
-	
-	public function update_location()
-	{
-		$this->template->header = NULL;
-		$this->template->footer = NULL;
-		$this->template->content = new View('location_ajax_js');
-		if ($this->is_ajax())
-		{
-			$this->template->content->post = 1;
-		}
-		else
-		{
-			$this->template->content->post = 0;			
-		}
-	}
-	
 	public function remove_location($id = FALSE)
 	{
 		$this->template->header = NULL;
@@ -323,7 +114,7 @@ class Locations_Controller extends Main_Controller {
 		}
 	}
 
-    function export($id = false)
+    public function export($id = FALSE)
     {
     	$this->template->header = NULL;
 		$this->template->content = NULL;

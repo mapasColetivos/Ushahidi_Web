@@ -768,4 +768,21 @@ class Incident_Model extends ORM {
 		return $categories;
 	}
 
+	/**
+	 * Gets the locations for this incident as an array
+	 *
+	 * @return array
+	 */
+	public function get_locations_array()
+	{
+		$locations = array();
+		foreach ($this->location as $location)
+		{
+			$entry = $location->as_array();
+			$entry = array_merge($entry, $location->get_media_array());
+			$locations[] = $entry;
+		}
+		return $locations;
+	}
+
 }
