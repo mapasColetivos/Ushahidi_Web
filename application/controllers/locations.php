@@ -31,23 +31,46 @@ class Locations_Controller extends Main_Controller {
 
     	// Set the view properties
     	$this->template->content = View::factory('locations/create')
-    	    ->set('user', $this->user)
-    	    ->set('incident', $incident)
-    	    ->set('incident_layers', $incident->get_layers())
-    	    ->bind('javascript', $javascript);
+			->set('user', $this->user)
+			->set('incident', $incident)
+			->bind('incident_layers', $incident_layers)
+			->bind('javascript', $javascript);
 
     	// Set the properties for the JavaScript
     	$javascript = View::factory('locations/js/location')
-    	    ->set('latitude', $incident->incident_default_lat)
-    	    ->set('longitude', $incident->incident_default_lon)
-    	    ->set('map_zoom', $incident->incident_zoom)
-    	    ->set('layer_name', $incident->incident_title)
-    	    ->set('incident_id',  $incident->id)
-    	    ->set('markers_url', "json/locations/".$incident->id)
-    	    ->set('action_url', url::site('locations/manage/'.$incident->id))
-    	    ->set('locations', json_encode($incident->get_locations_array()));
+			->set('latitude', $incident->incident_default_lat)
+			->set('longitude', $incident->incident_default_lon)
+			->set('map_zoom', $incident->incident_zoom)
+			->set('layer_name', $incident->incident_title)
+			->set('incident_id',  $incident->id)
+			->set('markers_url', "json/locations/".$incident->id)
+			->set('action_url', url::site('locations/manage/'.$incident->id))
+			->set('locations', json_encode($incident->get_locations_array()))
+			->bind('layers', $user_layers)
+			->set('user', $this->user)
+			->set('layers_api_url', url::site('locations/layers/'.$incident->id));
+
+		$incident_layers = $incident->get_layers();
+		$all_layers = array();
+		foreach ($this->user->get_layers_array() as $layer)
+		{
+			$all_layers[$layer['id']] = $layer;
+		}
+
+		// Remove the layers for the current incident from the list
+		// of all the user's layers
+		foreach ($incident_layers as $layer)
+		{
+			if (array_key_exists($layer->id, $all_layers))
+			{
+				unset ($all_layers[$layer->id]);
+			}
+		}
+
+		$user_layers = json_encode(array_values($all_layers));
 
 		$this->themes->map_enabled = TRUE;
+		$this->themes->colorpicker_enabled = TRUE;
 		$this->template->header->header_block = $this->themes->header_block();
 		$this->template->footer->footer_block = $this->themes->footer_block();
 	}
@@ -61,7 +84,7 @@ class Locations_Controller extends Main_Controller {
 		$this->auto_render = FALSE;
 
 		// Check if the incident is valid
-		if (! Incident_Model::is_valid_incident($incident_id, FALSE))
+		if ( ! Incident_Model::is_valid_incident($incident_id, FALSE))
 		{
 			header("Status: 404 The specified incident does not exist");
 			return;
@@ -94,23 +117,65 @@ class Locations_Controller extends Main_Controller {
 				    "message" => $post->errors()
 				));
 			}
+			break;
+
+			case "delete":
+			break;
 
 		}
 	}
 
-	public function remove_location($id = FALSE)
+	/**
+	 * REST endpoint for adding/editing location layers
+	 */
+	public function layers($incident_id, $layer_id = NULL)
 	{
-		$this->template->header = NULL;
-		$this->template->footer = NULL;
-		$this->template->content = new View('location_ajax_js');
-		
-		if ($this->is_ajax())
+		$this->template = '';
+		$this->auto_render = FALSE;
+
+		switch (request::method())
 		{
-			$this->template->content->post = 1;
-		}
-		else
-		{
-			$this->template->content->post = 0;			
+			case "post":
+				Kohana::log("info", "Adding/editing KML");
+				$post = array_merge($_FILES, $_POST);
+				if (($layer_orm = location::save_layer($this->user, $layer_id, $post)) !== FALSE)
+				{
+					if (empty($layer_id))
+					{
+						// New layer added, echo response
+						echo json_encode(array(
+							'success' => TRUE,
+							'layer' => $layer_orm->as_array()
+						));
+					}
+					else
+					{
+						echo json_encode(array('success' => TRUE));
+					}
+				}
+				else
+				{
+					echo json_encode(array(
+						'success' => FALSE,
+						'message' => "The layer could not be saved"
+					));
+				}
+			break;
+
+			case "put":
+				Kohana::log("info", "Adding KML to incident");
+
+				$layer_orm = ORM::factory('layer', $layer_id);
+				ORM::factory('incident', $incident_id)->add_layer($this->user, $layer_orm);
+			break;
+
+			case "delete":
+				$layer_orm = ORM::factory('layer', $layer_id);
+				if ($layer_orm->loaded)
+				{
+					$layer_orm->delete();
+				}
+			break;
 		}
 	}
 

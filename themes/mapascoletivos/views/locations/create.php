@@ -22,7 +22,7 @@
 					<div class="toolbox">
 						<ul id="controlToggle"> 
 							<li>
-								<a href="#" data-image="arrow" class="default">
+								<a href="#" data-image="arrow" class="default toggle">
 								<?php 
 									echo html::image("media/img/toolbar/arrow.png", "clique com o cursor sobre o ponto para editá-lo", 
 									    array('id'=>'img_arrow'));
@@ -30,7 +30,7 @@
 								</a>
 							</li>
 							<li> 
-								<a href="#" data-image="location" data-control="point">
+								<a href="#" data-image="location" data-control="point" class="toggle">
 								<?php
 									echo html::image("media/img/toolbar/location.png", "criar novo ponto", 
 										array('for'=>"pointToggle", 'id'=>'img_location'));
@@ -39,12 +39,12 @@
 							</li>
 							<li>
 							<?php 
-								echo html::anchor("kml/index/".$incident->id,
+								echo html::anchor("#",
 									// Image
 									html::image("media/img/toolbar/upload.png", "importar camadas (.KML, .KMZ)", 
 										array('data-image'=>'upload')),
 									// Anchor attributes
-									array('rel'=>'layer'));
+									array('title'=>'layer', 'class' => 'kml-layer'));
 							?>
 							</li>
 							<li>
@@ -165,7 +165,41 @@
 
 		<?php echo form::close(); ?>
 	</div>
-	<iframe name="location_submit_target" id="location_submit_target" src=""style="width:0;height:0;border:none;"></iframe>
+	<iframe name="location_submit_target" id="location_submit_target" src="" style="width:0;height:0;border:none;"></iframe>
+</script>
+
+<script type="text/template" id="add-layer-dialog-template">
+	<div class="dialog-close"><a href="#" title="<?php echo Kohana::lang('ui_main.close'); ?>">X</a></div>	
+	<div class="report_map">
+		<h2><?php echo Kohana::lang('ui_main.layers'); ?></h2>
+
+		<div class="report_row">
+			<a href="#" class="create-layer"><?php echo Kohana::lang('ui_main.add_edit'); ?></a>
+			<div class="create-layer" style="display: none;"></div>
+		</div>
+
+	</div>
+</script>
+
+<script type="text/template" id="add-layer-item-template">
+	<div class="layer-info">
+	<h4><%= layer_name %></h4>
+	<span class="box_edit_span">
+	<% if (layer_file !== '') { %>
+		<?php echo Kohana::lang('ui_main.kml_kmz_file'); ?>: <%= layer_file %>
+	<% } else if (layer_url !== '') { %>
+		<?php echo Kohana::lang('ui_main.kml_url'); ?>: <%= layer_url %>
+	<% } %>
+	</span>
+	</div>
+	<div class="actions">
+		<ul>
+			<li><a href="#" class="add-layer">Adicionar ao Mapa</a></li>
+			<li><a href="#" class="edit"><?php echo Kohana::lang('ui_main.edit'); ?></a></li>
+			<li><a href="#" class="remove"><?php echo Kohana::lang('ui_main.delete'); ?></a></li>
+		</ul>
+	</div>
+	<div style="clear: both;"></div>
 </script>
 
 <script type="text/template" id="add-input-field-template">
@@ -177,9 +211,37 @@
 
 	<a href="#" class="add">add</a>
 	<% if (show_remove) { %>
-		<a href="#" class="rem">remove</>
+		<a href="#" class="rem">remove</a>
 	<% } %>
 </script>
 
+<script type="text/template" id="edit-layer-template">
+	<?php echo form::open("locations/layers/".$incident->id, array(
+	    'enctype' => 'multipart/form-data',
+	    'target' => 'layer_submit_target')); ?>
+
+		<div class="report_row">
+			<h4><?php echo Kohana::lang('ui_main.layer_name'); ?></h4>
+			<input type="text" name="layer_name" value="<%= layer_name %>" class="text long2">
+		</div>
+		<div class="report_row">
+			<h4><?php echo Kohana::lang('ui_main.layer_color'); ?></h4>
+			<input type="text" name="layer_color" id="layer_color" value="<%= layer_color %>" class="text short">
+		</div>
+		<div class="report_row">
+			<h4><?php echo Kohana::lang('ui_main.layer_url'); ?></h4>
+			<input type="text", name="layer_url" value="<%= layer_url %>" class="text long2">
+		</div>
+		<div class="report_row">
+			<h4><?php echo Kohana::lang('ui_main.kml_kmz_upload'); ?></h4>
+			<input type="file" name="layer_file">
+		</div>
+		<div style="clear:both"></div>
+		<div class="location_buttons">
+			<input type='submit' class="btn_submit_location" value='<?php echo Kohana::lang('ui_main.save'); ?>'/>
+		</div>
+	<?php echo form::close(); ?>
+	<iframe name="layer_submit_target" id="layer_submit_target" src="" style="width:0;height:0;border:none;"></iframe>
+</script>
 
 <?php echo $javascript; ?>

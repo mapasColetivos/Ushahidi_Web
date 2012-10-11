@@ -924,6 +924,7 @@ class Json_Controller extends Template_Controller {
 		    ->join('incident_category', 'incident_category.incident_id', 'incident.id')
 		    ->join('category', 'category.id', 'incident_category.category_id')
 		    ->where('incident.incident_active', 1)
+		    ->where('incident.incident_privacy', 0)
 		    ->where($incident_where)
 		    ->get();
 

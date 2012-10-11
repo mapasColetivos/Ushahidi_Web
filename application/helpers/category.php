@@ -243,8 +243,8 @@ class category_Core {
 			$category_class = ($category['parent_id'] > 0) ? " class=\"report-listing-category-child\"" : "";
 			
 			$category_image = "";
-			$color_css = 'class="item-swatch" style="background-color: #"'.$category['category_color'].'"';
-
+			$color_css = 'class="item-swatch" style="background-color: #%s"';
+			$color_css = sprintf($color_css, trim($category['category_color']));
 			if ( ! empty($category['category_image_thumb']))
 			{
 				$category_image = html::image(

@@ -35,6 +35,8 @@ ALTER TABLE `maps_users` CHANGE `map_id` `incident_id` INT(11) NOT NULL;
 RENAME TABLE `maps_users` TO `incident_follows`;
 ALTER TABLE `incident_follows` ADD UNIQUE INDEX `incident_subscribe_unique_idx` (`user_id`, `incident_id`);
 
+RENAME TABLE `incidents_tags` TO `incident_tags`;
+
 CREATE TABLE IF NOT EXISTS `auth_tokens` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `token` varchar(40) NOT NULL DEFAULT '',

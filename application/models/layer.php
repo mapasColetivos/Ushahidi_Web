@@ -93,7 +93,37 @@ class Layer_Model extends ORM {
 	public static function is_valid_layer($layer_id)
 	{
 		return (intval($layer_id) > 0)
-				? self::factory('layer', intval($layer_id))->loaded
-				: FALSE;
+			? self::factory('layer', intval($layer_id))->loaded
+			: FALSE;
+	}
+
+	/**
+	 * Override the default delete behaviour
+	 * If the entry has an upload, the file is purged from the file system
+	 *
+	 * @return  mixed ORM on success, FALSE otherwise
+	 */
+	public function delete()
+	{
+		if ( ! empty($this->layer_file))
+		{
+			// Generate the absolute file path for the layer file (KML, KMZ)
+			$file_path = Kohana::config('upload.directory', TRUE).$this->layer_file;
+			if (file_exists($file_path))
+			{
+				try
+				{
+					// Purge KML from uploads directory
+					unlink($file_path);
+				}
+				catch (Kohana_Exception $e)
+				{
+					Kohana::log("error", sprintf("Error deleting file (%s) - %s", $file_path, $e->getMessage()));
+					return FALSE;
+				}
+			}
+		}
+
+		return parent::delete();
 	}
 }

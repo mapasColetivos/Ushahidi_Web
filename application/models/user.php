@@ -610,4 +610,32 @@ class User_Model extends Auth_User_Model {
 		     ->find_all();
 	}
 
+	/**
+	 * Gets the layers for the current user. If the user has
+	 * the "superadmin" role, all the layers as returned
+	 *
+	 * @return array
+	 */
+	public function get_layers_array()
+	{
+		$layers = array();
+
+		if ($this->has(ORM::factory('role', 'superadmin')))
+		{
+			foreach (ORM::factory('layer')->find_all() as $layer)
+			{
+				$layers[] = $layer->as_array();
+			}
+		}
+		else
+		{
+			foreach ($this->layer as $layer)
+			{
+				$layers[] = $layer->as_array();
+			}
+		}
+
+		return $layers;
+	}
+
 } // End User_Model

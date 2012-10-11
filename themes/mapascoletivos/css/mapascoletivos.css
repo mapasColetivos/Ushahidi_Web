@@ -2161,7 +2161,6 @@ a.rem { background:url(../images/icon-minus.gif) no-repeat;}
 .report_map{
 	position:relative;
 	overflow:hidden;
-	min-width:800px;
 	border:1px solid #ccc;
 	height: 600px;
 }
@@ -3073,6 +3072,7 @@ div.modal-dialog {
 	z-index: 13001;
 	position: absolute;
 	top: 100px;
+	width: 600px;
 	border: 1px solid #EEE;
 	border-radius: 5px;
 	-webkit-border-radius: 5px;
@@ -3093,9 +3093,45 @@ div.modal-dialog .dialog-close a {
 
 .modal-dialog .report_map {
 	border: none !important;
-	min-width: 250px;
-	margin: 15px auto;
-	padding: 8px 2px 4px 16px;
-	height: auto;
+	width: auto ;
+	margin: 15px 0;
+	padding: 15px;
+	max-height: 450px;
+	overflow-y: scroll;
+}
+.report_row.border {
+	border-bottom: 1px solid #CCC;
+	padding: 8px 2px;
+}
+.modal-dialog .actions {
+	float: right;
+	margin: 10px 0;
+}
+.modal-dialog .layer-info {
+	float: left;
+}
 
+
+.modal-dialog div.create-layer {
+	background-color: #CCC;
+	padding: 5px 8px;
+	margin: 10px 0;
+}
+.modal-dialog .actions ul li {
+	float: left;
+	list-style-type: none;
+	margin: 0 5px;
+}
+
+.modal-dialog a.create-layer {
+    padding: 5px;
+    background-color: #066;
+    color: #FFF;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    text-decoration: none;
+}
+.modal-dialog a.create-layer:hover {
+	background-color: #C00;
 }

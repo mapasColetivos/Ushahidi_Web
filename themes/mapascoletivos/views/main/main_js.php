@@ -14,7 +14,7 @@
  * @license    http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL) 
  */
 ?>
-		
+
 // Initialize the Ushahidi namespace
 Ushahidi.baseUrl = "<?php echo url::site(); ?>";
 Ushahidi.markerRadius = <?php echo $marker_radius; ?>;

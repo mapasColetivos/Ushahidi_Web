@@ -1,7 +1,7 @@
 <?php defined('SYSPATH') OR die('No direct script access');
 
 /**
- * This controller is used to create/edit/delete/export locations
+ * Locations helper
  *
  * PHP version 5
  * LICENSE: This source file is subject to LGPL license
@@ -229,5 +229,87 @@ class location_Core {
 				$i++;
 			}
 		}
+	}
+
+	/**
+	 * Saves a new layer
+	 *
+	 * @param  ORM $user User adding this layer
+	 * @param  int $layer_id
+	 * @param  array $post
+	 *
+	 * @return mixed ORM on success, FALSE otherwise
+	 */
+	public static function save_layer($user, $layer_id, $post)
+	{
+		$layer = empty($layer_id) ? new Layer_Model() : ORM::factory('layer', $layer_id);
+
+		$layer_data = arr::extract($post, 'layer_name', 'layer_color', 'layer_url');
+		$layer_data['layer_file'] = isset($post['layer_file']['name'])? $post['layer_file']['name'] : NULL;
+
+		$layer_file_data = arr::extract($post, 'layer_file');
+
+		// Set up validation for the layer file
+		$upload_validate = Validation::factory($layer_file_data)
+				->add_rules('layer_file', 'upload::valid','upload::type[kml,kmz]');
+
+		// Validate and save
+		if ($layer->validate($layer_data) AND $upload_validate->validate(FALSE))
+		{
+			$layer->user_id = $user->id;
+			$layer->save();
+
+			// Upload the file
+			if (($path_info = upload::save("layer_file")) !== FALSE)
+			{
+				$path_parts = pathinfo($path_info);
+				$file_name = $path_parts['filename'];
+				$file_ext = $path_parts['extension'];
+				$layer_file = $file_name.".".$file_ext;
+				$layer_url = '';
+
+				if (strtolower($file_ext) == "kmz")
+				{ 
+					// This is a KMZ Zip Archive, so extract
+					//because there can be more than one file in a KMZ
+					$archive = new Pclzip($path_info);
+					if (($archive_files = $archive->extract(PCLZIP_OPT_EXTRACT_AS_STRING)) == TRUE)
+					{
+						foreach ($archive_files as $file)
+						{
+							$ext_file_name = $file['filename'];
+							$archive_file_parts = pathinfo($ext_file_name);
+							$file_extension = array_key_exists('extension', $archive_file_parts)
+								? $archive_file_parts['extension']
+								: '';
+							if
+							(
+								$file_extension == 'kml' AND $ext_file_name AND
+								$archive->extract(PCLZIP_OPT_PATH, Kohana::config('upload.directory')) == TRUE
+							)
+							{ 
+								// Okay, so we have an extracted KML - Rename it and delete KMZ file
+								rename($path_parts['dirname']."/".$ext_file_name, 
+									$path_parts['dirname']."/".$file_name.".kml");
+	
+								$file_ext = "kml";
+								unlink($path_info);
+								$layer_file = $file_name.".".$file_ext;
+							}
+						}
+					}
+
+					$layer->layer_url = $layer_url;
+					$layer->layer_file = $layer_file;
+					$layer->save();
+				}
+			}
+		}
+		else
+		{
+			return FALSE;
+		}
+
+		return $layer;
 	}
 }

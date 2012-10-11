@@ -1,10 +1,14 @@
-<?php
+<script type="text/javascript">
+
+// Set the marker raidus, opacit, stroke witdh and opacity
+Ushahidi.markerRadius = "<?php echo Kohana::config('map.marker_radius'); ?>";
+Ushahidi.markerOpacity = "<?php echo kohana::config('map.marker_opacity'); ?>";
+Ushahidi.markerStokeWidth = "<?php echo Kohana::config('map.marker_stroke_width'); ?>";
+Ushahidi.markerStrokeOpacity = "<?php echo Kohana::config('map.marker_stroke_opacity'); ?>";
+
 /**
  * JavaScript for the locations page
  */
-?>
-
-<script type="text/javascript">
 $(function(){
 	var map = null;
 
@@ -32,8 +36,26 @@ $(function(){
 		url: "<?php echo $action_url; ?>",
 	});
 
+	var KmlLayer = Backbone.Model.extend({
+		defaults: {
+			"id": "",
+			"layer_name": "",
+			"layer_file": "",
+			"layer_url": "",
+			"layer_color": "",
+			"layer_visible": 1,
+			"user_id": <?php echo $user->id; ?>
+		}
+	});
+	var KmlLayersList = Backbone.Collection.extend({
+		model: KmlLayer,
+		url: "<?php echo $layers_api_url; ?>"
+	});
+
 	// Initialize the locations collection
 	var locations = new IncidentLocations();
+
+	var kmlLayers = new KmlLayersList();
 
 	// 
 	// View for the controls on the toolbar
@@ -55,7 +77,8 @@ $(function(){
 		},
 
 		events: {
-			"click li a": "toggleControl",
+			"click li a.toggle": "toggleControl",
+			"click li a.kml-layer": "addLayer",
 		},
 
 		// Deactivates all controls
@@ -103,7 +126,8 @@ $(function(){
 			// Deactivate all controls
 			this.deactivateAllControls();
 
-			var selectedControl = $(e.currentTarget);			
+			var selectedControl = $(e.currentTarget);
+
 			// Set the image to denote that the control has been selected
 			selectedControl.addClass("active");
 			var imageSrc = this.getControlImage(selectedControl, true);
@@ -118,6 +142,12 @@ $(function(){
 				}
 			}
 
+			return false;
+		},
+
+		// Displays the add layers dialog
+		addLayer: function(e) {
+			new AddLayerDialog().render();
 			return false;
 		},
 
@@ -182,20 +212,14 @@ $(function(){
 		}
 	});
 
-	// 
-	// View for adding/editing a location
-	// 
-	var AddLocationView = Backbone.View.extend({
+	// Base dialog view
+	var BaseDialog = Backbone.View.extend({
 
 		tagName: "div",
 
 		className: "modal-dialog",
 
-		template: _.template($("#add-location-template").html()),
-
-		_submitted: false,
-
-		initialize: function() {
+		_init: function() {
 			// Initialize the dialog container
 			this._dialogContainer = document.createElement('div');
 			var _css = {
@@ -222,6 +246,39 @@ $(function(){
 
 			// Add the dialog container to the DOM
 			$("body").append(this._dialogContainer);
+
+		},
+
+		// When the dialog is closed
+		close: function(e) {
+			var context = this;
+			$(this._dialogContainer).fadeOut("slow", function() { $(context._dialogContainer).remove(); });
+			return false;
+		},
+
+		// Displays the dialog
+		display: function() {
+			// Add the dialog to its container
+			$(this._dialogContainer).append(this.$el).fadeIn("slow");
+
+			// Center the dialog - we can only get the offset after the dialog
+			// has been displayed
+			var margin = "-" + (this.el.offsetWidth/2) + "px";
+			this.$el.css({left: "50%", "margin-left": margin});			
+		}
+	});
+
+	// 
+	// View for adding/editing a location
+	// 
+	var AddLocationView = BaseDialog.extend({
+
+		template: _.template($("#add-location-template").html()),
+
+		_submitted: false,
+
+		initialize: function() {
+			this._init();
 
 			// Mapping of media field types to the input types
 			this._mediaFieldMap = {
@@ -287,13 +344,6 @@ $(function(){
 			return false;
 		},
 
-		// When the dialog is closed
-		close: function(e) {
-			var context = this;
-			$(this._dialogContainer).fadeOut("slow", function() { $(context._dialogContainer).remove(); });
-			return false;
-		},
-
 		addMediaItem: function(media) {
 			var templateData = {
 				id: media.id,
@@ -331,14 +381,185 @@ $(function(){
 			this.addMedia("video");
 			this.addMedia("photo");
 
-			// Add the dialog to its container
+			this.display();
+
+			return this;
+		}
+	});
+	
+
+	// 
+	// Dialog for the KMLs
+	// 
+	var AddLayerDialog = BaseDialog.extend({
+
+		template: _.template($("#add-layer-dialog-template").html()),
+
+		initialize: function() {
+			this._init();
+			kmlLayers.on("add", this.addLayer, this);
+		},
+
+		events: {
+			"click .dialog-close a": "close",
+		},
+
+		addLayer: function(layer) {
+			var view = new LayerItemView({model: layer});
+			this.$("div.report_map").append(view.render().el);
+
+			var context = this;
+			view.$("a.edit").toggle(function() {
+				context.editLayer(layer);
+			}, function() {
+				context.hideEditForm();
+			})
+		},
+
+		addLayers: function() {
+			kmlLayers.each(this.addLayer, this);
+		},
+
+		editLayer: function(layer) {
+			var view = new EditLayerView({model: layer});
+			this.$("div.create-layer").html(view.render().el).slideDown();
+		},
+
+		hideEditForm: function() {
+			this.$("div.create-layer").slideUp();
+		},
+
+		render: function() {
+			this.$el.html(this.template());
+			kmlLayers.each(this.addLayer, this);
+
 			$(this._dialogContainer).append(this.$el).fadeIn("slow");
+			this.display();
 
-			// Center the dialog - we can only get the offset after the dialog
-			// has been displayed
-			var margin = "-" + (this.el.offsetWidth/2) + "px";
-			this.$el.css({left: "50%", "margin-left": margin});
+			var context = this;
+			this.$("a.create-layer").toggle(function() {
+				context.editLayer(new KmlLayer());
+			}, function() {
+				context.hideEditForm();
+			});
 
+			return this;
+		}
+	});
+
+	// View for a single layer item in the dialog
+	var LayerItemView = Backbone.View.extend({
+
+		tagName: "div",
+
+		className: "report_row border",
+
+		template: _.template($("#add-layer-item-template").html()),
+
+		events: {
+			"click a.remove": "delete",
+			"click a.add-layer": "addToIncident"
+		},
+
+		delete: function(e) {
+			var context = this;
+			this.model.destroy({wait: true, success: function(response) {
+				console.log("deleted");
+				context.$el.fadeOut();
+			}});
+
+			return false;
+		},
+
+		addToIncident: function(e) {
+			var context = this;
+			this.model.save({}, {
+				wait: true,
+				success: function(model, response){
+					kmlLayers.remove(model);
+					context.$el.fadeOut();					
+				}
+			});
+			return false;
+		},
+
+		render: function() {
+			this.$el.html(this.template(this.model.toJSON()));
+
+			var context = this;
+			this.$el.hover(function() {
+				context.$el.css({"background-color": "#FFFEEB"});
+			}, function() {
+				context.$el.css({"background-color": "#FFF"});
+			});
+
+			return this;
+		}
+	});
+
+	// View for editing/adding a new layer
+	var EditLayerView = Backbone.View.extend({
+
+		template: _.template($("#edit-layer-template").html()),
+
+		events: {
+			"click .btn_submit_location" : "beginSave"
+		},
+
+		beginSave: function(e) {
+			// Mark the input fields as readonly
+			this.$(":input").attr("disabled");
+
+			// Replace the buttons with the loading icon
+			this.$(".location_buttons").hide();
+			this.$("#save_progress_bar").show();
+
+			// When the iframe finishes loading
+			var submitTarget = this.$("#layer_submit_target");
+			$(submitTarget).bind("load", {iframe: submitTarget, form: this}, this.completeSave);
+		},
+
+		// When saving is complete
+		completeSave: function(e) {
+			var form = e.data.form, iframe = e.data.iframe;
+
+			// Convert the JSON string to a JSON object
+			// Wrap the text in parenthesis to avoid a syntax error
+			var response = eval("("+iframe.contents().find("body").html()+")");
+			if (response.success) {
+				if (response.layer !== undefined) {
+					kmlLayers.add(response.layer);
+				}
+				$(form.$el).parent('div.create-layer').slideUp();
+			} else {
+				// An error ocurred
+				form.$(":input").removeAttr("disabled");
+				form.$(".location_buttons").hide();
+			}
+
+			return false;
+		},
+
+		render: function() {
+			this.$el.html(this.template(this.model.toJSON()));
+
+			// Color picker events
+			var context = this;
+			this.$("#layer_color").ColorPicker({
+				onSubmit: function(hsb, hex, rgb) {
+					$('#layer_color').val(hex);
+				},
+				onChange: function(hsb, hex, rgb) {
+					$('#layer_color').val(hex);
+				},
+				onBeforeShow: function () {
+					$(this).ColorPickerSetColor(this.value);
+				}
+			}).bind('keyup', function(){
+				$(this).ColorPickerSetColor(this.value);
+			});
+
+			$(".colorpicker").css({"z-index": 10001});
 			return this;
 		}
 	});
@@ -348,12 +569,14 @@ $(function(){
 
 
 	// 
-	// Initialize the list of locations
+	// Initialize the list of locations and overlays
 	// 
 	locations.reset(<?php echo $locations; ?>);
 	locations.on("add", function(location) {
 		new AddLocationView({model: location}).render();
 	});
+
+	kmlLayers.reset(<?php echo $layers; ?>);
 
 
 	// Callback function for feature selection

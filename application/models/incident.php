@@ -785,4 +785,31 @@ class Incident_Model extends ORM {
 		return $locations;
 	}
 
+	/**
+	 * Associates an the incident with the layer by creating
+	 * an entry in incident_kml
+	 * @param  ORM $user
+	 * @param  ORM $layer
+	 */
+	public function add_layer($user, $layer)
+	{
+		$entry = ORM::factory('incident_kml')
+			->where('incident_id', $this->id)
+			->where('layer_id', $layer->id)
+			->find();
+
+		if ( ! $entry->loaded)
+		{
+			$entry->incident_id = $this->id;
+			$entry->layer_id = $layer->id;
+			$entry->user_id = $user->id;
+			$entry->save();
+
+			return TRUE;
+		}
+
+		Kohana::log("error", "The layer has already been associated with this incident");
+		return FALSE;
+	}
+
 }

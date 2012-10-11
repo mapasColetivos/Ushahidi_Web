@@ -18,6 +18,10 @@
 
 // Set the base url
 Ushahidi.baseURL = "<?php echo url::site(); ?>";
+Ushahidi.markerRadius = "<?php echo Kohana::config('map.marker_radius'); ?>";
+Ushahidi.markerOpacity = "<?php echo kohana::config('map.marker_opacity'); ?>";
+Ushahidi.markerStokeWidth = "<?php echo Kohana::config('map.marker_stroke_width'); ?>";
+Ushahidi.markerStrokeOpacity = "<?php echo Kohana::config('map.marker_stroke_opacity'); ?>";
 
 var map = null;
 jQuery(window).load(function() {
