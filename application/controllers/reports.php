@@ -39,44 +39,47 @@ class Reports_Controller extends Main_Controller {
 		$this->is_cachable = TRUE;
 
 		$this->template->header->this_page = 'reports';
-		$this->template->content = new View('reports/main');
-		$this->themes->js = new View('reports/reports_js');
-
 		$this->template->header->page_title .= Kohana::lang('ui_main.reports').Kohana::config('settings.title_delimiter');
 
-		// Store any exisitng URL parameters
-		$this->themes->js->url_params = json_encode($_GET);
+		$this->template->content = View::factory('reports/main')
+			->bind('default_map_all', $default_map_all)
+			->bind('default_map_all_icon', $default_map_all_icon)
+			->bind('alert_radius_view', $alert_radius_view)
+			->bind('report_listing_view', $report_listing_view)
+			->bind('category_title', $category_title)
+			->bind('oldest_timestamp', $oldest_timestamp)
+			->bind('latest_timestamp', $latest_timestamp)
+			->bind('custom_forms_filter', $custom_forms_filter)
+			->set('total_reports', Incident_Model::get_total_reports(TRUE))
+			->set('category_tree_view', category::get_category_tree_view())
+			->set('services', Service_Model::get_array());
 
-		// Enable the map
-		$this->themes->map_enabled = TRUE;
-
-		// Set the latitude and longitude
-		$this->themes->js->latitude = Kohana::config('settings.default_lat');
-		$this->themes->js->longitude = Kohana::config('settings.default_lon');
-		$this->themes->js->default_map = Kohana::config('settings.default_map');
-		$this->themes->js->default_zoom = Kohana::config('settings.default_zoom');
+		// JavaScript for this page
+		$this->themes->js = View::factory('reports/reports_js')
+			->set('url_params', json_encode($_GET))
+			->set('latitude' ,Kohana::config('settings.default_lat'))
+			->set('longitude', Kohana::config('settings.default_lon'))
+			->set('default_map', Kohana::config('settings.default_map'))
+			->set('default_zoom', Kohana::config('settings.default_zoom'))
+			->bind('default_map_all', $default_map_all)
+			->bind('default_map_all_icon', $default_map_all_icon);
 
 		// Get Default Color
-		$this->themes->js->default_map_all = $this->template->content->default_map_all = Kohana::config('settings.default_map_all');
+		$default_map_all = Kohana::config('settings.default_map_all');
 		
 		// Get default icon
-		$this->themes->js->default_map_all_icon = $this->template->content->default_map_all_icon = '';
+		$default_map_all_icon = '';
 		if (Kohana::config('settings.default_map_all_icon_id'))
 		{
 			$icon_object = ORM::factory('media')->find(Kohana::config('settings.default_map_all_icon_id'));
-			$default_map_icon = Kohana::config('upload.relative_directory')."/".$icon_object->media_thumb;
-
-			$this->themes->js->default_map_all_icon = $default_map_icon;
-			$this->template->content->default_map_all_icon = $default_map_icon;
+			$default_map_all_icon = Kohana::config('upload.relative_directory')."/".$icon_object->media_thumb;
 		}
 
 		// Load the alert radius view
-		$alert_radius_view = new View('alerts/radius');
-		$alert_radius_view->show_usage_info = FALSE;
-		$alert_radius_view->enable_find_location = FALSE;
-		$alert_radius_view->css_class = "rb_location-radius";
-
-		$this->template->content->alert_radius_view = $alert_radius_view;
+		$alert_radius_view = View::factory('alerts/radius')
+			->set('show_usage_info', FALSE)
+			->set('enable_find_location', FALSE)
+			->set('css_class', "rb_location-radius");
 
 		// Get locale
 		$l = Kohana::config('locale.language.0');
@@ -84,29 +87,15 @@ class Reports_Controller extends Main_Controller {
 		// Get the report listing view
 		$report_listing_view = $this->_get_report_listing_view($l);
 
-		// Set the view
-		$this->template->content->report_listing_view = $report_listing_view;
-
 		// Load the category
 		$category_id = (isset($_GET['c']) AND intval($_GET['c']) > 0)? intval($_GET['c']) : 0;
 		$category = ORM::factory('category', $category_id);
 
-		if ($category->loaded)
-		{
-			// Set the category title
-			$this->template->content->category_title = Category_Lang_Model::category_title($category_id,$l);
-		}
-		else
-		{
-			$this->template->content->category_title = "";
-		}
-
-		// Collect report stats
-		$this->template->content->report_stats = new View('reports/stats');
+		// Get the category title
+		$category_title = ($category->loaded)
+			? Category_Lang_Model::category_title($category_id, $l)
+			: "";
 		
-		// Total Reports
-		$total_reports = Incident_Model::get_total_reports(TRUE);
-
 		// Get the date of the oldest report
 		if (isset($_GET['s']) AND ! empty($_GET['s']) AND intval($_GET['s']) > 0)
 		{
@@ -127,28 +116,15 @@ class Reports_Controller extends Main_Controller {
 			$latest_timestamp = Incident_Model::get_latest_report_timestamp();
 		}
 
-		// Round the number of days up to the nearest full day
-		$days_since = ceil((time() - $oldest_timestamp) / 86400);
-		$avg_reports_per_day = ($days_since < 1)? $total_reports : round(($total_reports / $days_since),2);
+		// Custom forms filter
+		$custom_forms_filter = View::factory('reports/submit_custom_forms')
+			->set('disp_custom_fields', customforms::get_custom_form_fields())
+			->set('search_form', TRUE);
 
-		// Percent Verified
-		$total_verified = Incident_Model::get_total_reports_by_verified(TRUE);
-		$percent_verified = ($total_reports == 0) ? '-' : round((($total_verified / $total_reports) * 100),2).'%';
+		// Enable the map
+		$this->themes->map_enabled = TRUE;
 
-		// Category tree view
-		$this->template->content->category_tree_view = category::get_category_tree_view();
-
-		// Additional view content
-		$this->template->content->custom_forms_filter = new View('reports/submit_custom_forms');
-		$this->template->content->custom_forms_filter->disp_custom_fields = customforms::get_custom_form_fields();
-		$this->template->content->custom_forms_filter->search_form = TRUE;
-		$this->template->content->oldest_timestamp = $oldest_timestamp;
-		$this->template->content->latest_timestamp = $latest_timestamp;
-		$this->template->content->report_stats->total_reports = $total_reports;
-		$this->template->content->report_stats->avg_reports_per_day = $avg_reports_per_day;
-		$this->template->content->report_stats->percent_verified = $percent_verified;
-		$this->template->content->services = Service_Model::get_array();
-
+		// Generate the header and footer blocks
 		$this->template->header->header_block = $this->themes->header_block();
 		$this->template->footer->footer_block = $this->themes->footer_block();
 	}
@@ -247,10 +223,10 @@ class Reports_Controller extends Main_Controller {
 		}
 
 		$this->template->header->this_page = 'reports_submit';
-		$this->template->content = new View('reports/submit');
-
 		$this->template->header->page_title .= Kohana::lang('ui_main.reports_submit_new')
-											   .Kohana::config('settings.title_delimiter');
+		    .Kohana::config('settings.title_delimiter');
+
+		$this->template->content = new View('reports/submit');
 
 		//Retrieve API URL
 		$this->template->api_url = Kohana::config('settings.api_url');
@@ -408,10 +384,6 @@ class Reports_Controller extends Main_Controller {
 	 */
 	public function view($id = FALSE)
 	{
-		$this->template->header->this_page = 'reports';
-		$this->template->content = new View('reports/detail');
-
-
 		// Sanitize the report id before proceeding
 		$id = intval($id);
 
@@ -420,16 +392,25 @@ class Reports_Controller extends Main_Controller {
 			url::redirect('main');
 		}
 
+		// Load the incident
 		$incident = ORM::factory('incident')
 			->where('id',$id)
 			->where('incident_active',1)
 			->find();
-			
-		// Not Found
-		if ( ! $incident->loaded) 
+
+		// Check if the incident exists and the currently logged user
+		// has permissions to access
+		if ( ! $incident->loaded OR ! $incident->has_access($this->user))
 		{
 			url::redirect('reports/');
 		}
+
+		$this->template->header->this_page = 'reports';
+		$this->template->content = View::factory('reports/detail')
+			->bind('incident', $incident)
+			->bind('collaborators', $collaborators)
+			->set('user', $this->user);
+			
 		// Filters
 		$incident_title = $incident->incident_title;
 		$incident_description = $incident->incident_description;
@@ -438,20 +419,17 @@ class Reports_Controller extends Main_Controller {
 
 		$this->template->header->page_title .= $incident_title.Kohana::config('settings.title_delimiter');
 
-		// Set view properties
-		$this->template->content->incident = $incident;
-		$this->template->content->user = $this->user;
-		$this->template->content->collaborators = $incident->get_collaborators();
+		$collaborators = $incident->get_collaborators();
 
 		// Javascript Header
 		$this->themes->map_enabled = TRUE;
 
-		$this->themes->js = new View('reports/view_js');
-		$this->themes->js->markers_url = sprintf("json/locations/%d", $incident->id);
-		$this->themes->js->layer_name = $incident->incident_title;
-		$this->themes->js->latitude = $incident->incident_default_lat;
-		$this->themes->js->longitude = $incident->incident_default_lon;
-		$this->themes->js->map_zoom = $incident->incident_zoom;
+		$this->themes->js = View::factory('reports/view_js')
+			->set('markers_url', sprintf("json/locations/%d", $incident->id))
+			->set('layer_name', $incident->incident_title)
+			->set('latitude', $incident->incident_default_lat)
+			->set('longitude', $incident->incident_default_lon)
+			->set('map_zoom', $incident->incident_zoom);
 
 		// If the Admin is Logged in - Allow for an edit link
 		// $this->template->content->logged_in = $this->logged_in;

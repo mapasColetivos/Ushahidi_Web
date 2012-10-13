@@ -171,7 +171,7 @@ class category_Core {
 			. "FROM ".$table_prefix."category c "
 			. "LEFT JOIN ".$table_prefix."category c_parent ON (c.parent_id = c_parent.id) "
 			. "LEFT JOIN ".$table_prefix."incident_category ic ON (ic.category_id = c.id) "
-			. "LEFT JOIN ".$table_prefix."incident i ON (ic.incident_id = i.id AND i.incident_active = 1 ) "
+			. "LEFT JOIN ".$table_prefix."incident i ON (ic.incident_id = i.id AND i.incident_active = 1 AND i.incident_privacy = 0) "
 			. "WHERE c.category_visible = 1 "
 			. "AND (c_parent.category_visible = 1 OR c.parent_id = 0)" // Parent must be visible, or must be top level
 			. "AND c.category_title != \"NONE\" "

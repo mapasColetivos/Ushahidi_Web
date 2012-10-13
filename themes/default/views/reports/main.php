@@ -78,7 +78,7 @@
 									?>
 									<span class="item-swatch" style="background-color: #<?php echo Kohana::config('settings.default_map_all'); ?>"><?php echo $all_cat_image ?></span>
 									<span class="item-title"><?php echo Kohana::lang('ui_main.all_categories'); ?></span>
-									<span class="item-count" id="all_report_count"><?php echo $report_stats->total_reports; ?></span>
+									<span class="item-count" id="all_report_count"><?php echo $total_reports; ?></span>
 									</a>
 								</li>
 								<?php echo $category_tree_view; ?>
@@ -207,14 +207,6 @@
 				<!-- end #filters-box -->
 			</div>
       
-			<div style="display:none">
-				<?php
-					// Filter::report_stats - The block that contains reports list statistics
-					Event::run('ushahidi_filter.report_stats', $report_stats);
-					echo $report_stats;
-				?>
-			</div>
-
 		</div>
 		<!-- end reports block -->
 		

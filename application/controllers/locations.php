@@ -179,70 +179,74 @@ class Locations_Controller extends Main_Controller {
 		}
 	}
 
-    public function export($id = FALSE)
+    public function export($incident_id)
     {
-    	$this->template->header = NULL;
-		$this->template->content = NULL;
-		$this->template->footer = NULL;
+		$this->template = '';
+		$this->auto_render = FALSE;
 
-        $locations = ORM::factory('location')
-        	->where('incident_id',$id)
-        	->find_all();
-            
-        $report_csv = "#,INCIDENT TITLE,INCIDENT DATE";
+		// Load the incident
+		$incident = ORM::factory('incident', $incident_id);
+
+		// Titles
+		$report_csv = "#,INCIDENT TITLE,INCIDENT DATE";
 		$report_csv .= ",LOCATION";
 		$report_csv .= ",DESCRIPTION";
 		$report_csv .= ",CATEGORY";
 		$report_csv .= ",LATITUDE";
 		$report_csv .= ",LONGITUDE";
-        $report_csv .= ",APPROVED,VERIFIED";
-        $report_csv .= "\n";
-        foreach ($locations as $location)
-        {
-            $report_csv .= '"'.$location->id.'",';
-            $report_csv .= '"'.$this->_csv_text($location->incident->incident_title).'",';
-            $report_csv .= '"'.$location->location_date.'"';
-			$report_csv .= ',"'.$this->_csv_text($location->location_name).'"';
-			$report_csv .= ',"'.$this->_csv_text($location->location_description).'"';
-			$report_csv .= ',"';           
-			         
-            foreach($location->incident->incident_category as $category)
-            {
-                if ($category->category->category_title)
-                {
-                    $report_csv .= $this->_csv_text($category->category->category_title) . ", ";
-                }
-            }
-			$report_csv .= '"';
-			$report_csv .= ',"'.$this->_csv_text($location->latitude).'"';
-			$report_csv .= ',"'.$this->_csv_text($location->longitude).'"';
-            
-            if ($location->incident->incident_active)
-            {
-                $report_csv .= ",YES";
-            }
-            else
-            {
-                $report_csv .= ",NO";
-            }
-            
-            if ($location->incident->incident_verified)
-            {
-                $report_csv .= ",YES";
-            }
-            else
-            {
-                $report_csv .= ",NO";
-            }
-            
-            $report_csv .= "\n";
-        }
-        // Output to browser
-        header("Content-type: text/x-csv");
-        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-        header("Content-Disposition: attachment; filename=" . time() . ".csv");
-        header("Content-Length: " . strlen($report_csv));
-        echo $report_csv;
+		$report_csv .= ",APPROVED,VERIFIED";
+		$report_csv .= "\n";
+
+		if ($incident->loaded)
+		{
+			foreach ($incident->location as $location)
+			{
+				$report_csv .= '"'.$location->id.'",';
+				$report_csv .= '"'.$this->_csv_text($location->incident->incident_title).'",';
+				$report_csv .= '"'.$location->location_date.'"';
+				$report_csv .= ',"'.$this->_csv_text($location->location_name).'"';
+				$report_csv .= ',"'.$this->_csv_text($location->location_description).'"';
+				$report_csv .= ',"';
+
+				foreach($location->incident->incident_category as $category)
+				{
+					if ($category->category->category_title)
+					{
+						$report_csv .= $this->_csv_text($category->category->category_title) . ", ";
+					}
+				}
+				$report_csv .= '"';
+				$report_csv .= ',"'.$this->_csv_text($location->latitude).'"';
+				$report_csv .= ',"'.$this->_csv_text($location->longitude).'"';
+
+				if ($location->incident->incident_active)
+				{
+					$report_csv .= ",YES";
+				}
+				else
+				{
+					$report_csv .= ",NO";
+				}
+
+				if ($location->incident->incident_verified)
+				{
+					$report_csv .= ",YES";
+				}
+				else
+				{
+					$report_csv .= ",NO";
+				}
+
+				$report_csv .= "\n";
+			}
+		}
+
+		// Output to browser
+		header("Content-type: text/x-csv");
+		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+		header("Content-Disposition: attachment; filename=" . time() . ".csv");
+		header("Content-Length: " . strlen($report_csv));
+		echo $report_csv;
     }
 
 	/**

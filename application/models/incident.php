@@ -94,7 +94,7 @@ class Incident_Model extends ORM {
 	public static function get_total_reports($approved = FALSE)
 	{
 		return ($approved)
-			? ORM::factory('incident')->where('incident_active', '1')->count_all()
+			? ORM::factory('incident')->where('incident_active', '1')->where('incident_privacy', 0)->count_all()
 			: ORM::factory('incident')->count_all();
 	}
 
@@ -107,8 +107,8 @@ class Incident_Model extends ORM {
 	public static function get_total_reports_by_verified($verified = FALSE)
 	{
 		return ($verified)
-			? ORM::factory('incident')->where('incident_verified', '1')->where('incident_active', '1')->count_all()
-			: ORM::factory('incident')->where('incident_verified', '0')->where('incident_active', '1')->count_all();
+			? ORM::factory('incident')->where('incident_verified', '1')->where('incident_active', '1')->where('incident_privacy', 0)->count_all()
+			: ORM::factory('incident')->where('incident_verified', '0')->where('incident_active', '1')->where('incident_privacy', 0)->count_all();
 	}
 
 	/**
@@ -403,7 +403,8 @@ class Incident_Model extends ORM {
 		}
 		else
 		{
-			$sql .= 'WHERE i.incident_active = 1 ';
+			$sql .= 'WHERE i.incident_active = 1 '
+			    . "AND i.incident_privacy = 0 ";
 		}
 
 		// Check for the additional conditions for the query
@@ -751,7 +752,7 @@ class Incident_Model extends ORM {
 	 */
 	public function is_owner($user)
 	{
-		return ($this->user_id == $user->id) OR $user->username == "admin";
+		return ($this->user_id == $user->id) OR $user->has(ORM::factory('role', 'superadmin'));
 	}
 
 	/**
@@ -810,6 +811,32 @@ class Incident_Model extends ORM {
 
 		Kohana::log("error", "The layer has already been associated with this incident");
 		return FALSE;
+	}
+
+	/**
+	 * Checks if the specified user has access to the
+	 * incident
+	 *
+	 * @param  ORM $user
+	 * @return bool
+	 */
+	public function has_access($user)
+	{
+		// If the incident is public, return TRUE
+		if ( ! $this->incident_privacy)
+		{
+			return TRUE;
+		}
+
+		// If the incident is private and no user has been specified
+		// return FALSE
+		if ($this->incident_privacy AND empty($user))
+		{
+			return FALSE;
+		}
+
+		// Default - check for ownership
+		return $this->is_owner($user);
 	}
 
 }
