@@ -19,25 +19,25 @@ class Locations_Controller extends Main_Controller {
 	 */ 
 	public function create($incident_id = FALSE)
 	{
-    	// Validate the specified incident ID and ensure the
-    	// user is logged in before proceeding
-    	if ( ! Incident_Model::is_valid_incident($incident_id, FALSE) OR ! $this->user)
-    	{
-    		url::redirect('main');
-    	}
+		// Validate the specified incident ID and ensure the
+		// user is logged in before proceeding
+		if ( ! Incident_Model::is_valid_incident($incident_id, FALSE) OR ! $this->user)
+		{
+			url::redirect('main');
+		}
 
-    	// Load the incident
-    	$incident = ORM::factory('incident', $incident_id);
+		// Load the incident
+		$incident = ORM::factory('incident', $incident_id);
 
-    	// Set the view properties
-    	$this->template->content = View::factory('locations/create')
+		// Set the view properties
+		$this->template->content = View::factory('locations/create')
 			->set('user', $this->user)
 			->set('incident', $incident)
 			->bind('incident_layers', $incident_layers)
 			->bind('javascript', $javascript);
 
-    	// Set the properties for the JavaScript
-    	$javascript = View::factory('locations/js/location')
+		// Set the properties for the JavaScript
+		$javascript = View::factory('locations/js/location')
 			->set('latitude', $incident->incident_default_lat)
 			->set('longitude', $incident->incident_default_lon)
 			->set('map_zoom', $incident->incident_zoom)
@@ -247,47 +247,47 @@ class Locations_Controller extends Main_Controller {
 		header("Content-Disposition: attachment; filename=" . time() . ".csv");
 		header("Content-Length: " . strlen($report_csv));
 		echo $report_csv;
-    }
+	}
 
 	/**
 	 * Delete Photo
 	 * @param int $id The unique id of the photo to be deleted
 	 */
-    function deleteAsset ($id)
-    {
-    	$media = ORM::factory('media')->where('id',$id)->find();
-    	$incident_id = $media->incident_id;
-    	
-    	//Special for photos that have physical assets on the system
-        if ($media->media_type == 1 )
-        {
-            $photo = $media;
-            $photo_large = $photo->media_link;
-            $photo_thumb = $photo->media_thumb;
-
-            // Delete Files from Directory
-            if ( ! empty($photo_large))
-            {
-                unlink(Kohana::config('upload.directory', TRUE) . $photo_large);
-            }
-            
-            if ( ! empty($photo_thumb))
-            {
-                unlink(Kohana::config('upload.directory', TRUE) . $photo_thumb);
-            }
-        }
-        
-        $media->delete();
-		url::redirect(url::site().'locations/submit/'.$incident_id);
-    }
-
-	function deleteAsset2 ( $id, $user_id)
+	public function deleteAsset ($id)
 	{
-    	$media = ORM::factory('media')->where('id',$id)->find();
-    	$incident_id = $media->incident_id;
+		$media = ORM::factory('media')->where('id',$id)->find();
+		$incident_id = $media->incident_id;
+    	
+		//Special for photos that have physical assets on the system
+		if ($media->media_type == 1 )
+		{
+			$photo = $media;
+			$photo_large = $photo->media_link;
+			$photo_thumb = $photo->media_thumb;
+
+			// Delete Files from Directory
+			if ( ! empty($photo_large))
+			{
+				unlink(Kohana::config('upload.directory', TRUE) . $photo_large);
+			}
+
+			if ( ! empty($photo_thumb))
+			{
+				unlink(Kohana::config('upload.directory', TRUE) . $photo_thumb);
+			}
+		}
+
+		$media->delete();
+		url::redirect(url::site().'locations/submit/'.$incident_id);
+	}
+
+	public function deleteAsset2 ( $id, $user_id)
+	{
+		$media = ORM::factory('media')->where('id',$id)->find();
+		$incident_id = $media->incident_id;
 		if ($media->owner_id != $user_id)
 		{
-		    // popup para avisar que nao sao os mesmos caras, volta
+			// popup para avisar que nao sao os mesmos caras, volta
 			echo "<script language=javascript>alert('Please enter a valid username.')</script>";
 			url::redirect(url::site().'locations/submit/'.$incident_id . '/Somente quem postou a midia pode removê-la. Entre em contato.');
 		}
@@ -303,37 +303,24 @@ class Locations_Controller extends Main_Controller {
 				// Delete Files from Directory
 				if ( ! empty($photo_large))
 				{
-				    unlink(Kohana::config('upload.directory', TRUE) . $photo_large);
+					unlink(Kohana::config('upload.directory', TRUE) . $photo_large);
 				}
 
 				if ( ! empty($photo_thumb))
 				{
-				    unlink(Kohana::config('upload.directory', TRUE) . $photo_thumb);
+					unlink(Kohana::config('upload.directory', TRUE) . $photo_thumb);
 				}
 			}
-		
+
 			$media->delete();
 		}
-		
+
 		url::redirect(url::site().'locations/submit/'.$incident_id);
 	}
 
-	private function _save_new_location($name,$lat,$lon,$layer_id,$incident_id)
+	private function _csv_text($text)
 	{
-		$location = new Location_Model();
-		$location->location_name = $name;
-		$location->latitude = $lat;
-		$location->longitude = $lon;
-		$location->location_date = date("Y-m-d H:i:s",time());
-		$location->layer_id = $layer_id;
-		$location->incident_id = $incident_id;
-		$location->save();
-		return $location;
-    }
-    
-    private function _csv_text($text)
-    {
-        $text = stripslashes(htmlspecialchars($text));
-        return $text;
-    }
+		$text = stripslashes(htmlspecialchars($text));
+		return $text;
+	}
 }

@@ -41,6 +41,7 @@ class Reports_Controller extends Main_Controller {
 		$this->template->header->this_page = 'reports';
 		$this->template->header->page_title .= Kohana::lang('ui_main.reports').Kohana::config('settings.title_delimiter');
 
+		// Main view
 		$this->template->content = View::factory('reports/main')
 			->bind('default_map_all', $default_map_all)
 			->bind('default_map_all_icon', $default_map_all_icon)
@@ -88,7 +89,7 @@ class Reports_Controller extends Main_Controller {
 		$report_listing_view = $this->_get_report_listing_view($l);
 
 		// Load the category
-		$category_id = (isset($_GET['c']) AND intval($_GET['c']) > 0)? intval($_GET['c']) : 0;
+		$category_id = (isset($_GET['c']) AND intval($_GET['c']) > 0) ? intval($_GET['c']) : 0;
 		$category = ORM::factory('category', $category_id);
 
 		// Get the category title
