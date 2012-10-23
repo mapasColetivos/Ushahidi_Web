@@ -4,13 +4,13 @@
 		<!-- social -->
 		<div id="social">
 			<div id="facebook_button">
-				<?php 
+				<?php
 					// URL to share on Facebook
-					echo html::anchor("#", "", 
+					echo html::anchor("#", "",
 					    array("name"=>"fb_share", "type"=>"icon", "share_url"=>""));
 
 					// Facebook sharing JavaScript
-					echo html::script("http://static.ak.fbcdn.net/connect.php/js/FB.Share"); 
+					echo html::script("http://static.ak.fbcdn.net/connect.php/js/FB.Share");
 				?>
 			</div>
 			<div id="twitter_button">
@@ -24,7 +24,7 @@
 					    "data-lang" => "pt"
 					));
 
-					// Twitter widget JavaScript 
+					// Twitter widget JavaScript
 					echo html::script("https://platform.twitter.com/widgets.js");
 				?>
 			</div>
@@ -50,7 +50,7 @@
 						$attributes['class'] = 'user-follow following';
 						$attributes['data-action-name'] = 'unfollow';
 					}
-					
+
 					// Display the anchor
 					echo html::anchor("#", "", $attributes);
 				}
@@ -61,7 +61,7 @@
 
 			<div class="user_title">
 				<h2>
-				<?php 
+				<?php
 					echo $visited_user->name;
 					if ($visiting_user AND ($visiting_user->id == $visited_user->id))
 					{
@@ -79,7 +79,7 @@
 
 				<!-- user website -->
 				<p>
-					web: 
+					web:
 				<?php
 					if ($visited_user->web)
 					{
@@ -117,8 +117,8 @@
 					{
 						// Display the collaborator's avatar
 						echo html::anchor(
-							"users/index/".$user->id, 
-							html::image($user->gravatar(), 
+							"users/index/".$user->id,
+							html::image($user->gravatar(),
 								array('width'=>'30px', 'title'=>$user->name)));
 					}
 				?>
@@ -131,25 +131,22 @@
 				<div id="maps_count_content">
 					<table id="maps_count_counter">
 						<tr>
-							<!-- No. of maps (incidents) the visited use has created -->	
+							<!-- No. of maps (incidents) the visited use has created -->
 							<td class="maps_counter active" id="created_counter">
-								<span><?php echo $visited_user->incident->count(); ?></span>
-								</br>
+								<span><?php echo count($incidents); ?></span><br/>
 								criados
 							</td>
 							<td/>
 							<!-- No. of maps (incidents) the visited user has collaborated on -->
 							<td class="maps_counter" id="available_counter">
-								<span><?php echo count($visited_user->get_incidents_collaborated_on()); ?></span>
-								</br>
+								<span><?php echo count($visited_user->get_incidents_collaborated_on()); ?></span><br/>
 								colaborando
 							</td>
 							<td/>
 
 							<!-- No. of incidents (maps) the visited user following -->
 							<td class="maps_counter" id="following_counter">
-								<span><?php echo $visited_user->incident_follows->count(); ?></span>
-								</br>
+								<span><?php echo $visited_user->incident_follows->count(); ?></span><br/>
 								seguindo
 							</td>
 						</tr>
@@ -157,23 +154,19 @@
 					<div id="maps_count_list">
 						<!-- List the maps (incidents) created by the visited user -->
 						<ul class="map_list" id="created_counter_list">
-						<?php foreach ($visited_user->incident as $incident): ?>
-							<?php if ( ! $incident->incident_privacy OR $has_view_access): ?>
+						<?php foreach ($incidents as $incident): ?>
 							<li>
 								<?php echo html::anchor("reports/view/".$incident->id, $incident->incident_title); ?>
 							</li>
-							<?php endif; ?>
 						<?php endforeach; ?>
 						</ul>
 
 						<!-- List the maps being collaborated on -->
 						<ul class="map_list" id="available_counter_list" style='display:none'>
 						<?php foreach ($visited_user->get_incidents_collaborated_on() as $incident): ?>
-							<?php if ( ! $incident->incident_privacy OR $has_view_access): ?>
 							<li>
 								<?php echo html::anchor("reports/view/".$incident->id, $incident->incident_title); ?>
 							</li>
-							<?php endif; ?>
 						<?php endforeach; ?>
 						</ul>
 
@@ -181,11 +174,9 @@
 						<ul class="map_list" id="following_counter_list" style='display:none'>
 						<?php foreach ($visited_user->incident_follows as $follow): ?>
 							<?php $incident = $follow->incident; ?>
-							<?php if ( ! $incident->incident_privacy OR $has_view_access): ?>
 							<li>
 								<?php echo html::anchor("reports/view/".$incident->id, $incident->incident_title); ?>
 							</li>
-							<?php endif; ?>
 						<?php endforeach; ?>
 						</ul>
 					</div>
@@ -286,5 +277,5 @@ $(function(){
 		// Prevent further event processing
 		return false;
 	});
-}); 
+});
 </script>

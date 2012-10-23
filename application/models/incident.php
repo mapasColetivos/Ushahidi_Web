@@ -823,7 +823,7 @@ class Incident_Model extends ORM {
 	public function has_access($user)
 	{
 		// If the incident is public, return TRUE
-		if ( ! $this->incident_privacy)
+		if ( ! $this->incident_privacy OR $user->loaded)
 		{
 			return TRUE;
 		}
@@ -835,8 +835,8 @@ class Incident_Model extends ORM {
 			return FALSE;
 		}
 
-		// Default - check for ownership
-		return $this->is_owner($user);
+		// Default
+		return FALSE;
 	}
 
 }

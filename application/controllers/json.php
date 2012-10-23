@@ -887,7 +887,7 @@ class Json_Controller extends Template_Controller {
 
 		// Build the predicate list first because the Database library
 		// doesn't 
-		$incident_where = "1=1";
+		$incident_where = "1=1 AND i.incident_privacy = 0";
 		if (Incident_Model::is_valid_incident($incident_id, FALSE))
 		{
 			$incident_where = array();
@@ -924,7 +924,6 @@ class Json_Controller extends Template_Controller {
 		    ->join('incident_category', 'incident_category.incident_id', 'incident.id')
 		    ->join('category', 'category.id', 'incident_category.category_id')
 		    ->where('incident.incident_active', 1)
-		    ->where('incident.incident_privacy', 0)
 		    ->where($incident_where)
 		    ->get();
 

@@ -14,7 +14,7 @@
  */
 
 class Reports_Controller extends Main_Controller {
-	
+
 	/**
 	 * Whether an admin console user is logged in
 	 * @var bool
@@ -43,6 +43,9 @@ class Reports_Controller extends Main_Controller {
 
 		// Main view
 		$this->template->content = View::factory('reports/main')
+			->set('total_reports', Incident_Model::get_total_reports(TRUE))
+			->set('category_tree_view', category::get_category_tree_view())
+			->set('services', Service_Model::get_array())
 			->bind('default_map_all', $default_map_all)
 			->bind('default_map_all_icon', $default_map_all_icon)
 			->bind('alert_radius_view', $alert_radius_view)
@@ -50,10 +53,7 @@ class Reports_Controller extends Main_Controller {
 			->bind('category_title', $category_title)
 			->bind('oldest_timestamp', $oldest_timestamp)
 			->bind('latest_timestamp', $latest_timestamp)
-			->bind('custom_forms_filter', $custom_forms_filter)
-			->set('total_reports', Incident_Model::get_total_reports(TRUE))
-			->set('category_tree_view', category::get_category_tree_view())
-			->set('services', Service_Model::get_array());
+			->bind('custom_forms_filter', $custom_forms_filter);
 
 		// JavaScript for this page
 		$this->themes->js = View::factory('reports/reports_js')
@@ -67,7 +67,7 @@ class Reports_Controller extends Main_Controller {
 
 		// Get Default Color
 		$default_map_all = Kohana::config('settings.default_map_all');
-		
+
 		// Get default icon
 		$default_map_all_icon = '';
 		if (Kohana::config('settings.default_map_all_icon_id'))
@@ -96,7 +96,7 @@ class Reports_Controller extends Main_Controller {
 		$category_title = ($category->loaded)
 			? Category_Lang_Model::category_title($category_id, $l)
 			: "";
-		
+
 		// Get the date of the oldest report
 		if (isset($_GET['s']) AND ! empty($_GET['s']) AND intval($_GET['s']) > 0)
 		{
@@ -142,13 +142,11 @@ class Reports_Controller extends Main_Controller {
 		}
 
 		// Load the report listing view
-		$report_listing = new View('reports/list');
-
-		// Fetch all incidents
-		$incidents = reports::fetch_incidents(TRUE);
-
-		// Pagination
-		$pagination = reports::$pagination;
+		$report_listing = View::factory('reports/list')
+			->set('incidents', reports::fetch_incidents(TRUE))
+			->bind('localized_categories', $localized_categories)
+			->bind('pagination', $pagination)
+			->bind('stats_breadcrumb', $stats_breadcrumb);
 
 		// For compatibility with older custom themes:
 		// Generate array of category titles with their proper localizations using an array
@@ -158,12 +156,8 @@ class Reports_Controller extends Main_Controller {
 			$localized_categories[$category['category_title']] = Category_Lang_Model::category_title($category['category_id']);
 		}
 
-		// Set the view content
-		$report_listing->incidents = $incidents;
-		$report_listing->localized_categories = $localized_categories;
-
-		//Set default as not showing pagination. Will change below if necessary.
-		$report_listing->pagination = "";
+		// Pagination
+		$pagination = reports::$pagination;
 
 		// Pagination and Total Num of Report Stats
 		$plural = ($pagination->total_items == 1)? "" : "s";
@@ -179,23 +173,21 @@ class Reports_Controller extends Main_Controller {
 
 			if ($total_pages >= 1)
 			{
-				$report_listing->pagination = $pagination;
-
 				// Show the total of report
-				// @todo This is only specific to the frontend reports theme
-				$report_listing->stats_breadcrumb = $pagination->current_first_item.'-'
+				$stats_breadcrumb = $pagination->current_first_item.'-'
 											. $pagination->current_last_item.' of '.$pagination->total_items.' '
 											. Kohana::lang('ui_main.reports');
 			}
 			else
-			{ 
+			{
 				// If we don't want to show pagination
-				$report_listing->stats_breadcrumb = $pagination->total_items.' '.Kohana::lang('ui_admin.reports');
+				$stats_breadcrumb = $pagination->total_items.' '.Kohana::lang('ui_admin.reports');
 			}
 		}
 		else
 		{
-			$report_listing->stats_breadcrumb = '('.$pagination->total_items.' report'.$plural.')';
+			$pagination = '';
+			$stats_breadcrumb = '('.$pagination->total_items.' report'.$plural.')';
 		}
 
 		// Return
@@ -206,7 +198,7 @@ class Reports_Controller extends Main_Controller {
 	{
 		$this->template = "";
 		$this->auto_render = FALSE;
-		
+
 		$report_listing_view = $this->_get_report_listing_view();
 		print $report_listing_view;
 	}
@@ -390,28 +382,18 @@ class Reports_Controller extends Main_Controller {
 
 		if ( ! Incident_Model::is_valid_incident($id, TRUE))
 		{
-			url::redirect('main');
+			url::redirect('reports');
 		}
 
 		// Load the incident
-		$incident = ORM::factory('incident')
-			->where('id',$id)
-			->where('incident_active',1)
-			->find();
-
-		// Check if the incident exists and the currently logged user
-		// has permissions to access
-		if ( ! $incident->loaded OR ! $incident->has_access($this->user))
-		{
-			url::redirect('reports/');
-		}
+		$incident = ORM::factory('incident', $id);
 
 		$this->template->header->this_page = 'reports';
 		$this->template->content = View::factory('reports/detail')
 			->bind('incident', $incident)
 			->bind('collaborators', $collaborators)
 			->set('user', $this->user);
-			
+
 		// Filters
 		$incident_title = $incident->incident_title;
 		$incident_description = $incident->incident_description;
@@ -468,7 +450,7 @@ class Reports_Controller extends Main_Controller {
 		}
 		else
 		{
-			if (!empty($_POST['action']) AND !empty($_POST['type']))
+			if ( ! empty($_POST['action']) AND !empty($_POST['type']))
 			{
 				$action = $_POST['action'];
 				$type = $_POST['type'];
@@ -584,7 +566,7 @@ class Reports_Controller extends Main_Controller {
 			if ($geocode_result)
 			{
 				echo json_encode(array_merge(
-					$geocode_result, 
+					$geocode_result,
 					array('status' => 'success')
 				));
 			}
@@ -657,7 +639,7 @@ class Reports_Controller extends Main_Controller {
 			{
 				$total_rating += $rating->rating;
 			}
-			
+
 			return $total_rating;
 		}
 		else
@@ -734,7 +716,7 @@ class Reports_Controller extends Main_Controller {
     }
 
     /**
-     * REST endpoint for report (incident) follow/unfollow 
+     * REST endpoint for report (incident) follow/unfollow
      */
     public function social()
     {

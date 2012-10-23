@@ -4,13 +4,13 @@
 		<!-- social -->
 		<div id="social">
 			<div id="facebook_button">
-				<?php 
+				<?php
 					// URL to share on Facebook
-					echo html::anchor($incident->share_url(), "", 
+					echo html::anchor($incident->share_url(), "",
 					    array("name"=>"fb_share", "type"=>"icon", "share_url"=>$incident->share_url()));
 
 					// Facebook sharing JavaScript
-					echo html::script("http://static.ak.fbcdn.net/connect.php/js/FB.Share"); 
+					echo html::script("http://static.ak.fbcdn.net/connect.php/js/FB.Share");
 				?>
 			</div>
 			<div id="twitter_button">
@@ -24,7 +24,7 @@
 					    "data-lang" => "pt"
 					));
 
-					// Twitter widget JavaScript 
+					// Twitter widget JavaScript
 					echo html::script("https://platform.twitter.com/widgets.js");
 				?>
 			</div>
@@ -53,8 +53,8 @@
 					</p>
 					<p>
 					<!-- Incident tags go here -->
-						Tags: 
-					<?php 
+						Tags:
+					<?php
 						foreach ($incident->incident_tags as $incident_tag)
 						{
 							$tag = $incident_tag->tag;
@@ -64,25 +64,25 @@
 					</p>
 				</div>
 			</div>
-			
+
 			<div class="divisor"></div>
 
 			<div class="maps_count">
 				<p>exibições: </p>
 				<p>última atualização:</p>
 				<table>
-					<tr>	
-						<td><span><?php echo $incident->count_images(); ?></span>
-							</br>
-						fotos
+					<tr>
+						<td>
+							<span><?php echo $incident->count_images(); ?></span><br/>
+							fotos
 						</td>
-						<td><span><?php echo $incident->count_videos(); ?></span>
-							</br>
-						videos
+						<td>
+							<span><?php echo $incident->count_videos(); ?></span><br/>
+							videos
 						</td>
-						<td><span><?php echo $incident->count_reports(); ?></span>
-							</br>
-						reports
+						<td>
+							<span><?php echo $incident->count_reports(); ?></span><br/>
+							reports
 						</td>
 					</tr>
 				</table>
@@ -99,7 +99,7 @@
 					<?php
 					 	// Show the author's gravatar
 						$creator = $incident->user;
-						echo html::anchor("users/index/".$creator->id, 
+						echo html::anchor("users/index/".$creator->id,
 							html::image($creator->gravatar(), array('width'=>'30px', 'title'=>$creator->username)));
 					?>
 				</p>
@@ -114,8 +114,8 @@
 						{
 							// Display the collaborator's avatar
 							echo html::anchor(
-								"users/index/".$collaborator->id, 
-								html::image($collaborator->gravatar(), 
+								"users/index/".$collaborator->id,
+								html::image($collaborator->gravatar(),
 									array('width'=>'30px', 'title'=>$collaborator->username)));
 						}
 					?>

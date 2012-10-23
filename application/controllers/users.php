@@ -4,14 +4,14 @@
  * Users Controller
  *
  * PHP version 5
- * LICENSE: This source file is subject to LGPL license 
+ * LICENSE: This source file is subject to LGPL license
  * that is available through the world-wide-web at the following URI:
  * http://www.gnu.org/copyleft/lesser.html
- * @author     mapasColetivos Team <http://www.mapascoletivos.com.br> 
+ * @author     mapasColetivos Team <http://www.mapascoletivos.com.br>
  * @package    Ushahidi - http://github.com/mapasColetivos/Ushahidi_Web
  * @subpackage Controllers
  * @copyright  Ushahidi - http://www.ushahidi.com
- * @license    http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL) 
+ * @license    http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL)
  */
 class Users_Controller extends Main_Controller {
 
@@ -27,28 +27,21 @@ class Users_Controller extends Main_Controller {
 			url::redirect('main');
 		}
 
-		// Check for view access to private incidents (maps)
-		$has_view_access = FALSE;
-		if ($this->user)
-		{
-			$has_view_access = ($this->user->username == "admin" OR $this->user->id = $visited_user->id);
-		}
-
-		$this->template->content = new View('users/layout');
-		$this->template->content->visited_user = $visited_user;	
-		$this->template->content->visiting_user = $this->user;
-		$this->template->content->users_following = $visited_user->get_following();
-		$this->template->content->has_view_access = $has_view_access;
+		$this->template->content = View::factory('users/layout')
+			->set('visited_user', $visited_user)
+			->set('visiting_user', $this->user)
+			->set('users_following', $visited_user->get_following())
+			->set('incidents', $visited_user->get_visible_incidents($this->user));
 
 		// Javascript Header
 		$this->themes->map_enabled = TRUE;
 
-		$this->themes->js = new View('reports/view_js');
-		$this->themes->js->markers_url = sprintf("json/locations?uid=%d", $visited_user->id);
-		$this->themes->js->layer_name = $visited_user->username."'s Pontos";
-		$this->themes->js->map_zoom = NULL;
-		$this->themes->js->latitude = Kohana::config('settings.default_lat');
-		$this->themes->js->longitude = Kohana::config('settings.default_lon');
+		$this->themes->js = View::factory('reports/view_js')
+			->set('markers_url', sprintf("json/locations?uid=%d", $visited_user->id))
+			->set('layer_name', $visited_user->username."'s Pontos")
+			->set('map_zoom', NULL)
+			->set('latitude', Kohana::config('settings.default_lat'))
+			->set('longitude', Kohana::config('settings.default_lon'));
 
 		$this->template->header->header_block = $this->themes->header_block();
 	}
@@ -64,9 +57,12 @@ class Users_Controller extends Main_Controller {
 			url::redirect('main');
 		}
 
-		// TODO: Redirect admin user to the dashboard
-
-		$this->template->content = new View('users/profile');
+		$this->template->content = View::factory('users/profile')
+			->set('user', $this->user)
+			->bind('errors', $errors)
+			->bind('form', $form)
+			->bind('form_error', $form_error)
+			->bind('form_saved', $form_saved);
 
 		// setup and initialize form field names
 		$form = array(
@@ -132,19 +128,14 @@ class Users_Controller extends Main_Controller {
 			}
 		}
 
-		$this->template->content->user = $this->user;
-		$this->template->content->form = $form;
-		$this->template->content->errors = $errors;
-		$this->template->content->form_error = $form_error;
-		$this->template->content->form_saved = $form_saved;
-		$this->template->header->header_block = $this->themes->header_block();	
+		$this->template->header->header_block = $this->themes->header_block();
 	}
 
 	/**
 	 * Displays the user signup form
-	 */	
+	 */
 	public function signup()
-	{   
+	{
 		$this->template->content = new View('users/signup');
 
 		// Setup and initialize form field names
