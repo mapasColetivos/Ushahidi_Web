@@ -887,7 +887,7 @@ class Json_Controller extends Template_Controller {
 
 		// Build the predicate list first because the Database library
 		// doesn't 
-		$incident_where = "1=1 AND i.incident_privacy = 0";
+		$incident_where = "1=1 AND incident.incident_privacy = 0";
 		if (Incident_Model::is_valid_incident($incident_id, FALSE))
 		{
 			$incident_where = array();
