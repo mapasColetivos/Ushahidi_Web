@@ -77,6 +77,7 @@ class location_Core {
 		$location->location_description = $post->location_description;
 		$location->latitude = $post->latitude;
 		$location->longitude = $post->longitude;
+		$location->incident_legend_id = $post->incident_legend_id;
 		$location->user_id = $user_id;
 		if ( ! $location->loaded)
 		{

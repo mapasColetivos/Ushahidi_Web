@@ -28,16 +28,25 @@ class Location_Model extends ORM {
 	);
 	
 	/**
-	 * Belongs-to relatioship definition
+	 * Belongs-to relationship definition
 	 * @var array
 	 */
-	protected $belongs_to = array('incident', 'user');
+	protected $belongs_to = array(
+		'incident',
+		'user'
+	);
 
 	/**
 	 * Many-to-one relationship definition
 	 * @var array
 	 */
-	protected $has_one = array('country');
+	protected $has_one = array(
+		// A location has one country
+		'country',
+
+		// A location has one legend
+		'incident_legend'
+	);
 	
 	/**
 	 * Database table name
@@ -113,8 +122,9 @@ class Location_Model extends ORM {
 		    "properties" => array(
 		        "id" => $this->id,
 		        "name" => $this->location_name,
+				"incident_legend_id" => $this->incident_legend_id,
 		        "link" => url::site("location/show/".$this->id),
-		        "color" => "",
+		        "color" => $this->incident_legend->legend_color,
 		        "thumb" => $thumb,
 		        "icon" => $icon,
 		    ),
@@ -124,4 +134,5 @@ class Location_Model extends ORM {
 		    )
 		);
 	}
+
 }

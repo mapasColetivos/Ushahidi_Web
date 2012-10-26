@@ -450,6 +450,7 @@ class User_Model extends Auth_User_Model {
 	 *     2. Uploading a KML for that incident
 	 *     3. Submitting a location for the incident
 	 *     4. Uploading media (news source link, images, video) for the incident
+	 *     5. Creating a legend on an incident
 	 *
 	 * @return array
 	 */
@@ -485,6 +486,12 @@ class User_Model extends Auth_User_Model {
 		foreach ($this->media as $media)
 		{
 			$this->_add_incident_to_array($incidents, $media->incident);
+		}
+		
+		// Legends created by this user
+		foreach ($this->incident_legend as $legend)
+		{
+			$this->_add_to_incident_array($incidents, $legend->incident);
 		}
 
 		return array_values($incidents);

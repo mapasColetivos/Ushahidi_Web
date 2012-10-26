@@ -3,7 +3,6 @@
 /**
  * Model for reported Incidents
  *
- *
  * PHP version 5
  * LICENSE: This source file is subject to LGPL license
  * that is available through the world-wide-web at the following URI:
@@ -13,7 +12,6 @@
  * @copyright  Ushahidi - http://www.ushahidi.com
  * @license    http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL)
  */
-
 class Incident_Model extends ORM {
 	/**
 	 * One-to-may relationship definition
@@ -31,10 +29,10 @@ class Incident_Model extends ORM {
 		'cluster' => 'cluster_incident',
 		'geometry',
 		'incident_kml',
-		'location_layer',
 		'incident_tags',
 		'location',
 		'incident_follows',
+		'incident_legend'
 	);
 
 	/**
@@ -683,6 +681,7 @@ class Incident_Model extends ORM {
 	 *     - Created a location entry
 	 *     - Uploaded a KML for the current incident
 	 *     - Uploaded media (image, video etc) for the incident
+	 *     - Added a legend to the incident/map
 	 * @return array
 	 */
 	public function get_collaborators()
@@ -801,6 +800,7 @@ class Incident_Model extends ORM {
 
 		if ( ! $entry->loaded)
 		{
+			$entry = new Incident_Kml_Model();
 			$entry->incident_id = $this->id;
 			$entry->layer_id = $layer->id;
 			$entry->user_id = $user->id;
@@ -837,6 +837,27 @@ class Incident_Model extends ORM {
 
 		// Default
 		return FALSE;
+	}
+	
+	/**
+	 * Gets the legends for the current incident
+	 *
+	 * @return array
+	 */
+	public function get_legends_array()
+	{
+		$legends = array();
+		
+		foreach ($this->incident_legend as $member)
+		{
+			$legends[] = array(
+				'id' => $member->id,
+				'legend_name' => $member->legend->legend_name,
+				'legend_color' => $member->legend_color
+			);
+		}
+		
+		return $legends;
 	}
 
 }
