@@ -33,7 +33,7 @@ class User_Model extends Auth_User_Model {
 		'incident_kml',
 		'user_followers',
 		'layer',
-		'location_layer',
+		'incident_legend',
 		'incident_follows',
 	);
 
@@ -476,12 +476,6 @@ class User_Model extends Auth_User_Model {
 			$this->_add_incident_to_array($incidents, $location->incident);
 		}
 
-		// Location layers (location_layer)
-		foreach ($this->location_layer as $location_layer)
-		{
-			$this->_add_incident_to_array($incidents, $location_layer->incident);
-		}
-
 		// Media
 		foreach ($this->media as $media)
 		{
@@ -491,7 +485,9 @@ class User_Model extends Auth_User_Model {
 		// Legends created by this user
 		foreach ($this->incident_legend as $legend)
 		{
-			$this->_add_to_incident_array($incidents, $legend->incident);
+			if ( ! $legend->incident->loaded)
+				continue;
+			$this->_add_incident_to_array($incidents, $legend->incident);
 		}
 
 		return array_values($incidents);
