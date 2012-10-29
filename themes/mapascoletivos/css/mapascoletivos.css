@@ -3111,7 +3111,6 @@ div.modal-dialog .dialog-close a {
 	float: left;
 }
 
-
 .modal-dialog div.create-layer {
 	background-color: #CCC;
 	padding: 5px 8px;
@@ -3134,4 +3133,53 @@ div.modal-dialog .dialog-close a {
 }
 .modal-dialog a.create-layer:hover {
 	background-color: #C00;
+}
+
+ul.legend-list {
+	list-style-type: none;
+}
+
+ul.legend-list li {
+	margin-bottom: 2px;
+	padding: 0;
+	width: 380px;
+}
+
+.legend-list li.active {
+	background-color: #CCC;
+}
+
+ul.legend-list li a.legend {
+	padding: 3px 5px;
+	width: 250px;
+	display: block;
+}
+.legend-list span.legend-color {
+	width: 14px;
+	height: 14px;
+	float: left;
+	display: block;
+	margin-right: 8px;
+}
+.legend-list div.legend-actions {
+	float: right;
+	margin-top: -20px;
+}
+.legend-actions ul{
+	list-style-type: none;	
+}
+.legend-actions ul li {
+	float: left;
+	width: auto;
+}
+.legend-actions li a {
+	padding: 3px 5px;
+	display: block;
+}
+
+div.create-legend {
+    background-color: #CCC;
+    padding: 8px 5px;
+    width: 300px;
+    margin: 4px 0 15px;
 }

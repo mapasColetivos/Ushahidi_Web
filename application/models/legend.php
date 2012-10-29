@@ -38,9 +38,28 @@ class Legend_Model extends ORM {
 	{
 		$legend_orm = ORM::factory('legend')
 			->where('legend_name', $name)
-				->find();
+			->find();
 		
 		return $legend_orm->loaded ? $legend_orm : FALSE;
+	}
+	
+	/**
+	 * Creates a new legend if it doesn't exist
+	 *
+	 * @param string $legend_name Name of the legend being created
+	 * @return ORM
+	 */
+	public static function add_legend($legend_name)
+	{
+		$legend_orm = self::get_legend($legend_name);
+		if ( ! $legend_orm)
+		{
+			$legend_orm = new Legend_Model();
+			$legend_orm->legend_name = $legend_name;
+			$legend_orm->save();
+		}
+		
+		return $legend_orm;
 	}
 	
 }

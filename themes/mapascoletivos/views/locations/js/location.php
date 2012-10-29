@@ -51,11 +51,18 @@ $(function(){
 		model: KmlLayer,
 		url: "<?php echo $layers_api_url; ?>"
 	});
+	
+	// Legends
+	var Legend = Backbone.Model.extend();
+	var LegendsList = Backbone.Collection.extend({
+		model: Legend,
+		url: "<?php echo $legends_api_url; ?>"
+	});
 
-	// Initialize the locations collection
+	// Initialize the collections
 	var locations = new IncidentLocations();
-
 	var kmlLayers = new KmlLayersList();
+	var incidentLegends = new LegendsList();
 
 	// 
 	// View for the controls on the toolbar
@@ -293,7 +300,9 @@ $(function(){
 				news: "#divNews",
 				photo: "#divPhoto",
 			};
-
+			
+			// Register reset and add events for the legends collection
+			incidentLegends.on("add", this.addLegend, this);			
 		},
 
 		// Events
@@ -373,6 +382,45 @@ $(function(){
 				this.addMediaItem({id: null, media_type: mediaType, media_link: null});
 			}
 		},
+		
+		addLegend: function(legend) {
+			var view = new LegendItemView({model: legend, locationView: this});
+			this.$("ul.legend-list").append(view.render().el);
+			
+			if (this.model.get("incident_legend_id") === legend.get("id")) {
+				view.$el.addClass("active");
+			}
+			
+			// Attach events
+			var context = this;
+			view.$(".legend-actions a.edit").toggle(function() {
+				context.editLegend(legend, view);
+			}, function() {
+				context.hideEditLegendForm();
+			});
+		},
+		
+		addLegends: function() {
+			incidentLegends.each(this.addLegend, this);
+		},
+		
+		// Sets the legend id for this locatio 
+		// in the legend_id hidden field
+		setLegend: function(legendId) {
+			this.$("#incident_legend_id").val(legendId);
+		},
+
+		// Displays the form for editing a legend item
+		editLegend: function(legend, legendView) {
+			var view = new EditLegendView({model: legend, legendView: legendView});
+			this.$("div.create-legend").html(view.render().el).slideDown();
+		},
+		
+		// Rolls up the edit legend form
+		hideEditLegendForm: function(e) {
+			this.$("div.create-legend").slideUp();
+			return false;
+		},
 
 		render: function() {
 			this.$el.html(this.template(this.model.toJSON()));
@@ -380,8 +428,17 @@ $(function(){
 			this.addMedia("news");
 			this.addMedia("video");
 			this.addMedia("photo");
+			this.addLegends();
 
 			this.display();
+			
+			// Event binding
+			var context = this;
+			this.$("a#add-legend").toggle(function(){
+				context.editLegend(new Legend({legend_name: null, legend_color: null}));
+			}, function() {
+				context.hideEditLegendForm();
+			});
 
 			return this;
 		}
@@ -464,7 +521,6 @@ $(function(){
 		delete: function(e) {
 			var context = this;
 			this.model.destroy({wait: true, success: function(response) {
-				console.log("deleted");
 				context.$el.fadeOut();
 			}});
 
@@ -563,13 +619,153 @@ $(function(){
 			return this;
 		}
 	});
+	
+	// View for a single legend item
+	var LegendItemView = Backbone.View.extend({
+		
+		tagName: "li",
+		
+		template: _.template($("#add-legend-template").html()),
+				
+		events: {
+			"click a.legend": "select",
+			"click .legend-actions a.remove": "delete"
+		},
+		
+		// Sets the legend for the current location to the
+		// selected one
+		select: function(e) {
+			// Remove the active class from all legends
+			$("ul.legend-list li").removeClass("active");
+			this.$el.addClass("active");
+
+			this.options.locationView.setLegend(this.model.get("id"));
+			return false;
+		},
+		
+		// Updates display when the model (legend name or color) is modified
+		update: function(legend) {
+			this.model = legend;
+			this.$el.html(this.template(legend.toJSON()));
+		},
+
+		// Handles deletion of legends
+		delete: function(e) {
+			var view = this;
+			this.model.destroy({
+				wait: true, 
+				success: function(model, response) {
+					// Remove the legend from view
+					view.$el.fadeOut();
+				}
+			});
+
+			return false;
+		},
+
+		render: function() {
+			this.$el.html(this.template(this.model.toJSON()));
+			return this;
+		}
+	});
+	
+	// Add/edit legend view
+	var EditLegendView = Backbone.View.extend({
+		
+		template: _.template($("#edit-legend-template").html()),
+		
+		_isSaving: false,
+		
+		events: {
+			"click a.save": "save",
+			"click a.cancel": "cancel",
+		},
+		
+		// Add/edit legends
+		save: function(e) {
+			if (!this._isSaving) {
+				this._isSaving = true;
+
+				// Grey/disable out the input fields
+				this.$("input").attr("readonly");
+		
+				// Get the input data - legned name and color
+				var legendName = this.$("#legend_name").val(),
+					legendColor = this.$("#legend_color").val(),
+					context = this;
+				
+				// Abort of legend name or color are not specified
+				if (legendName == '' || legendColor == '')
+					return false;
+				
+				// Options to be passed when adding/updating a legend	
+				var saveOptions = {						
+					wait: true, 
+					success: function(model, response) {
+						// Show success message
+						context._isSaving = false;
+						if (context.options.legendView !== undefined) {
+							context.options.legendView.update(model);
+						}
+						// Hide this form
+						context.$el.parent("div.create-legend").slideUp();
+					},
+					error: function(response) {
+						context.$("input").removeAttr("readonly");
+						context._isSaving = false;
+					},
+				};
+				
+				// Legend data to be saved
+				var legendData = {legend_name: legendName, legend_color: legendColor}; 
+				
+				if (this.model.get("id") === undefined) {
+					// Adding a new model, add to the collection
+					incidentLegends.create(legendData, saveOptions);
+				} else {
+					// Updating a model
+					this.model.save(legendData, saveOptions);
+				}
+			}
+			// Halt further event processing
+			return false;
+		},
+		
+		// Cancel add/edit
+		cancel: function(e) {
+			this.$el.slideUp();
+			return false;
+		},
+
+		render: function() {
+			this.$el.html(this.template(this.model.toJSON()));
+			
+			// Color picker events
+			this.$("#legend_color").ColorPicker({
+				onSubmit: function(hsb, hex, rgb) {
+					$('#legend_color').val(hex);
+				},
+				onChange: function(hsb, hex, rgb) {
+					$('#legend_color').val(hex);
+				},
+				onBeforeShow: function () {
+					$(this).ColorPickerSetColor(this.value);
+				}
+			}).bind('keyup', function(){
+				$(this).ColorPickerSetColor(this.value);
+			});
+
+			$(".colorpicker").css({"z-index": 10001});
+			return this;
+		}
+	});
 
 	// --------------------------------------------------------------------------
 	// 
 
 
 	// 
-	// Initialize the list of locations and overlays
+	// Initialize the list of locations, kmls and legends
 	// 
 	locations.reset(<?php echo $locations; ?>);
 	locations.on("add", function(location) {
@@ -577,6 +773,7 @@ $(function(){
 	});
 
 	kmlLayers.reset(<?php echo $layers; ?>);
+	incidentLegends.reset(<?php echo $legends; ?>);
 
 
 	// Callback function for feature selection

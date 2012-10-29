@@ -1,17 +1,17 @@
 <div class="content-bg">
-	<div class="big-block">			
+	<div class="big-block">
 		<div id="map_editor" class="report_right">
 			<input type='hidden' id="incident_id" value='<?php echo $incident->id; ?>'>
 			<input type='hidden' id="latitude" value="0">
 			<input type='hidden' id="longitude" value="0">
 			<div class="report_row">
 				<div class="report-find-location">
-					<?php 
+					<?php
 						echo html::anchor('reports/view/'.$incident->id, "Finalizar Mapa",
 							array('id'=>'finish_edition', 'class'=>'btn_submit_location'));
 					?>
 					<h3>
-					<?php 
+					<?php
 						echo $incident->incident_title;
 						if ($incident->is_owner($user))
 						{
@@ -20,28 +20,28 @@
 					?>
 					</h3>
 					<div class="toolbox">
-						<ul id="controlToggle"> 
+						<ul id="controlToggle">
 							<li>
 								<a href="#" data-image="arrow" class="default toggle">
-								<?php 
-									echo html::image("media/img/toolbar/arrow.png", "clique com o cursor sobre o ponto para editá-lo", 
+								<?php
+									echo html::image("media/img/toolbar/arrow.png", "clique com o cursor sobre o ponto para editá-lo",
 									    array('id'=>'img_arrow'));
 								?>
 								</a>
 							</li>
-							<li> 
+							<li>
 								<a href="#" data-image="location" data-control="point" class="toggle">
 								<?php
-									echo html::image("media/img/toolbar/location.png", "criar novo ponto", 
+									echo html::image("media/img/toolbar/location.png", "criar novo ponto",
 										array('for'=>"pointToggle", 'id'=>'img_location'));
 								?>
-								</a> 
+								</a>
 							</li>
 							<li>
-							<?php 
+							<?php
 								echo html::anchor("#",
 									// Image
-									html::image("media/img/toolbar/upload.png", "importar camadas (.KML, .KMZ)", 
+									html::image("media/img/toolbar/upload.png", "importar camadas (.KML, .KMZ)",
 										array('data-image'=>'upload')),
 									// Anchor attributes
 									array('title'=>'layer', 'class' => 'kml-layer'));
@@ -49,17 +49,17 @@
 							</li>
 							<li>
 								<a href="<?php echo url::site('locations/export/'.$incident->id); ?>" class="save-rep-btn">
-								<img src="<?php echo url::site('media/img/toolbar/download.png'); ?>" 
+								<img src="<?php echo url::site('media/img/toolbar/download.png'); ?>"
 								    data-image="download" title="exportar dados (.CSV)" /></a>
 							</li>
 						</ul>
-						<div style="clear:both;" id="find_text"><?php echo Kohana::lang('ui_main.pinpoint_location'); ?>.</div>						
+						<div style="clear:both;" id="find_text"><?php echo Kohana::lang('ui_main.pinpoint_location'); ?>.</div>
 							<div id="location-search">
 								<?php print form::input('location_find', '', ' title="'.Kohana::lang('ui_main.location_example').'" class="findtext"'); ?>
 								<input type="button" name="button" id="button" value="<?php echo Kohana::lang('ui_main.find_location'); ?>" class="btn_find" />
 								<span id="find_loading" class="report-find-loading"></span>
 							</div>
-					</div>	
+					</div>
 				</div>
 
 				<div id="user_map" class="report_map">
@@ -87,16 +87,16 @@
 
 				</div>
 			</div>
-			<div id="report_points"></div>				
+			<div id="report_points"></div>
 		</div>
 	</div>
 </div>
 
 
-<?php 
+<?php
 	// Include the backbone JS scripts
 	$scripts = array('media/js/underscore-min', 'media/js/backbone-min');
-	echo html::script($scripts, TRUE); 
+	echo html::script($scripts, TRUE);
 ?>
 
 <script type="text/template" id="add-location-template">
@@ -107,15 +107,16 @@
 			<h3>A localização foi salvo com sucesso.</h3>
 		</div>
 		<h2>Editar Ponto</h2>
-		<?php 
+		<?php
 			echo form::open("locations/manage/".$incident->id, array(
 			    'enctype' => 'multipart/form-data',
 			    'target' => 'location_submit_target'
-			)); 
+			));
 		?>
 		<input type="hidden" name="id" value="<%= id %>" />
 		<input type="hidden" name="latitude" value="<%= latitude %>" />
 		<input type="hidden" name="longitude" value="<%= longitude %>" />
+		<input type="hidden" id="incident_legend_id" name="incident_legend_id" value="<%= incident_legend_id %>" />
 
 		<div class="report_row">
 			<h4><?php echo Kohana::lang('ui_main.reports_location_name'); ?><br /></h4>
@@ -129,27 +130,30 @@
 			<textarea name="location_description" rows="10" class="textarea long"><%= location_description %></textarea>
 		</div>
 
+		<div id="divLegends" class="report_row">
+			<h4>Legendas <a id="add-legend" href="#">[adicionar legenda]</a></h4>
+			<div class="create-legend" style="display:none;"></div>
+			<ul class="legend-list"></ul>
+		</div>
+
 		<div id="divNews" class="report_row">
 			<h4>
-				<?php echo Kohana::lang('ui_main.reports_news'); ?> 
+				<?php echo Kohana::lang('ui_main.reports_news'); ?>
 				<span class="box_edit_span">link http://www.url.com</span>
 			</h4>
 		</div>
 		<div id="divVideo" class="report_row">
 			<h4>
-				<?php echo Kohana::lang('ui_main.reports_video'); ?> 
+				<?php echo Kohana::lang('ui_main.reports_video'); ?>
 				<span class="box_edit_span">link para youtube</span>
 			</h4>
 		</div>
 
 		<div id="divPhoto" class="report_row">
 			<h4>
-				<?php echo Kohana::lang('ui_main.reports_photos'); ?> 
+				<?php echo Kohana::lang('ui_main.reports_photos'); ?>
 				<span class="box_edit_span">extensões permitidas: .jpg,.png,.gif || max 2MB</span>
 			</h4>
-		</div>
-
-		<div id="divLegends" class="report_row">
 		</div>
 
 		<div style="clear: both;"></div>
@@ -169,7 +173,7 @@
 </script>
 
 <script type="text/template" id="add-layer-dialog-template">
-	<div class="dialog-close"><a href="#" title="<?php echo Kohana::lang('ui_main.close'); ?>">X</a></div>	
+	<div class="dialog-close"><a href="#" title="<?php echo Kohana::lang('ui_main.close'); ?>">X</a></div>
 	<div class="report_map">
 		<h2><?php echo Kohana::lang('ui_main.layers'); ?></h2>
 
@@ -216,7 +220,7 @@
 </script>
 
 <script type="text/template" id="edit-layer-template">
-	<?php echo form::open("locations/layers/".$incident->id, array(
+	<?php echo form::open("reports/layers/".$incident->id, array(
 	    'enctype' => 'multipart/form-data',
 	    'target' => 'layer_submit_target')); ?>
 
@@ -242,6 +246,35 @@
 		</div>
 	<?php echo form::close(); ?>
 	<iframe name="layer_submit_target" id="layer_submit_target" src="" style="width:0;height:0;border:none;"></iframe>
+</script>
+
+<script type="text/template" id="add-legend-template">
+	<a href="#" class="legend">
+		<span class="legend-color" style="background-color: #<%= legend_color %>;"></span>
+		<span class="legend-title"><%= legend_name %></span>
+	</a>
+	<div class="legend-actions">
+		<ul>
+			<li><a href="#" class="edit"><?php echo Kohana::lang('ui_main.edit'); ?></a></li>
+			<li><a href="#" class="remove"><?php echo Kohana::lang('ui_main.delete'); ?></a></li>
+		</ul>
+	</div>
+</script>
+
+<script type="text/template" id="edit-legend-template">
+	<div class="report_row">
+		<h4><?php echo Kohana::lang('ui_main.name'); ?></h4>
+		<input type="text" name="legend_name" id="legend_name" value="<%= legend_name %>" class="text long"/>
+	</div>
+	<div class="report_row">
+		<h4><?php echo Kohana::lang('ui_main.color'); ?></h4>
+		<input type="text" name="legend_color" id="legend_color" value="<%= legend_color %>" class="text short" />
+	</div>
+	<div style="clear: both;"></div>
+	<div class="report-row buttons">
+		<a href="#" class="cancel"><?php echo Kohana::lang('ui_main.cancel'); ?></a>
+		<a href="#" class="save"><?php echo Kohana::lang('ui_main.save'); ?></a>
+	</div>
 </script>
 
 <?php echo $javascript; ?>

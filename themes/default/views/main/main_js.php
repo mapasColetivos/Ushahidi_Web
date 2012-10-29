@@ -1,20 +1,20 @@
 <?php
 /**
  * Main cluster js file.
- * 
+ *
  * Server Side Map Clustering
  *
  * PHP version 5
- * LICENSE: This source file is subject to LGPL license 
+ * LICENSE: This source file is subject to LGPL license
  * that is available through the world-wide-web at the following URI:
  * http://www.gnu.org/copyleft/lesser.html
- * @author     Ushahidi Team <team@ushahidi.com> 
+ * @author     Ushahidi Team <team@ushahidi.com>
  * @package    Ushahidi - http://source.ushahididev.com
  * @copyright  Ushahidi - http://www.ushahidi.com
- * @license    http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL) 
+ * @license    http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL)
  */
 ?>
-		
+
 // Initialize the Ushahidi namespace
 Ushahidi.baseUrl = "<?php echo url::site(); ?>";
 Ushahidi.markerRadius = <?php echo $marker_radius; ?>;
@@ -60,7 +60,7 @@ function smartColumns() {
 	// Find how many columns of 200px can fit per row / then round it down to a whole number
 	var colNum = <?php echo $blocks_per_row; ?>;
 
-	// Get the width of the row and divide it by the number of columns it 
+	// Get the width of the row and divide it by the number of columns it
 	// can fit / then round it down to a whole number. This value will be
 	// the exact width of the re-adjusted column
 	var colFixed = Math.floor(colWrap / colNum);
@@ -69,7 +69,7 @@ function smartColumns() {
 	// cross-browser bugs that appear in certain view port resolutions.
 	$("ul.content-column").css({ 'width' : colWrap});
 
-	// Set exact width of the re-adjusted column	
+	// Set exact width of the re-adjusted column
 	$("ul.content-column li").css({ 'width' : colFixed});
 }
 
@@ -165,7 +165,7 @@ jQuery(function() {
 	// Render thee JavaScript for the base layers so that
 	// they are accessible by Ushahidi.js
 	<?php echo map::layers_js(FALSE); ?>
-	
+
 	// Map configuration
 	var config = {
 
@@ -219,23 +219,23 @@ jQuery(function() {
 
 	// Category Switch Action
 	$("ul#category_switch li > a").click(function(e) {
-		
+
 		var categoryId = this.id.substring(4);
 		var catSet = 'cat_' + this.id.substring(4);
 
 		// Remove All active
 		$("a[id^='cat_']").removeClass("active");
-		
+
 		// Hide All Children DIV
 		$("[id^='child_']").hide();
 
 		// Add Highlight
-		$("#cat_" + categoryId).addClass("active"); 
+		$("#cat_" + categoryId).addClass("active");
 
 		// Show children DIV
 		$("#child_" + categoryId).show();
 		$(this).parents("div").show();
-		
+
 		// Update report filters
 		map.updateReportFilters({c: categoryId});
 
@@ -274,7 +274,7 @@ jQuery(function() {
 
 		return false;
 	});
-		
+
 	// Timeslider and date change actions
 	$("select#startDate, select#endDate").selectToUISlider({
 		labels: 4,
@@ -295,26 +295,26 @@ jQuery(function() {
 			}
 		}
 	});
-	
+
 	// Media Filter Action
 	$('.filters li a').click(function() {
 		var mediaType = parseFloat(this.id.replace('media_', '')) || 0;
-		
+
 		$('.filters li a').attr('class', '');
 		$(this).addClass('active');
 
 		// Update the report filters
 		map.updateReportFilters({m: mediaType});
-		
+
 		return false;
 	});
-	
+
 	//Execute the function when page loads
 	smartColumns();
 
 	// Are checkins enabled?
 	<?php if (Kohana::config('settings.checkins')): ?>
-	
+
 	// URL for fetching the checkins
 	var checkinsURL = "api/?task=checkin&action=get_ci&mapdata=1&sqllimit=1000&orderby=checkin.checkin_date&sort=ASC";
 
@@ -376,13 +376,7 @@ jQuery(function() {
 
 });
 
-$(window).resize(function () { 
+$(window).resize(function () {
 	//Each time the viewport is adjusted/resized, execute the function
 	smartColumns();
 });
-
-
-<?php if (Kohana::config('settings.checkins')): ?>
-// EK <emmanuel(at)ushahidi.com
-// TODO: Load the sidebar with the checkins - moving this to BackboneJS
-<?php endif; ?>

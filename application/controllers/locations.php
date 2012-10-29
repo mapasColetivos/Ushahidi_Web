@@ -15,8 +15,20 @@
 class Locations_Controller extends Main_Controller {
 
 	/**
+	 * Displays a single location item 
+	 * @param int $location_id
+	 */
+	public function index($location_id)
+	{
+		// TODO - Verify location exists
+		// TODO - Load the location view and set properties
+		// TODO - Render the view
+		exit;
+	}
+
+	/**
 	 * Loads the create location page
-	 */ 
+	 */
 	public function create($incident_id = FALSE)
 	{
 		// Validate the specified incident ID and ensure the
@@ -46,9 +58,11 @@ class Locations_Controller extends Main_Controller {
 			->set('markers_url', "json/locations/".$incident->id)
 			->set('action_url', url::site('locations/manage/'.$incident->id))
 			->set('locations', json_encode($incident->get_locations_array()))
-			->bind('layers', $user_layers)
 			->set('user', $this->user)
-			->set('layers_api_url', url::site('locations/layers/'.$incident->id));
+			->set('layers_api_url', url::site('reports/layers/'.$incident->id))
+			->set('legends', json_encode($incident->get_legends_array()))
+			->set('legends_api_url', url::site('reports/legends/'.$incident->id))
+			->bind('layers', $user_layers);
 
 		$incident_layers = $incident->get_layers();
 		$all_layers = array();
@@ -122,60 +136,6 @@ class Locations_Controller extends Main_Controller {
 			case "delete":
 			break;
 
-		}
-	}
-
-	/**
-	 * REST endpoint for adding/editing location layers
-	 */
-	public function layers($incident_id, $layer_id = NULL)
-	{
-		$this->template = '';
-		$this->auto_render = FALSE;
-
-		switch (request::method())
-		{
-			case "post":
-				Kohana::log("info", "Adding/editing KML");
-				$post = array_merge($_FILES, $_POST);
-				if (($layer_orm = location::save_layer($this->user, $layer_id, $post)) !== FALSE)
-				{
-					if (empty($layer_id))
-					{
-						// New layer added, echo response
-						echo json_encode(array(
-							'success' => TRUE,
-							'layer' => $layer_orm->as_array()
-						));
-					}
-					else
-					{
-						echo json_encode(array('success' => TRUE));
-					}
-				}
-				else
-				{
-					echo json_encode(array(
-						'success' => FALSE,
-						'message' => "The layer could not be saved"
-					));
-				}
-			break;
-
-			case "put":
-				Kohana::log("info", "Adding KML to incident");
-
-				$layer_orm = ORM::factory('layer', $layer_id);
-				ORM::factory('incident', $incident_id)->add_layer($this->user, $layer_orm);
-			break;
-
-			case "delete":
-				$layer_orm = ORM::factory('layer', $layer_id);
-				if ($layer_orm->loaded)
-				{
-					$layer_orm->delete();
-				}
-			break;
 		}
 	}
 
@@ -257,7 +217,7 @@ class Locations_Controller extends Main_Controller {
 	{
 		$media = ORM::factory('media')->where('id',$id)->find();
 		$incident_id = $media->incident_id;
-    	
+
 		//Special for photos that have physical assets on the system
 		if ($media->media_type == 1 )
 		{

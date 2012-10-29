@@ -175,8 +175,8 @@ class Reports_Controller extends Main_Controller {
 			{
 				// Show the total of report
 				$stats_breadcrumb = $pagination->current_first_item.'-'
-											. $pagination->current_last_item.' of '.$pagination->total_items.' '
-											. Kohana::lang('ui_main.reports');
+				    . $pagination->current_last_item.' of '.$pagination->total_items.' '
+				    . Kohana::lang('ui_main.reports');
 			}
 			else
 			{
@@ -390,9 +390,9 @@ class Reports_Controller extends Main_Controller {
 
 		$this->template->header->this_page = 'reports';
 		$this->template->content = View::factory('reports/detail')
+			->set('user', $this->user)
 			->bind('incident', $incident)
-			->bind('collaborators', $collaborators)
-			->set('user', $this->user);
+			->bind('collaborators', $collaborators);
 
 		// Filters
 		$incident_title = $incident->incident_title;
@@ -755,4 +755,139 @@ class Reports_Controller extends Main_Controller {
     	$redirect_uri = sprintf("reports/submit/%s", $incident_id);
     	url::redirect($redirect_uri);
     }
+
+
+	/**
+	 * REST endpoint for adding/editing location layers
+	 */
+	public function layers($incident_id, $layer_id = NULL)
+	{
+		$this->template = '';
+		$this->auto_render = FALSE;
+
+		switch (request::method())
+		{
+			case "post":
+				Kohana::log("info", "Adding/editing KML");
+				$post = array_merge($_FILES, $_POST);
+				if (($layer_orm = location::save_layer($this->user, $layer_id, $post)) !== FALSE)
+				{
+					if (empty($layer_id))
+					{
+						// New layer added, echo response
+						echo json_encode(array(
+							'success' => TRUE,
+							'layer' => $layer_orm->as_array()
+						));
+					}
+					else
+					{
+						echo json_encode(array('success' => TRUE));
+					}
+				}
+				else
+				{
+					echo json_encode(array(
+						'success' => FALSE,
+						'message' => "The layer could not be saved"
+					));
+				}
+			break;
+
+			case "put":
+				Kohana::log("info", "Adding KML to incident");
+
+				$layer_orm = ORM::factory('layer', $layer_id);
+				ORM::factory('incident', $incident_id)->add_layer($this->user, $layer_orm);
+			break;
+
+			case "delete":
+				$layer_orm = ORM::factory('layer', $layer_id);
+				if ($layer_orm->loaded)
+				{
+					$layer_orm->delete();
+				}
+			break;
+		}
+	}
+	
+	/**
+	 * REST endpoint for managing the legends for the incident
+	 *
+	 * @param int $incident_id ID of the incident
+	 * @param int $legend_id When specified, id of the legend. This parameter must
+	 *                       be specified when updating/deleting legends
+	 */
+	public function legends($incident_id, $legend_id = NULL)
+	{
+		$this->template = '';
+		$this->auto_render = FALSE;
+		
+		// Verify that the incident exsits
+		$incident_orm = ORM::factory('incident', $incident_id);
+		if ( ! $incident_orm->loaded)
+		{
+			header("HTTP/1.1 404 The requested incident does not exist", TRUE, 404);
+			exit;
+		}
+
+		$request_data = json_decode(file_get_contents('php://input'), TRUE);
+		switch (request::method())
+		{
+			// Create new legend
+			case "post":				
+				if (($legend = Incident_Model::add_legend($incident_id, $request_data, $this->user->id)) !== FALSE)
+				{
+					echo json_encode($legend);
+				}
+				else
+				{
+					header("HTTP/1.1 400 The legend could not be saved", TRUE, 400);
+				}			
+			break;
+
+			// Modify legend in $legend_id
+			case "put":
+				// Get the legend
+				$legend_orm = ORM::factory('incident_legend', $legend_id);
+				if ($legend_orm->loaded)
+				{
+					// Update the legend name
+					$legend_label = $legend_orm->legend;
+					$legend_label->legend_name = $request_data['legend_name'];
+					$legend_label->save();
+				
+					// Update the legend color
+					$legend_orm->legend_color = $request_data['legend_color']	;
+					$legend_orm->save();
+				
+					echo json_encode(array(
+						'id' => $legend_orm->id,
+						'legend_name' => $legend_label->legend_name,
+						'legend_color' => $legend_orm->legend_color
+					));
+				}
+				else
+				{
+					// 404 - Legend does not exist
+					header("HTTP/1.1 404 The legend does not exist", TRUE, 404);
+				}
+				break;
+			
+			// Delete legend in $legend_id
+			case "delete":
+				$legend_orm = ORM::factory('incident_legend', $legend_id);
+				if ($legend_orm->loaded)
+				{
+					$legend_orm->delete();
+				}
+				else
+				{
+					// 404 - Legend does not exist
+					header("HTTP/1.1 404 The legend does not exist", TRUE, 404);
+				}
+			break;
+		}
+	}
+	
 }

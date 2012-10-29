@@ -123,7 +123,7 @@ class Location_Model extends ORM {
 		        "id" => $this->id,
 		        "name" => $this->location_name,
 				"incident_legend_id" => $this->incident_legend_id,
-		        "link" => url::site("location/show/".$this->id),
+		        "link" => url::site("locations/".$this->id),
 		        "color" => $this->incident_legend->legend_color,
 		        "thumb" => $thumb,
 		        "icon" => $icon,

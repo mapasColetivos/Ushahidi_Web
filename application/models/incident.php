@@ -714,6 +714,22 @@ class Incident_Model extends ORM {
 				$collaborators[$kml->user->id] = $kml->user;
 			}
 		}
+		
+		// Legends
+		foreach ($this->incident_legend as $legend)
+		{
+			// NOTES: 28/10/2012
+			// Emmanuel Kala <emkala(at)gmail.com>
+			// Some rows in incident_legend have a NULL user_id
+			// because of non-existent DB constraints.
+			if ( ! $legend->user->loaded)
+				continue;
+
+			if ( ! array_key_exists($legend->user->id, $collaborators))
+			{
+				$collaborators[$legend->user->id] = $legend->user;
+			}
+		}
 
 		return array_values($collaborators);
 	}
@@ -858,6 +874,45 @@ class Incident_Model extends ORM {
 		}
 		
 		return $legends;
+	}
+	
+	/**
+	 * Adds a legend to the incident
+	 * 
+	 * @param int $incident_id ID of the incident
+	 * @param array $post_data Name and color of the legend packed into an object
+	 * @param int $user_id ID of the user adding the legend
+	 * @return mixed array on success, FALSE otherwise
+	 */
+	public static function add_legend($incident_id, $post_data, $user_id)
+	{
+		// Add the legend
+		$legend_orm = Legend_Model::add_legend($post_data['legend_name']);		
+		
+		// Use a try/catch block so that we fail gracefully should a DB
+		// constraint be violated
+		try
+		{
+			$incident_legend = new Incident_Legend_Model();
+			$incident_legend->incident_id = $incident_id;
+			$incident_legend->legend_id = $legend_orm->id;
+			$incident_legend->legend_color = $post_data['legend_color'];
+			$incident_legend->user_id = $user_id;
+			$incident_legend->save();
+
+			return array(
+				'id' => $incident_legend->id,
+				'legend_name' => $legend_orm->legend_name,
+				'legend_color' => $incident_legend->legend_color
+			);
+		}
+		catch (Kohana_Exception $e)
+		{
+			// Log the error
+			Kohana::log("error", $e->getMessage());			
+		}
+		
+		return FALSE;
 	}
 
 }

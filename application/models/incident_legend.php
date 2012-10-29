@@ -42,7 +42,7 @@ class Incident_Legend_Model extends ORM {
 		
 		// Delete the legend associated with this record if
 		// it doesn't have any more children
-		if ($legend->incident_legend->find_all()->count_all() == 0)
+		if ($legend->incident_legend->count() == 0)
 		{			
 			$legend->delete();
 		}
