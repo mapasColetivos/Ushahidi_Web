@@ -62,26 +62,17 @@ class Locations_Controller extends Main_Controller {
 			->set('layers_api_url', url::site('reports/layers/'.$incident->id))
 			->set('legends', json_encode($incident->get_legends_array()))
 			->set('legends_api_url', url::site('reports/legends/'.$incident->id))
-			->bind('layers', $user_layers);
+			->bind('layers', $all_layers);
 
 		$incident_layers = $incident->get_layers();
 		$all_layers = array();
-		foreach ($this->user->get_layers_array() as $layer)
+		foreach (ORM::factory('layer')->find_all() as $layer)
 		{
-			$all_layers[$layer['id']] = $layer;
+			if ( ! $layer->loaded) continue;
+			$all_layers[] = $layer->as_array();
 		}
-
-		// Remove the layers for the current incident from the list
-		// of all the user's layers
-		foreach ($incident_layers as $layer)
-		{
-			if (array_key_exists($layer->id, $all_layers))
-			{
-				unset ($all_layers[$layer->id]);
-			}
-		}
-
-		$user_layers = json_encode(array_values($all_layers));
+		
+		$all_layers = json_encode($all_layers);
 
 		$this->themes->map_enabled = TRUE;
 		$this->themes->colorpicker_enabled = TRUE;

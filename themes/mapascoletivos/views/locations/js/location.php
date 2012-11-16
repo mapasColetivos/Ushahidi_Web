@@ -733,7 +733,7 @@ $(function(){
 		
 		// Cancel add/edit
 		cancel: function(e) {
-			this.$el.slideUp();
+			this.$el.parent("div.create-legend").slideUp();
 			return false;
 		},
 

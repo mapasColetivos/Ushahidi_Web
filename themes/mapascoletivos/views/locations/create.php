@@ -130,12 +130,6 @@
 			<textarea name="location_description" rows="10" class="textarea long"><%= location_description %></textarea>
 		</div>
 
-		<div id="divLegends" class="report_row">
-			<h4>Legendas <a id="add-legend" href="#">[adicionar legenda]</a></h4>
-			<div class="create-legend" style="display:none;"></div>
-			<ul class="legend-list"></ul>
-		</div>
-
 		<div id="divNews" class="report_row">
 			<h4>
 				<?php echo Kohana::lang('ui_main.reports_news'); ?>
@@ -154,6 +148,12 @@
 				<?php echo Kohana::lang('ui_main.reports_photos'); ?>
 				<span class="box_edit_span">extensões permitidas: .jpg,.png,.gif || max 2MB</span>
 			</h4>
+		</div>
+
+		<div id="divLegends" class="report_row">
+			<h4>Legendas <a id="add-legend" href="#">[adicionar legenda]</a></h4>
+			<div class="create-legend" style="display:none;"></div>
+			<ul class="legend-list"></ul>
 		</div>
 
 		<div style="clear: both;"></div>
