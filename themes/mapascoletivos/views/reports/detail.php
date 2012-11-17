@@ -55,9 +55,8 @@
 					<!-- Incident tags go here -->
 						Tags:
 					<?php
-						foreach ($incident->incident_tags as $incident_tag)
+						foreach ($incident_tags as $tag)
 						{
-							$tag = $incident_tag->tag;
 							echo html::anchor('reports/?t='.$tag->id, $tag->value);
 						}
 					?>
@@ -160,7 +159,6 @@
 			<div id="filters_bar">
 				<h1 id="map_title"><?php echo $incident->incident_title; ?></h1>
 
-				<?php if ($incident->incident_kml->count()): ?>
 				<div class="map-filters">
 					<div id="menu_filters">
 						<a href="#" class="filter-switch">
@@ -169,28 +167,39 @@
 						</a>
 					</div>
 				</div>
-				<?php endif; ?>
-
 			</div>
 
 			<!-- map display -->
 			<div id="user_map">
-				<?php if ($incident->incident_kml->count()): ?>
 				<!-- incident layers -->
 				<div class="layers-overlay" style="display:none;">
 					<div class="map-layers">
-						<ul class="layers-listing">
-					 	<?php foreach ($incident->incident_kml as $kml): ?>
-					 	<?php if ($kml->layer->loaded): ?>
+					
+					<?php if (count($incident_legends)): ?>
+						<ul class="legend-filters" id="legend-switcher">
+						<?php foreach ($incident_legends as $legend): ?>
+							<li>
+								<a href="#" data-legend-id="<?php echo $legend['id']; ?>">
+									<span class="swatch" style="background-color: #<?php echo $legend['legend_color']; ?>;"></span>
+									<span class="legend-title"><?php echo $legend['legend_name']; ?></span>
+								</a>
+							</li>
+						<?php endforeach; ?>
+						</ul>
+					<?endif; ?>
+					
+					<?php if (count($incident_layers)): ?>
+						<ul class="legend-filters" id="layer-switcher">
+					 	<?php foreach ($incident_layers as $layer): ?>
 					 		<li>
-					 			<a href="#" data-layer-id="<?php echo $kml->layer_id; ?>" data-layer-name="<?php echo $kml->layer->layer_name; ?>">
-						 			<span class="layer-color" style="background-color: #<?php echo $kml->layer->layer_color; ?>"></span>
-						 			<span class="user-layer-name"><?php echo $kml->layer->layer_name; ?></span>
+					 			<a href="#" data-layer-id="<?php echo $layer->id; ?>" data-layer-name="<?php echo $layer->layer_name; ?>">
+						 			<span class="swatch" style="background-color: #<?php echo $layer->layer_color; ?>"></span>
+						 			<span class="legend-title"><?php echo $layer->layer_name; ?></span>
 					 			</a>
 					 		</li>
-					 	<?php endif; ?>
 					 	<?php endforeach; ?>
 						</ul>
+					<?php endif; ?>
 
 					</div>
 				</div>

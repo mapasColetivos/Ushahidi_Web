@@ -61,7 +61,7 @@ jQuery(window).load(function() {
 	map.addLayer(Ushahidi.GEOJSON, {
 		name: "<?php echo $layer_name; ?>",
 		url: "<?php echo $markers_url; ?>",
-	});
+	}, true);
 
 	// When the display of the layers listing is toggled
 	$("a.filter-switch").toggle(
@@ -79,7 +79,7 @@ jQuery(window).load(function() {
 	);
 
 	// Layer selection
-	$("ul.layers-listing li > a").click(function(e) {
+	$("ul#layer-switcher li > a").click(function(e) {
 		// Get the layer id
 		var layerId = $(this).data("layer-id");
 
@@ -87,11 +87,9 @@ jQuery(window).load(function() {
 		var context = this;
 
 		// Remove all actively selected layers
-		$(".layers-listing a").each(function(i) {
+		$("#layer-switcher a").each(function(i) {
 			if ($(this).hasClass("active")) {
-				if ($(this).data("layer-id") == $(context).data("layer-id")) {
-					isCurrentLayer = true;
-				}
+				isCurrentLayer = $(this).data("layer-id") == layerId;
 				map.trigger("deletelayer", $(this).data("layer-name"));
 				$(this).removeClass("active");
 			}
@@ -105,6 +103,30 @@ jQuery(window).load(function() {
 				name: $(this).data("layer-name"),
 				url: "json/layer/" + layerId
 			});
+		}
+
+		return false;
+	});
+	
+	// Legend selection
+	$("ul#legend-switcher li > a").click(function(e){
+
+		// Get the legend id
+		var legendId = $(this).data("legend-id"),
+			isCurrentLegend = false;
+
+		$("#legend-switcher a").each(function(i){
+			if ($(this).hasClass("active")) {
+				isCurrentLegend = $(this).data("legend-id") == legendId;
+				$(this).removeClass("active");
+			}
+		});
+		
+		if (!isCurrentLegend) {
+			$(this).addClass("active");
+			map.updateReportFilters({legend: legendId});
+		} else {
+			map.updateReportFilters({legend: 0});
 		}
 
 		return false;

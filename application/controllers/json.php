@@ -876,6 +876,17 @@ class Json_Controller extends Template_Controller {
 
 			$incident_where['location.user_id'] = intval($_GET['uid']);
 		}
+		
+		// Legend ID
+		if (isset($_GET['legend']) AND Incident_Legend_Model::exists($_GET['legend']))
+		{
+			if ( ! is_array($incident_where))
+			{
+				$incident_where = array();
+			}
+			
+			$incident_where['location.incident_legend_id'] = intval($_GET['legend']);
+		}
 
 		// Get the locations
 		$markers_result = Database::instance()

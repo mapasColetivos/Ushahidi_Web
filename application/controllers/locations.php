@@ -66,7 +66,7 @@ class Locations_Controller extends Main_Controller {
 
 		$incident_layers = $incident->get_layers();
 		$all_layers = array();
-		foreach (ORM::factory('layer')->find_all() as $layer)
+		foreach (ORM::factory('layer')->orderby('id', 'DESC')->find_all() as $layer)
 		{
 			if ( ! $layer->loaded) continue;
 			$all_layers[] = $layer->as_array();

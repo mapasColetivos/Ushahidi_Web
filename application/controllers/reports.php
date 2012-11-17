@@ -380,18 +380,21 @@ class Reports_Controller extends Main_Controller {
 		// Sanitize the report id before proceeding
 		$id = intval($id);
 
-		if ( ! Incident_Model::is_valid_incident($id, TRUE))
-		{
-			url::redirect('reports');
-		}
-
 		// Load the incident
 		$incident = ORM::factory('incident', $id);
+		if ( ! $incident->loaded)
+		{
+			// TODO: Show a 404 - Page not found
+			url::redirect('reports');			
+		}
 
 		$this->template->header->this_page = 'reports';
 		$this->template->content = View::factory('reports/detail')
 			->set('user', $this->user)
-			->bind('incident', $incident)
+			->set('incident', $incident)
+			->set('incident_legends', $incident->get_legends_array())
+			->set('incident_layers', $incident->get_layers())
+			->set('incident_tags', $incident->get_tags())
 			->bind('collaborators', $collaborators);
 
 		// Filters
@@ -413,9 +416,6 @@ class Reports_Controller extends Main_Controller {
 			->set('latitude', $incident->incident_default_lat)
 			->set('longitude', $incident->incident_default_lon)
 			->set('map_zoom', $incident->incident_zoom);
-
-		// If the Admin is Logged in - Allow for an edit link
-		// $this->template->content->logged_in = $this->logged_in;
 
 		// Rebuild Header Block
 		$this->template->header->header_block = $this->themes->header_block();
@@ -858,7 +858,7 @@ class Reports_Controller extends Main_Controller {
 					$legend_label->save();
 				
 					// Update the legend color
-					$legend_orm->legend_color = $request_data['legend_color']	;
+					$legend_orm->legend_color = $request_data['legend_color'];
 					$legend_orm->save();
 				
 					echo json_encode(array(

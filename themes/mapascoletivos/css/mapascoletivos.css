@@ -1074,40 +1074,44 @@ div.cat-filters span a{
   color: #996;
 }
 
-ul.category-filters{
+ul.category-filters, ul.legend-filters {
+	padding: 12px 15px;
     background-color: rgba(45, 45, 45, 0.8);
     list-style: none;
     border: none;
 }
 
-ul.category-filters li{
-    padding: 0;
-    margin-bottom: 2px;
-	  list-style-type:none;
+ul.category-filters li, ul.legend-filters li {
+	padding: 0;
+	margin-bottom: 2px;
+	list-style-type: none;
 }
 
-ul.category-filters li a{
+ul.category-filters li a, ul.legend-filters li a {
     display: block;
     padding: 8px 10px 8px 5px;
-/*    padding: 8px 10px 8px 35px; maxf change */
     font-size: 15px;
     text-transform: lowercase;
     font-weight: normal;
     text-decoration: none;
-    color: #eee;
+    color: #eee !important;
     position: relative;
     line-height: 17px;
     overflow: hidden;
+	border: #E7E3DA 1px solid;
 }
 
-ul.category-filters li a.active {
-    background-color: rgba(45, 45, 45, 0.8);
+ul.category-filters li a.active, ul.legend-filters li a.active {
     color: #eee;
-    
 }
 
-ul.category-filters li a:hover {
+ul.legend-filters li a.active {
+    background-color: #3484AC;
+}
+
+ul.category-filters li a:hover, ul.legend-filters li a:hover {
     border: #eee 1px solid;
+	background-color: #3484AC;
 }
 
 ul.category-filters li.child{
@@ -3009,25 +3013,11 @@ div.layers-overlay {
 	background-color: rgba(45, 45, 45, 0.6);
 	padding: 5px;
 }
-.map-layers ul {
+
+/*.map-layers ul {
 	list-style-type: none;
 }
-
-.map-layers li a {
-	padding: 8px 10px 8px 5px;
-	display: block;
-	text-decoration: none;
-	overflow: hidden;
-	line-height: 17px;
-	font-size: 13px;
-	color: #FFF !important;
-}
-
-.map-layers li a:hover, 
-.map-layers li a.active {
-	font-weight: bold;
-}
-
+*/
 .map-layers .layer-color {
 	float: left;
 	height: 16px;

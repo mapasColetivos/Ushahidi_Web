@@ -56,6 +56,6 @@ class Incident_Legend_Model extends ORM {
 	 */
 	public static function exists($id)
 	{
-		return ORM::factory('incident_legend')->loaded;
+		return ORM::factory('incident_legend', $id)->loaded;
 	}
 }
