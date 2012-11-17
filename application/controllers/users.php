@@ -31,7 +31,9 @@ class Users_Controller extends Main_Controller {
 			->set('visited_user', $visited_user)
 			->set('visiting_user', $this->user)
 			->set('users_following', $visited_user->get_following())
-			->set('incidents', $visited_user->get_visible_incidents($this->user));
+			->set('incidents', $visited_user->get_visible_incidents($this->user))
+			->set('incidents_following', $visited_user->get_incidents_following())
+			->set('incidents_collaborated_on', $visited_user->get_incidents_collaborated_on());
 
 		// Javascript Header
 		$this->themes->map_enabled = TRUE;

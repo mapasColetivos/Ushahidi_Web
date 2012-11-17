@@ -456,56 +456,48 @@ class User_Model extends Auth_User_Model {
 	 */
 	public function get_incidents_collaborated_on()
 	{
-		$incidents = array();
+		$incident_ids = array();
 
 		// Get the incidents
 		foreach ($this->incident as $incident)
 		{
-			$this->_add_incident_to_array($incidents, $incident);
+			$incident_ids[] = $incident->id;
 		}
 
 		// KMLs uploaded by the user (incident_kml)
 		foreach ($this->incident_kml as $kml)
 		{
-			$this->_add_incident_to_array($incidents, $kml->incident);
+			$incident_ids[] = $kml->incident_id;
 		}
 
 		// Locations created by the user (location)
 		foreach ($this->location as $location)
 		{
-			$this->_add_incident_to_array($incidents, $location->incident);
+			$incident_ids[] = $location->incident_id;
 		}
 
 		// Media
 		foreach ($this->media as $media)
 		{
-			$this->_add_incident_to_array($incidents, $media->incident);
+			$incident_ids[] = $media->incident_id;
 		}
 		
 		// Legends created by this user
 		foreach ($this->incident_legend as $legend)
 		{
-			if ( ! $legend->incident->loaded)
-				continue;
-			$this->_add_incident_to_array($incidents, $legend->incident);
+			$incident_ids[] = $legend->incident_id;
 		}
 
-		return array_values($incidents);
-	}
+		if ( ! count($incident_ids)) return array();
 
-	/**
-	 * Given an incident checks whether it exists in the provided buffer
-	 * and adds it (if it doesn't exist)
-	 *
-	 * @param   array          $incidents List of incidents
-	 * @param   Incident_Model $incident Incident to be added
-	 */
-	private function _add_incident_to_array(array & $incidents, $incident)
-	{
-		if ( ! array_key_exists($incident->id, $incidents))
+		$incidents = array();
+		$incident_ids = array_unique($incident_ids);
+		foreach (ORM::factory('incident')->in('id', $incident_ids)->find_all() as $incident)
 		{
-			$incidents[$incident->id] = $incident;
+			$incidents[] = $incident;
 		}
+		
+		return $incidents;
 	}
 
 	/**
@@ -656,7 +648,7 @@ class User_Model extends Auth_User_Model {
 		$fetch_all = ! empty ($visitor) AND
 			($visitor->is_administrator() OR $visitor->id === $this->id);
 
-		$visbile_incidents = array();
+		$visible_incidents = array();
 
 		foreach ($this->incident as $incident)
 		{
@@ -686,6 +678,33 @@ class User_Model extends Auth_User_Model {
 	{
 		return $this->has(ORM::factory('role', 'superadmin')) OR
 			$this->has(ORM::factory('role', 'admin'));
+	}
+	
+	/**
+	 * Gets the incidents that the user is following
+	 * 
+	 * @return array
+	 */
+	public function get_incidents_following()
+	{
+		$incident_ids = array();
+		
+		foreach ($this->incident_follows as $follow)
+		{
+			$incident_ids[] = $follow->incident_id;
+		}
+		
+		// Sanity check
+		if ( ! count($incident_ids)) return array();
+		
+		// Fetch the followed incidents
+		$incidents = array();
+		foreach (ORM::factory('incident')->in('id', $incident_ids)->find_all() as $incident)
+		{
+			$incidents[] = $incident;
+		}
+			
+		return $incidents;
 	}
 
 } // End User_Model

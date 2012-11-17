@@ -139,14 +139,14 @@
 							<td/>
 							<!-- No. of maps (incidents) the visited user has collaborated on -->
 							<td class="maps_counter" id="available_counter">
-								<span><?php echo count($visited_user->get_incidents_collaborated_on()); ?></span><br/>
+								<span><?php echo count($incidents_collaborated_on); ?></span><br/>
 								colaborando
 							</td>
 							<td/>
 
 							<!-- No. of incidents (maps) the visited user following -->
 							<td class="maps_counter" id="following_counter">
-								<span><?php echo $visited_user->incident_follows->count(); ?></span><br/>
+								<span><?php echo count($incidents_following); ?></span><br/>
 								seguindo
 							</td>
 						</tr>
@@ -163,7 +163,7 @@
 
 						<!-- List the maps being collaborated on -->
 						<ul class="map_list" id="available_counter_list" style='display:none'>
-						<?php foreach ($visited_user->get_incidents_collaborated_on() as $incident): ?>
+						<?php foreach ($incidents_collaborated_on as $incident): ?>
 							<li>
 								<?php echo html::anchor("reports/view/".$incident->id, $incident->incident_title); ?>
 							</li>
@@ -172,8 +172,7 @@
 
 						<!-- List of maps (incidents) the visited user is following -->
 						<ul class="map_list" id="following_counter_list" style='display:none'>
-						<?php foreach ($visited_user->incident_follows as $follow): ?>
-							<?php $incident = $follow->incident; ?>
+						<?php foreach ($incidents_following as $incident): ?>
 							<li>
 								<?php echo html::anchor("reports/view/".$incident->id, $incident->incident_title); ?>
 							</li>

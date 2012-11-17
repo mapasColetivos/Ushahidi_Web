@@ -47,4 +47,15 @@ class Incident_Legend_Model extends ORM {
 			$legend->delete();
 		}
 	}
+	
+	/**
+	 * Helper method to checks if the entry with the specified ID exists
+	 *
+	 * @param  int $id ID of the incident_legend record in the database
+	 * @return bool
+	 */
+	public static function exists($id)
+	{
+		return ORM::factory('incident_legend')->loaded;
+	}
 }

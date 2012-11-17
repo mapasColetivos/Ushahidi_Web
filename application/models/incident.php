@@ -686,52 +686,51 @@ class Incident_Model extends ORM {
 	 */
 	public function get_collaborators()
 	{
-		$collaborators = array();
+		$collaborator_ids = array();
 
 		// Locations
 		foreach ($this->location as $location)
 		{
-			if ( ! array_key_exists($location->user->id, $collaborators))
-			{
-				$collaborators[$location->user->id] = $location->user;
-			}
+			$collaborator_ids[] = $location->user_id;
 		}
 
 		// Media
 		foreach ($this->media as $media)
 		{
-			if ( ! array_key_exists($media->user->id, $collaborators))
-			{
-				$collaborators[$media->user->id] = $media->user;
-			}
+			$collaborator_ids[] = $media->user_id;
 		}
 
 		// KMLS
 		foreach ($this->incident_kml as $kml)
 		{
-			if ( ! array_key_exists($kml->user->id, $collaborators))
-			{
-				$collaborators[$kml->user->id] = $kml->user;
-			}
+			$collaborator_ids[] = $kml->user_id;
 		}
 		
 		// Legends
 		foreach ($this->incident_legend as $legend)
 		{
-			// NOTES: 28/10/2012
-			// Emmanuel Kala <emkala(at)gmail.com>
-			// Some rows in incident_legend have a NULL user_id
-			// because of non-existent DB constraints.
-			if ( ! $legend->user->loaded)
-				continue;
-
-			if ( ! array_key_exists($legend->user->id, $collaborators))
-			{
-				$collaborators[$legend->user->id] = $legend->user;
-			}
+			$collaborators_ids[] = $legend->user_id;
 		}
 
-		return array_values($collaborators);
+		// Sanity check
+		if ( ! count($collaborator_ids)) return array();
+		
+		// Get the unique values
+		$collaborator_ids = array_unique($collaborator_ids);
+		
+		$collaborators = array();
+
+		// Fetch the entries
+		$collaborators_iterator = ORM::factory('user')
+			->in('id', $collaborator_ids)
+			->find_all();
+
+		foreach ($collaborators_iterator as $collaborator)
+		{
+			$collaborators[] = $collaborator;
+		}
+
+		return $collaborators;
 	}
 
 	/**
@@ -750,10 +749,19 @@ class Incident_Model extends ORM {
 	 */
 	public function get_layers()
 	{
-		$layers = array();
+		$layer_ids = array();
 		foreach ($this->incident_kml as $kml)
 		{
-			$layers[] = $kml->layer;
+			$layer_ids[] = $kml->layer_id;
+		}
+
+		// Sanity check
+		if ( ! count($layer_ids)) return array();
+
+		$layers = array();
+		foreach (ORM::factory('layer')->in('id', $layer_ids)->find_all() as $layer)
+		{
+			$layers[] = $layer;
 		}
 		return $layers;
 	}
@@ -913,6 +921,30 @@ class Incident_Model extends ORM {
 		}
 		
 		return FALSE;
+	}
+	
+	/**
+	 * Gets an array of the incident's tags
+	 *
+	 * @return array
+	 */
+	public function get_tags()
+	{
+		$tag_ids = array();
+		foreach ($this->incident_tags as $tag)
+		{
+			$tag_ids[] = $tag->tag_id;
+		}
+
+		if ( ! count($tag_ids)) return array();
+
+		$tags = array();
+		foreach (ORM::factory('tag')->in('id', $tag_ids)->find_all() as $tag)
+		{
+			$tags[] = $tag;
+		}
+		
+		return $tags;
 	}
 
 }
