@@ -171,7 +171,6 @@
 
 			<!-- map display -->
 			<div id="user_map">
-				<!-- incident layers -->
 				<div class="layers-overlay" style="display:none;">
 					<div class="map-layers">
 					
@@ -188,6 +187,7 @@
 						</ul>
 					<?endif; ?>
 					
+					<!-- incident layers -->
 					<?php if (count($incident_layers)): ?>
 						<ul class="legend-filters" id="layer-switcher">
 					 	<?php foreach ($incident_layers as $layer): ?>
@@ -200,11 +200,9 @@
 					 	<?php endforeach; ?>
 						</ul>
 					<?php endif; ?>
-
+					<!-- /incident layers -->
 					</div>
 				</div>
-				<!-- /incident layers -->
-				<?php endif; ?>
 			</div>
 
 			<!-- map comments -->
