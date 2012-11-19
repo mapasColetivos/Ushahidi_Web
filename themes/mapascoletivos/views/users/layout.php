@@ -191,14 +191,12 @@
 				<h1 id="map_title">Geografia pessoal</h1>
 
 				<div class="map-filters">
-					<?php if ($visited_user->layer->count()): ?>
 					<div id="menu_filters">
 						<a href="#" class="filter-switch">
 							<span><?php echo Kohana::lang('ui_main.location_layers'); ?></span>
 							<?php echo html::image("media/img/arrow_down_gray.png", "", array('border'=>'0')); ?>
 						</a>
 					</div>
-					<?php endif; ?>
 				</div>
 			</div>
 
@@ -209,7 +207,7 @@
 				<!-- user layers -->
 				<div class="layers-overlay" style="display:none;">
 					<div class="map-layers">
-						<ul class="layers-listing">
+						<ul class="legend-filters" id="layer-switcher">
 					 	<?php foreach ($visited_user->layer as $layer): ?>
 					 		<li>
 					 			<a href="#" data-layer-id="<?php echo $layer->id; ?>" data-layer-name="<?php echo $layer->layer_name; ?>">

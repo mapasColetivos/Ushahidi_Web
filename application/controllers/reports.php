@@ -392,11 +392,15 @@ class Reports_Controller extends Main_Controller {
 		$this->template->content = View::factory('reports/detail')
 			->set('user', $this->user)
 			->set('incident', $incident)
-			->set('incident_legends', $incident->get_legends_array())
-			->set('incident_layers', $incident->get_layers())
 			->set('incident_tags', $incident->get_tags())
-			->bind('collaborators', $collaborators);
+			->bind('collaborators', $collaborators)
+			->bind('map_filters', $map_filters);
 
+		// Map filters view
+		$map_filters = View::factory('map/filters')
+			->set('incident_layers', $incident->get_layers())
+			->set('incident_legends', $incident->get_legends_array());
+		
 		// Filters
 		$incident_title = $incident->incident_title;
 		$incident_description = $incident->incident_description;

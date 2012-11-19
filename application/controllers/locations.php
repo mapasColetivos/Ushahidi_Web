@@ -45,8 +45,16 @@ class Locations_Controller extends Main_Controller {
 		$this->template->content = View::factory('locations/create')
 			->set('user', $this->user)
 			->set('incident', $incident)
-			->bind('incident_layers', $incident_layers)
+			->bind('map_filters', $map_filters)
 			->bind('javascript', $javascript);
+
+		// Map filters view
+		$map_filters = View::factory('map/filters')
+			->bind('incident_layers', $incident_layers)
+			->bind('incident_legends', $incident_legends);
+
+		// Marker legends for the current incident
+		$incident_legends = $incident->get_legends_array();
 
 		// Set the properties for the JavaScript
 		$javascript = View::factory('locations/js/location')
@@ -60,13 +68,27 @@ class Locations_Controller extends Main_Controller {
 			->set('locations', json_encode($incident->get_locations_array()))
 			->set('user', $this->user)
 			->set('layers_api_url', url::site('reports/layers/'.$incident->id))
-			->set('legends', json_encode($incident->get_legends_array()))
+			->set('incident_legends', json_encode($incident_legends))
 			->set('legends_api_url', url::site('reports/legends/'.$incident->id))
 			->bind('layers', $all_layers);
 
+		// Layers for the incident in $incident_id
 		$incident_layers = $incident->get_layers();
+
+		// Layers associated with the current incident should not
+		// be included in the "import layers" listing
+		$excluded_layer_ids = array();
+		foreach ($incident_layers as $layer)
+		{
+			$excluded_layer_ids[] = $layer->id;
+		}
+
 		$all_layers = array();
-		foreach (ORM::factory('layer')->orderby('id', 'DESC')->find_all() as $layer)
+		$layers_iterator = ! count($excluded_layer_ids)
+			? ORM::factory('layer')->orderby('id', 'DESC')->find_all()
+			: ORM::factory('layer')->notin('id', $excluded_layer_ids)->find_all();
+
+		foreach ($layers_iterator as $layer)
 		{
 			if ( ! $layer->loaded) continue;
 			$all_layers[] = $layer->as_array();
@@ -91,7 +113,7 @@ class Locations_Controller extends Main_Controller {
 		// Check if the incident is valid
 		if ( ! Incident_Model::is_valid_incident($incident_id, FALSE))
 		{
-			header("Status: 404 The specified incident does not exist");
+			header("Status: 404 The specified incident does not exist", TRUE, 404);
 			return;
 		}
 

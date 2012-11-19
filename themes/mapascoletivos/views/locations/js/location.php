@@ -6,11 +6,12 @@ Ushahidi.markerOpacity = "<?php echo kohana::config('map.marker_opacity'); ?>";
 Ushahidi.markerStokeWidth = "<?php echo Kohana::config('map.marker_stroke_width'); ?>";
 Ushahidi.markerStrokeOpacity = "<?php echo Kohana::config('map.marker_stroke_opacity'); ?>";
 
+var map;
+
 /**
  * JavaScript for the locations page
  */
 $(function(){
-	var map = null;
 
 	// 
 	// Backbone JS wiring for the models and views
@@ -387,7 +388,7 @@ $(function(){
 			var view = new LegendItemView({model: legend, locationView: this});
 			this.$("ul.legend-list").append(view.render().el);
 			
-			if (this.model.get("incident_legend_id") === legend.get("id")) {
+			if (this.model.get("incident_legend_id") == legend.get("id")) {
 				view.$el.addClass("active");
 			}
 			
@@ -773,7 +774,7 @@ $(function(){
 	});
 
 	kmlLayers.reset(<?php echo $layers; ?>);
-	incidentLegends.reset(<?php echo $legends; ?>);
+	incidentLegends.reset(<?php echo $incident_legends; ?>);
 
 
 	// Callback function for feature selection
@@ -783,8 +784,6 @@ $(function(){
 
 		// Display the edit location dialog
 		new AddLocationView({model: locations.get(locationID)}).render();
-
-		return false;
 	};
 
 
@@ -831,7 +830,7 @@ $(function(){
 		name: "<?php echo $layer_name; ?>",
 		url: "<?php echo $markers_url; ?>",
 		onFeatureSelect: onFeatureSelect,
-	});
+	}, true);
 
 	// When the display of the layers listing is toggled
 	$("a.filter-switch").toggle(

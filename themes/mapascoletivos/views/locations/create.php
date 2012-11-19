@@ -19,6 +19,7 @@
 						}
 					?>
 					</h3>
+					<!-- toolbox -->
 					<div class="toolbox">
 						<ul id="controlToggle">
 							<li>
@@ -59,32 +60,25 @@
 								<input type="button" name="button" id="button" value="<?php echo Kohana::lang('ui_main.find_location'); ?>" class="btn_find" />
 								<span id="find_loading" class="report-find-loading"></span>
 							</div>
-					</div>
-				</div>
 
-				<div id="user_map" class="report_map">
+							<!-- map filters -->
+							<div style="float: right; margin: 20px -10px 0 0;">
+								<div id="menu_filters">
+									<a href="#" class="filter-switch">
+										<span><?php echo Kohana::lang('ui_main.location_layers'); ?></span>
+										<?php echo html::image("media/img/arrow_down_gray.png", "", array('border'=>'0')); ?>
+									</a>
+								</div>
+							</div>
+							<!-- /map filters -->
 
-					<?php if ($incident->incident_kml->count()): ?>
-					<!-- incident layers -->
-					<div class="layers-overlay" style="display:none;">
-						<div class="map-layers">
-							<ul class="layers-listing">
-						 	<?php foreach ($incident->incident_kml as $kml): ?>
-						 	<?php if ($kml->layer->loaded): ?>
-						 		<li>
-						 			<a href="#" data-layer-id="<?php echo $kml->layer_id; ?>" data-layer-name="<?php echo $kml->layer->layer_name; ?>">
-							 			<span class="layer-color" style="background-color: #<?php echo $kml->layer->layer_color; ?>"></span>
-							 			<span class="user-layer-name"><?php echo $kml->layer->layer_name; ?></span>
-						 			</a>
-						 		</li>
-						 	<?php endif; ?>
-						 	<?php endforeach; ?>
-							</ul>
 						</div>
 					</div>
-					<!-- /incident layers -->
-					<?php endif; ?>
+					<!-- /toolbox -->
 
+				<div style="clear:both;"></div>
+				<div id="user_map" class="report_map">
+					<?php echo $map_filters; ?>
 				</div>
 			</div>
 			<div id="report_points"></div>

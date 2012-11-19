@@ -171,38 +171,7 @@
 
 			<!-- map display -->
 			<div id="user_map">
-				<div class="layers-overlay" style="display:none;">
-					<div class="map-layers">
-					
-					<?php if (count($incident_legends)): ?>
-						<ul class="legend-filters" id="legend-switcher">
-						<?php foreach ($incident_legends as $legend): ?>
-							<li>
-								<a href="#" data-legend-id="<?php echo $legend['id']; ?>">
-									<span class="swatch" style="background-color: #<?php echo $legend['legend_color']; ?>;"></span>
-									<span class="legend-title"><?php echo $legend['legend_name']; ?></span>
-								</a>
-							</li>
-						<?php endforeach; ?>
-						</ul>
-					<?endif; ?>
-					
-					<!-- incident layers -->
-					<?php if (count($incident_layers)): ?>
-						<ul class="legend-filters" id="layer-switcher">
-					 	<?php foreach ($incident_layers as $layer): ?>
-					 		<li>
-					 			<a href="#" data-layer-id="<?php echo $layer->id; ?>" data-layer-name="<?php echo $layer->layer_name; ?>">
-						 			<span class="swatch" style="background-color: #<?php echo $layer->layer_color; ?>"></span>
-						 			<span class="legend-title"><?php echo $layer->layer_name; ?></span>
-					 			</a>
-					 		</li>
-					 	<?php endforeach; ?>
-						</ul>
-					<?php endif; ?>
-					<!-- /incident layers -->
-					</div>
-				</div>
+				<?php echo $map_filters; ?>
 			</div>
 
 			<!-- map comments -->
