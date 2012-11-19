@@ -202,25 +202,7 @@
 
 			<!-- map display -->
 			<div id="user_map">
-
-				<?php if ($visited_user->layer->count()): ?>
-				<!-- user layers -->
-				<div class="layers-overlay" style="display:none;">
-					<div class="map-layers">
-						<ul class="legend-filters" id="layer-switcher">
-					 	<?php foreach ($visited_user->layer as $layer): ?>
-					 		<li>
-					 			<a href="#" data-layer-id="<?php echo $layer->id; ?>" data-layer-name="<?php echo $layer->layer_name; ?>">
-						 			<span class="layer-color" style="background-color: #<?php echo $layer->layer_color; ?>"></span>
-						 			<span class="user-layer-name"><?php echo $layer->layer_name; ?></span>
-					 			</a>
-					 		</li>
-					 	<?php endforeach; ?>
-						</ul>
-					</div>
-				</div>
-				<?php endif; ?>
-				<!-- /user layers -->
+				<?php echo $map_filters; ?>
 			</div>
 
 		</div>

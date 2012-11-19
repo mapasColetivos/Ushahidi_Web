@@ -33,7 +33,13 @@ class Users_Controller extends Main_Controller {
 			->set('users_following', $visited_user->get_following())
 			->set('incidents', $visited_user->get_visible_incidents($this->user))
 			->set('incidents_following', $visited_user->get_incidents_following())
-			->set('incidents_collaborated_on', $visited_user->get_incidents_collaborated_on());
+			->set('incidents_collaborated_on', $visited_user->get_incidents_collaborated_on())
+			->bind('map_filters', $map_filters);
+
+		// Map filters view
+		$map_filters = View::factory('map/filters')
+			->set('incident_layers', $visited_user->get_layers())
+			->set('incident_legends', $visited_user->get_legends_array());
 
 		// Javascript Header
 		$this->themes->map_enabled = TRUE;

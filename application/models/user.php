@@ -614,20 +614,27 @@ class User_Model extends Auth_User_Model {
 	public function get_layers_array()
 	{
 		$layers = array();
-
-		if ($this->is_administrator())
+		foreach ($this->get_layers as $layer)
 		{
-			foreach (ORM::factory('layer')->find_all() as $layer)
-			{
-				$layers[] = $layer->as_array();
-			}
+			$layers[] = $layer->as_array();
 		}
-		else
+
+		return $layers;
+	}
+	
+	/**
+	 * Gets the list of layers created by the current user. The
+	 * entries in the return array are ORM objects
+	 *
+	 * @return array
+	 */
+	public function get_layers()
+	{
+		$layers = array();
+
+		foreach ($this->layer as $layer)
 		{
-			foreach ($this->layer as $layer)
-			{
-				$layers[] = $layer->as_array();
-			}
+			$layers[] = $layer;
 		}
 
 		return $layers;
@@ -705,6 +712,36 @@ class User_Model extends Auth_User_Model {
 		}
 			
 		return $incidents;
+	}
+
+	/**
+	 * Gets the legends created by the current user
+	 * @return array
+	 */
+	public function get_legends_array()
+	{
+		$legends = array();
+		
+		// Get the legends
+		$incident_legends = Database::instance()
+			->select('DISTINCT incident_legend.id', 'legend.legend_name', 'incident_legend.legend_color')
+			->from('incident_legend')
+			->join('legend', 'legend.id', 'incident_legend.legend_id')
+			->join('location', 'location.incident_legend_id', 'incident_legend.id')
+			->where('incident_legend.user_id', $this->id)
+			->get();
+		
+		foreach ($incident_legends as $legend)
+		{
+			$legends[] = array(
+				'id' => $legend->id,
+				'legend_name' => $legend->legend_name,
+				'legend_color' => $legend->legend_color
+			);
+		}
+
+		return $legends;
+		
 	}
 
 } // End User_Model
