@@ -802,11 +802,38 @@ class Incident_Model extends ORM {
 		$locations = array();
 		foreach ($this->location as $location)
 		{
-			$entry = $location->as_array();
-			$entry = array_merge($entry, $location->get_media_array());
-			$locations[] = $entry;
+			$locations[$location->id] = $location->as_array();
 		}
-		return $locations;
+
+		// Map media types to their actual names
+		$media_type_map = array(1 => 'photo', 2 => 'video', 4 => 'news');
+
+		foreach ($this->media as $media)
+		{
+			$location_id = $media->location_id;
+			if (array_key_exists($location_id, $locations))
+			{
+				$media_type = $media_type_map[$media->media_type];
+				
+				if ( ! array_key_exists($media_type, $locations[$location_id]))
+				{
+					$locations[$location_id][$media_type] = array();
+				}
+				
+				// Media type entry
+				$entry = array(
+				    "id" => $media->id,
+				    "location_id" => $location_id,
+				    "media_type" => $media_type,
+				    "media_link" => trim($media->media_link),
+				    "media_thumb" => $media->media_thumb					
+				);
+				
+				$locations[$location_id][$media_type][] = $entry;
+			}
+		}
+
+		return  ( ! count($locations)) ? $locations : array_values($locations);
 	}
 
 	/**
@@ -872,15 +899,23 @@ class Incident_Model extends ORM {
 	{
 		$legends = array();
 		
-		foreach ($this->incident_legend as $member)
+		// Get the legends
+		$incident_legends = Database::instance()
+			->select('incident_legend.id', 'legend.legend_name', 'incident_legend.legend_color')
+			->from('incident_legend')
+			->join('legend', 'legend.id', 'incident_legend.legend_id')
+			->where('incident_legend.incident_id', $this->id)
+			->get();
+		
+		foreach ($incident_legends as $legend)
 		{
 			$legends[] = array(
-				'id' => $member->id,
-				'legend_name' => $member->legend->legend_name,
-				'legend_color' => $member->legend_color
+				'id' => $legend->id,
+				'legend_name' => $legend->legend_name,
+				'legend_color' => $legend->legend_color
 			);
 		}
-		
+
 		return $legends;
 	}
 	
