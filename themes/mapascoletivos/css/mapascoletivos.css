@@ -3009,6 +3009,7 @@ span.box_edit_span{
 div.layers-overlay {
 	position: absolute;
 	min-width: 250px;
+	max-height: 400px;
 	z-index: 10000;
 	right: -1px;
 	top: -2px;
