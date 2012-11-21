@@ -92,9 +92,7 @@ class Layer_Model extends ORM {
 	 */
 	public static function is_valid_layer($layer_id)
 	{
-		return (intval($layer_id) > 0)
-			? self::factory('layer', intval($layer_id))->loaded
-			: FALSE;
+		return ORM::factory('layer', intval($layer_id))->loaded;
 	}
 
 	/**
@@ -125,5 +123,15 @@ class Layer_Model extends ORM {
 		}
 
 		return parent::delete();
+	}
+	
+	/**
+	 * Gets the list of visible layers
+	 * 
+	 * @return ORM_Iterator
+	 */
+	public static function get_visible_layers()
+	{
+		return ORM::factory('layer')->where('layer_visible', 1)->find_all();
 	}
 }

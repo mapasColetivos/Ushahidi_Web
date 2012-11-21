@@ -57,7 +57,7 @@
 						<div style="clear:both;" id="find_text"><?php echo Kohana::lang('ui_main.pinpoint_location'); ?>.</div>
 							<div id="location-search">
 								<?php print form::input('location_find', '', ' title="'.Kohana::lang('ui_main.location_example').'" class="findtext"'); ?>
-								<input type="button" name="button" id="button" value="<?php echo Kohana::lang('ui_main.find_location'); ?>" class="btn_find" />
+								<input type="button" name="button" id="find-location" value="<?php echo Kohana::lang('ui_main.find_location'); ?>" class="btn_find" />
 								<span id="find_loading" class="report-find-loading"></span>
 							</div>
 
@@ -85,7 +85,6 @@
 		</div>
 	</div>
 </div>
-
 
 <?php
 	// Include the backbone JS scripts
@@ -268,6 +267,16 @@
 	<div class="report-row buttons">
 		<a href="#" class="cancel"><?php echo Kohana::lang('ui_main.cancel'); ?></a>
 		<a href="#" class="save"><?php echo Kohana::lang('ui_main.save'); ?></a>
+	</div>
+</script>
+
+<script type="text/template" id="status-dialog-template">
+	<div class="dialog-close"><a href="#" title="<?php echo Kohana::lang('ui_main.close'); ?>">X</a></div>
+	<div class="report_map">
+		<div class="status-message" align="center" style="margin-top: 150px;">
+			<h3><?php echo Kohana::lang('ui_main.searching'); ?>...</h3>
+			<?php echo html::image(url::file_loc('img').'media/img/loading_g2.gif'); ?>
+		</div>
 	</div>
 </script>
 

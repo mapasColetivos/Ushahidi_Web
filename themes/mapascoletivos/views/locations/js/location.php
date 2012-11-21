@@ -23,6 +23,7 @@ $(function(){
 		defaults: {
 			"id": null,
 			"incident_id": <?php echo $incident_id; ?>,
+			"incident_legend_id": null,
 			"location_name": null,
 			"location_description": null,
 			"latitude": null,
@@ -760,6 +761,29 @@ $(function(){
 			return this;
 		}
 	});
+	
+	var StatusDialog = BaseDialog.extend({
+		template: _.template($("#status-dialog-template").html()),
+		
+		initialize: function() {
+			this._init();
+		},
+		
+		events: {
+			"click .dialog-close a": "close",
+		},
+		
+		message: function(message) {
+			// Hides the loading gif and displays a message in it's place
+			this.$(".status-message").html(message);
+		},
+		
+		render: function(){
+			this.$el.html(this.template());
+			this.display();
+			return this;
+		}
+	});
 
 	// --------------------------------------------------------------------------
 	// 
@@ -879,11 +903,80 @@ $(function(){
 		return false;
 	});
 
+	// When the "Find location" button is clicked
+	$("#find-location").click(function(){
+		// Get the location name
+		var locationName = $.trim($("#location_find").val());
+		if (locationName.length > 0) {
+			findLocation(locationName);
+		}
+		
+		// Prevent further even propagation
+		return false;
+	});
+	
+	// When the "return" key is pressed while the location address bar
+	// is in focus
+	$("#location_find").bind("keyup", function(e){
+		if (e.which == 13) {
+			var locationName = $.trim(this.value);
+			if (locationName.length > 0) {
+				findLocation(locationName);
+				return false;
+			}
+		}
+	});
+	
+	// Geocodes the provided location name and displays the "Add Location" dialog
+	// If the location is not found, the status dialog will display a 
+	// "Location not found" message
+	var findLocation = function(locationName) {
+		var statusDialog = new StatusDialog();
+		statusDialog.render();
+
+		setTimeout(function(){
+			$.ajax({
+				type: "post",
+					
+				url: "<?php echo $geocoder_url; ?>",
+					
+				data: {address: locationName},
+					
+				// Server returned status 200
+				success: function(response){
+					// Get the location name, latitude and longitude
+					if (response.location_name !== undefined) {
+						statusDialog.$(".dialog-close a").trigger("click");
+
+						// Show add location dialog
+						locations.add({
+							location_name: response.location_name,
+							latitude: response.latitude,
+							longitude: response.longitude
+						});
+					} else {
+						// Show "Location not found" on message dialog
+						var message = "<h3>Location \"" + locationName + "\" not found.</h3>";
+						statusDialog.message(message);
+					}
+				},
+
+				//  Server returned status code other than 200
+				error: function(response) {
+					var message = "<h3>An unknown error has occured. Please try again.</h3>";
+					statusDialog.message(message);
+				},
+					
+				dataType: "json"
+			});
+		}, 1500);		
+	}
+
 
 	// 
 	// Initialize the toolbar control
 	// 
-	var toolbarControl = new ToolbarControl();
+	var toolbarControl = new ToolbarControl();	
 
 });
 </script>

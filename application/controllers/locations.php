@@ -70,6 +70,7 @@ class Locations_Controller extends Main_Controller {
 			->set('layers_api_url', url::site('reports/layers/'.$incident->id))
 			->set('incident_legends', json_encode($incident_legends))
 			->set('legends_api_url', url::site('reports/legends/'.$incident->id))
+			->set('geocoder_url', url::site('reports/geocode'))
 			->bind('layers', $all_layers);
 
 		// Layers for the incident in $incident_id
