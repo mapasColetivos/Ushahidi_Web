@@ -954,11 +954,18 @@ class Json_Controller extends Template_Controller {
 	 */
 	public function location_popup($location_id)
 	{
-		if (Location_Model::is_valid_location($location_id))
+		if (($location = Location_Model::is_valid_location($location_id)) != FALSE)
 		{
-			$popup = View::factory('locations/popup');
-			$popup->location = ORM::factory('location', $location_id);
-			$popup->video_embeder = new VideoEmbed();
+			$popup = View::factory('locations/popup')
+				->set('location', $location)
+				->set('video_embeder', new VideoEmbed())
+				->bind('location_media', $location_media);
+			
+			$location_media = array();
+			foreach ($location->media as $media)
+			{
+				$location_media[] = $media;
+			}
 			
 			$popup->render(TRUE);
 		}

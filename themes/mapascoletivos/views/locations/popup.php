@@ -3,16 +3,17 @@
 	<h1><?php echo $location->location_name; ?></h1>
 	<h3><?php echo html::anchor("reports/view/".$location->incident_id, $location->incident->incident_title); ?></h3>
 
-	<div class="asset_area hooverable">
-		<div class="asset-overlay" id="description" style="display:none;">
+	<div class="asset_area <?php if (count($location_media)) echo "hooverable"; ?>">
+		<div class="asset-overlay" <?php if (count($location_media)) echo 'style="display: none;"' ?> >
 			<p><?php echo str_replace("\n","<br />", $location->location_description); ?></p>
 		</div>
 
-		<?php foreach($location->media as $media): ?>
-		<div class="assets" data-owner="<?php echo $media->user->name; ?>" data-owner-id="<?php $media->user_id; ?>"
-			data-media="<?php echo $media->media_type; ?>" data-id="<?php $media->id; ?>">
+		<?php foreach($location_media as $media): ?>
+			<?php $media_type = $media->media_type; ?>
+			<div class="assets" data-owner="<?php echo $media->user->name; ?>" data-owner-id="<?php $media->user_id; ?>"
+				data-media="<?php echo $media_type; ?>" data-media-id="<?php echo $media->id; ?>">
 		<?php
-			switch($media->media_type)
+			switch($media_type)
 			{
 				case 4:
 					// NEWS
@@ -23,6 +24,7 @@
 				case 2:
 					// VIDEO
 					$video_embeder->embed($media->media_link,'', 350,208);
+					echo "<span class=\"ignore-hover\"></span>";
 					break;
 				case 1:
 					// PHOTO
@@ -36,22 +38,21 @@
 		<?php endforeach; ?>
 	</div>
 
-	<?php if ($location->media->count() == 0): ?>
+	<?php if ( ! count($location_media)): ?>
 	<span style="float:right">
 		<?php echo html::anchor("users/index/".$location->user_id, $location->user->name); ?>
+	</span>
 	<?php endif ;?>
 
 	<div class="popup_controls">
 		<?php if ($location->media->count() > 1): ?>
 		<a id="asset_nav_previous">&larr;</a>
 		<span class="asset-nav">
-			<span id="current_asset_pos">1</span> de <?php echo $location->media->count(); ?>
+			<span id="current_asset_pos">1</span> de <?php echo count($location_media); ?>
 		</span>
 		<a id="asset_nav_next">&rarr;</a>
 		<?php endif; ?>
-		<a href="#" id="remove_asset" style="display:none;">
-			Remover esse upload
-		</a>		
+		<a href="#" id="remove_asset" style="display:none;">Remover esse upload</a>		
 		<span id="owner" style="float:right"></span>
 	</div>
 </div>

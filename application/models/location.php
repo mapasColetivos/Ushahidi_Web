@@ -57,13 +57,12 @@ class Location_Model extends ORM {
 	/**
 	 * Checks if a location id exists in the database
 	 * @param int $location_id Database ID of the the location
-	 * @return bool
+	 * @return mixed ORM if location exists, FALSE otherwise
 	 */
 	public static function is_valid_location($location_id)
 	{
-		return (intval($location_id) > 0)
-			? ORM::factory('location', intval($location_id))->loaded
-			: FALSE;
+		$location_orm = ORM::factory('location', intval($location_id));
+		return $location_orm->loaded ? $location_orm : FALSE;
 	}
 
 	/**
