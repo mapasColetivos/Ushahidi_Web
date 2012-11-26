@@ -136,20 +136,12 @@ if (window.Ushahidi) {
 			// Update the position
 			$("#current_asset_pos", dom).html(index+1);
 
-			// (Un)Bind events
-			if ($(".ignore-hover", asset).length) {
-				$(".hooverable", dom).mouseover(function(e) { return false; });
-			} else {
+			// Only bind mouse(over/out) events when the asset
+			// doesn't have a node with the "ignore-hover" class
+			if (!$(".ignore-hover", asset).length) {
 				// Mouseover
 				$(".hooverable", dom).mouseover(function(e) {
-					var imgNode = $("img.delimiter", this); 
-					var margin = (imgNode.position() !== null) ? $(imgNode).position().left : 0;
-				
-					// Attributes for the overlay
-					var attrs = {
-						"margin-left": margin  + "px",
-					};
-					$(".asset-overlay", dom).css(attrs).show();
+					$(".asset-overlay", dom).show();
 					return false;
 				});
 				
