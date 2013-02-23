@@ -535,7 +535,6 @@ $(function(){
 				wait: true,
 				success: function(model, response){
 					kmlLayers.remove(model);
-					context.$el.fadeOut();					
 				}
 			});
 			return false;

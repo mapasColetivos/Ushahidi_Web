@@ -981,5 +981,18 @@ class Incident_Model extends ORM {
 		
 		return $tags;
 	}
+	
+	/**
+	 * Removes the layer specified in layer_id from the incident in incident_id
+	 *
+	 * @param  int   incident_id
+	 * @param  int   layer_id
+	 */
+	public static function remove_kml($incident_id, $layer_id)
+	{
+		ORM::factory('incident_kml')
+			->where(array('incident_id'=> $incident_id, 'layer_id' => $layer_id))
+			->delete_all();
+	}
 
 }

@@ -91,7 +91,7 @@ class Main_Controller extends Template_Controller {
 			->bind('site_name', $site_name)
 			->bind('site_name_style', $site_name_style);
 				
-		$this->template->footer  = View::factory('footer')
+		$this->template->footer = View::factory('footer')
 				->set('footer_block', $this->themes->footer_block());
 
 		// Set Table Prefix
@@ -116,7 +116,7 @@ class Main_Controller extends Template_Controller {
 		$site_name_style = (strlen($site_name) > 20) ? " style=\"font-size:21px;\"" : "";
 
 		// page_title is a special variable that will be overridden by other controllers to
-		//    change the title bar contents
+		// change the title bar contents
 		$this->template->header->page_title = '';
 
 		//pass the URI to the header so we can dynamically add css classes to the "body" tag
@@ -141,7 +141,6 @@ class Main_Controller extends Template_Controller {
 		$this->template->header->header_nav->loggedin_user = FALSE;
 		if (($this->user = Auth::instance()->get_user()) != FALSE)
 		{
-
 			// Load User
 			$this->template->header->header_nav->loggedin_role = $this->user->dashboard();
 			$this->template->header->header_nav->loggedin_user = $this->user;
@@ -225,9 +224,7 @@ class Main_Controller extends Template_Controller {
 		$config_layers = Kohana::config('map.layers'); // use config/map layers if set
 		if ($config_layers == $layers)
 		{
-			foreach (ORM::factory('layer')
-					  ->where('layer_visible', 1)
-					  ->find_all() as $layer)
+			foreach (Layer_Model::get_visible_layers() as $layer)
 			{
 				$layers[$layer->id] = array($layer->layer_name, $layer->layer_color,
 					$layer->layer_url, $layer->layer_file);

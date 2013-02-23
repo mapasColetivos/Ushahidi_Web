@@ -766,6 +766,13 @@ class Reports_Controller extends Main_Controller {
 	 */
 	public function layers($incident_id, $layer_id = NULL)
 	{
+		if ( ! $this->user)
+		{
+			// 401 error - User not authorized
+			Kohana::log('error', 'You must be logged in to perform this request');
+			header('HTTP/1.1 403 Access denied', TRUE, 403);
+		}
+
 		$this->template = '';
 		$this->auto_render = FALSE;
 
@@ -806,10 +813,17 @@ class Reports_Controller extends Main_Controller {
 			break;
 
 			case "delete":
+				// Delete the layer from the incident
 				$layer_orm = ORM::factory('layer', $layer_id);
 				if ($layer_orm->loaded)
 				{
-					$layer_orm->delete();
+					Incident_Model::remove_kml($incident_id, $layer_id);
+					
+					// Does the layer have any more incidents?
+					if ($layer_orm->incident_kml->count() == 0)
+					{
+						$layer_orm->delete();
+					}
 				}
 			break;
 		}

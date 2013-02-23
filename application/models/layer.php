@@ -134,4 +134,25 @@ class Layer_Model extends ORM {
 	{
 		return ORM::factory('layer')->where('layer_visible', 1)->find_all();
 	}
+	
+	/**
+	 * Gets and returns an array of all the layers in the DB
+	 *
+	 * @param  bool $desc When TRUE, orders the records in descending order
+	 * @return array
+	 */
+	public static function get_layers_array($desc = TRUE)
+	{
+		$layers_iterator = ($desc)
+			? ORM::factory('layer')->orderby('id', 'DESC')->find_all()
+			: ORM::factory('layer')->find_all();
+		
+		$layers_array = array();
+		foreach ($layers_iterator as $layer)
+		{
+			$layers_array[] = $layer->as_array();
+		}
+		
+		return $layers_array;
+	}
 }

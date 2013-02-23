@@ -55,6 +55,9 @@ class Locations_Controller extends Main_Controller {
 
 		// Marker legends for the current incident
 		$incident_legends = $incident->get_legends_array();
+		
+		// Layers for the current incident
+		$incident_layers = $incident->get_layers();
 
 		// Set the properties for the JavaScript
 		$javascript = View::factory('locations/js/location')
@@ -73,29 +76,8 @@ class Locations_Controller extends Main_Controller {
 			->set('geocoder_url', url::site('reports/geocode'))
 			->bind('layers', $all_layers);
 
-		// Layers for the incident in $incident_id
-		$incident_layers = $incident->get_layers();
-
-		// Layers associated with the current incident should not
-		// be included in the "import layers" listing
-		$excluded_layer_ids = array();
-		foreach ($incident_layers as $layer)
-		{
-			$excluded_layer_ids[] = $layer->id;
-		}
-
-		$all_layers = array();
-		$layers_iterator = ! count($excluded_layer_ids)
-			? ORM::factory('layer')->orderby('id', 'DESC')->find_all()
-			: ORM::factory('layer')->notin('id', $excluded_layer_ids)->find_all();
-
-		foreach ($layers_iterator as $layer)
-		{
-			if ( ! $layer->loaded) continue;
-			$all_layers[] = $layer->as_array();
-		}
-		
-		$all_layers = json_encode($all_layers);
+		// Get all the layers and serialize them to JSON
+		$all_layers = json_encode(Layer_Model::get_layers_array());
 
 		$this->themes->map_enabled = TRUE;
 		$this->themes->colorpicker_enabled = TRUE;
