@@ -28,21 +28,14 @@
 					break;
 				case 1:
 					// PHOTO
-					$thumb = str_replace(".","_p.", $media->media_link);
 					$prefix = url::base().Kohana::config('upload.relative_directory');
-					echo html::image($prefix."/".$thumb, array('class'=>'delimiter'));
+					echo html::image($prefix."/".$media->media_link, array('class'=>'delimiter', 'style'=>'width:100%;'));
 					break;
 			}
 		?>
 		</div>
 		<?php endforeach; ?>
 	</div>
-
-	<?php if ( ! count($location_media)): ?>
-	<span style="float:right">
-		<?php echo html::anchor("users/index/".$location->user_id, $location->user->name); ?>
-	</span>
-	<?php endif ;?>
 
 	<div class="popup_controls">
 		<?php if ($location->media->count() > 1): ?>
@@ -52,7 +45,9 @@
 		</span>
 		<a id="asset_nav_next">&rarr;</a>
 		<?php endif; ?>
-		<a href="#" id="remove_asset" style="display:none;">Remover esse upload</a>		
-		<span id="owner" style="float:right"></span>
+		<a href="#" id="remove_asset" style="display:none;">Remover esse upload</a>
+		<span id="owner" style="float:right">
+			<?php echo html::anchor("users/index/".$location->user_id, $location->user->name); ?>
+		</span>
 	</div>
 </div>
