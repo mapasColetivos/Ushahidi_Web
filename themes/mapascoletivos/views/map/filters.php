@@ -63,7 +63,9 @@ jQuery(window).load(function() {
 		$("#layer-switcher a").each(function(i) {
 			if ($(this).hasClass("active")) {
 				isCurrentLayer = $(this).data("layer-id") == layerId;
-				map.trigger("deletelayer", $(this).data("layer-name"));
+				// DO not remove the currently selected layer from the
+				// layer switcher box
+				// map.trigger("deletelayer", $(this).data("layer-name"));
 				$(this).removeClass("active");
 			}
 		});
