@@ -25,17 +25,7 @@ if (window.Ushahidi) {
 	 * Overload Ushahidi.Map.addLayer
 	 */
 	mapasColetivos.Map.prototype.addLayer = function(layerType, options, save) {
-
-		if (layerType === Ushahidi.GEOJSON) {
-			// Enable layer selection on hover
-			options.selectOnHover = true;
-
-		} else if (layerType === Ushahidi.KML) {
-			options.selectOnHover = false;
-
-			// Delegate feature selection to the parent function
-			mapasColetivos.Map.prototype.onFeatureSelect = Ushahidi.Map.prototype.onFeatureSelect;
-		}
+		options.selectOnHover = (layerType === Ushahidi.GEOJSON);
 		Ushahidi.Map.prototype.addLayer.call(this, layerType, options, save);
 		return this;
 	}
@@ -49,7 +39,7 @@ if (window.Ushahidi) {
 
 		// Cache the currently selected feature
 		this._selectedFeature = feature;
-
+		
 		// Get the location id of the selected feature
 		var locationId = feature.attributes.id;
 		var context = this;
@@ -124,14 +114,17 @@ if (window.Ushahidi) {
 		// Displays the media asset
 		function displayMediaAsset(index, clearAssetArea) {
 			if (clearAssetArea) {
-				$(".asset_area div.assets", dom).fadeOut().remove();
+				$(".asset_area div.assets", dom).fadeOut('slow').remove();
 			}
 
 			// Get the asset at the specified index
 			var asset = $(assets[index]);
 			
 			// Display the asset
-			$(".asset_area", dom).append(asset).fadeIn("slow");
+			setTimeout(function() {
+				$(".asset_area", dom).append(asset);
+				$(asset).fadeIn('slow');
+			}, 300);
 
 			// Update the position
 			$("#current_asset_pos", dom).html(index+1);
