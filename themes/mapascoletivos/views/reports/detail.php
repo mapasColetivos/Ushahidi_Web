@@ -3,6 +3,13 @@
 
 		<!-- social -->
 		<div id="social">
+        	compartilhar: 			
+			<!-- TODO Finish up the email button -->
+			<div id="convidar">
+				<?php echo html::anchor("#", "<img src='/themes/default/images/icons/mail.png'/>", array('class'=>'btn_convidar')); ?>
+			</div>
+			<!-- /TODO -->
+            
 			<div id="facebook_button">
 				<?php
 					// URL to share on Facebook
@@ -33,14 +40,31 @@
 
 		<!-- left_column -->
 		<div id="left_column">
-			<!-- TODO Finish up the email button -->
-			<div id="convidar">
-				<?php echo html::anchor("#", "Convidar", array('class'=>'btn_convidar')); ?>
+        
+        	<!-- follow incident(map) -->
+			<div class="follow">
+				<p>
+				<?php
+					// Attributes for the anchor
+					$attributes = array(
+						'data-incident-id' => $incident->id,
+						'data-action-name' => 'follow',
+						'class' => 'incident-follow'
+					);
+
+					if ($user->is_incident_follower($incident))
+					{
+						// Add the following class
+						$attributes['class'] = 'incident-follow following';
+						$attributes['data-action-name'] = 'unfollow';
+					}
+
+					echo html::anchor("#", "", $attributes);
+				?>
+				</p>
 			</div>
-			<div class="links">
-				<?php echo html::anchor("locations/create/".$incident->id, "Colobar", array('class' => 'btn_collaborate')); ?>
-			</div>
-			<!-- /TODO -->
+			<!-- /follow -->
+			
 
 			<div class="description_map">
 				<h2><?php echo $incident->incident_title; ?></h2>
@@ -158,6 +182,10 @@
 		<div id="right_column">
 			<div id="filters_bar">
 				<h1 id="map_title"><?php echo $incident->incident_title; ?></h1>
+                <div class="links">
+				<?php echo html::anchor("locations/create/".$incident->id, "Colaborar", array('class' => 'btn_collaborate')); ?>
+			</div></h1>
+	
 
 				<div class="map-filters">
 					<div id="menu_filters">
