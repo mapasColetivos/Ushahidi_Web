@@ -346,6 +346,7 @@
 	'password_changed_successfully' => 'Password changed successfully! Login below.',
 	'password_forgot' => 'Forgot your password?',
 	'password_reset_confirm' => 'Check your email for the new password.',
+	'password_reset_email' => 'An email has been sent to the email address you have provided with instructions on how to change your password',
 	'password_save' => 'Stay logged in on this computer?',
 	'past_month' => 'Past Month',
 	'past_year' => 'Past Year',

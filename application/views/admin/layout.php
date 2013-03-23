@@ -29,8 +29,21 @@
 	if ($map_enabled)
 	{
 		echo html::script(url::file_loc('js').'media/js/OpenLayers', TRUE);
+
+		$script_template =  "<script type=\"text/javascript\" src=\"%s\"></script>";
+		if (is_array($api_url))
+		{
+			foreach ($api_url as $url)
+			{
+				echo sprintf($script_template, $url)."\n";
+			}
+		}
+		else
+		{
+			echo sprintf($script_template, $api_url)."\n";
+		}
+
 		echo html::script(url::file_loc('js').'media/js/ushahidi', TRUE);
-		echo $api_url . "\n";
 		echo "<script type=\"text/javascript\">
 			OpenLayers.ImgPath = '".url::file_loc('img').'media/img/openlayers/'."';
 			</script>";

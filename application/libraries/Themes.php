@@ -137,24 +137,17 @@ class Themes_Core {
 	 */
 	private function _header_js()
 	{
-		$core_js = "";
-		if ($this->map_enabled)
-		{
-			$core_js .= html::script($this->js_url."media/js/OpenLayers", TRUE);
-			$core_js .= "<script type=\"text/javascript\">OpenLayers.ImgPath = '".$this->js_url."media/img/openlayers/"."';</script>";
-			$core_js .= html::script($this->js_url."media/js/ushahidi", TRUE);
-		}
-
-		$core_js .= html::script($this->js_url."media/js/jquery", TRUE);
-		//$core_js .= html::script($this->js_url."media/js/jquery.ui.min", TRUE);
-		$core_js .= html::script("https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js", TRUE);
+		$core_js = html::script($this->js_url."media/js/jquery", TRUE);
+		$core_js .= html::script($this->js_url."media/js/jquery.ui.min.js", TRUE);
 		$core_js .= html::script($this->js_url."media/js/jquery.pngFix.pack", TRUE);
 		$core_js .= html::script($this->js_url."media/js/jquery.timeago", TRUE);
 
 		if ($this->map_enabled)
 		{
-
-			$core_js .= $this->api_url;
+			$core_js .= html::script($this->js_url."media/js/OpenLayers", TRUE);
+			$core_js .= "<script type=\"text/javascript\">OpenLayers.ImgPath = '".$this->js_url."media/img/openlayers/"."';</script>";
+			$core_js .= "<script type=\"text/javascript\" src=\"".$this->api_url."\"></script>";
+			$core_js .= html::script($this->js_url."media/js/ushahidi", TRUE);
 
 			if ($this->main_page || $this->this_page == "alerts")
 			{

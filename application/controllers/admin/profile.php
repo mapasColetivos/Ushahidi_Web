@@ -30,8 +30,7 @@ class Profile_Controller extends Admin_Controller
         $this->template->content = new View('admin/profile');
 
         // setup and initialize form field names
-        $form = array
-        (
+        $form = array(
             'current_password'  => '',
             'new_password'  => '',
             'password_again'  => '',

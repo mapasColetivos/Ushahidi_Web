@@ -86,18 +86,21 @@ class Login_Controller extends Template_Controller {
 				}
 				else
 				{
+					// TODO: Check if this is a new account and confirmation is pending
+					
 					// Log the authentication error
 					Kohana::log('error', "Authentication failed for user ".$validation->username);
+					
+					$validation->add_error('password', 'login error');
 
 					// Turn on the form error
 					$form_error = TRUE;
-
-					// Overwrite the form and errors arrays
-					$errors = arr::overwrite($errors, $validation->errors('auth'));
-					$form = arr::overwrite($form, $validation->as_array());
 				}
 			}
 
+			// Overwrite the form and errors arrays
+			$errors = arr::overwrite($errors, $validation->errors('auth'));
+			$form = arr::overwrite($form, $validation->as_array());
 		}
 
 		$this->template->errors = $errors;
@@ -291,46 +294,6 @@ class Login_Controller extends Template_Controller {
 		}
 	}
 
-	/**
-	 * Checks if username already exists.
-	 * @param Validation $post $_POST variable with validation rules
-	 */
-	public function username_exists_chk(Validation $post)
-	{
-		$users = ORM::factory('user');
-		// If add->rules validation found any errors, get me out of here!
-		if (array_key_exists('username', $post->errors()))
-			return;
-
-		if ($users->username_exists($post->username))
-			$post->add_error( 'username', 'exists');
-	}
-
-	/**
-	 * Checks if email address is associated with an account.
-	 * @param Validation $post $_POST variable with validation rules
-	 */
-	public function email_exists_chk( Validation $post )
-	{
-		$users = ORM::factory('user');
-		if ($post->action == "new")
-		{
-			if (array_key_exists('email',$post->errors()))
-				return;
-
-			if ($users->email_exists( $post->email ) )
-				$post->add_error('email','exists');
-		}
-		elseif($post->action == "forgot")
-		{
-			if (array_key_exists('resetemail',$post->errors()))
-				return;
-
-			if ( ! $users->email_exists( $post->resetemail ) )
-				$post->add_error('resetemail','invalid');
-		}
-	}
-
     /**
      * Create New password upon user request.
      */
@@ -414,53 +377,6 @@ class Login_Controller extends Template_Controller {
 		email::send($to, $from, $subject, $message, FALSE);
 
 		return TRUE;
-	}
-
-	/**
-	 * Email reset link to the user.
-	 *
-	 * @param the email address of the user requesting a password reset.
-	 * @param the username of the user requesting a password reset.
-	 * @param the new generated password.
-	 *
-	 * @return void.
-	 */
-	private function _email_resetlink( $email, $name, $secret_url )
-	{
-		$to = $email;
-		$from = Kohana::lang('ui_admin.password_reset_from');
-		$subject = Kohana::lang('ui_admin.password_reset_subject');
-		$message = $this->_email_resetlink_message($name, $secret_url);
-
-		//email details
-		if( email::send( $to, $from, $subject, $message, FALSE ) == 1 )
-		{
-			return TRUE;
-		}
-		else
-		{
-			return FALSE;
-		}
-
-	}
-
-	/**
-	 * Generate the email message body that goes out to the user when a password is reset
-	 *
-	 * @param the username of the user requesting a password reset.
-	 * @param the new generated password.
-	 *
-	 * @return void.
-	 */
-	private function _email_resetlink_message( $name, $secret_url )
-	{
-		$message = Kohana::lang('ui_admin.password_reset_message_line_1').' '.$name.",\n";
-		$message .= Kohana::lang('ui_admin.password_reset_message_line_2').' '.$name.". ";
-		$message .= Kohana::lang('ui_admin.password_reset_message_line_3')."\n\n";
-		$message .= $secret_url."\n\n";
-
-		return $message;
-
 	}
 
 }

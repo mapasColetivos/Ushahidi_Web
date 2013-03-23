@@ -1,9 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title><?php echo Kohana::lang('ui_main.ushahidi_admin'); ?></title>
-<?php echo html::stylesheet('media/css/admin/login.css'); ?>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title><?php echo Kohana::lang('ui_main.ushahidi_admin'); ?></title>
+	<?php echo html::stylesheet(array('themes/mapascoletivos/css/mapascoletivos.css', 'media/css/admin/login.css')); ?>
 </head>
 
 <body>
@@ -11,18 +11,17 @@
     <div id="ushahidi_login_logo"><img src="<?php echo url::base() ?>media/img/admin/logo_2.png" /></div>
     <div id="ushahidi_login">
     	<table width="100%" border="0" cellspacing="3" cellpadding="4" background="" id="ushahidi_loginbox">
+    		<?php if ($form_error): ?>
+			<div class="red-box">
+				<?php foreach ($errors as $error_item => $error_description): ?>
+					<p align="center"><?php echo  ( ! $error_description) ? '' : $error_description; ?></p>
+				<?php endforeach; ?>
+				</td>
+			</div>
+			<?php endif; ?>
     		<?php echo form::open(NULL, array('style'=>'line-height: 100%; margin-top: 0; margin-bottom: 0;')); ?>
-	    		<?php if ($form_error): ?>
-	    		<tr>
-	    			<td align="left" class="login_error">
-    				<?php foreach ($errors as $error_item => $error_description): ?>
-					<?php echo  ( ! $error_description) ? '' : "&#8226;&nbsp;" . $error_description; ?><br/>
-					<?php endforeach; ?>
-					</td>
-				</tr>
-				<?php endif; ?>
 				<tr>
-					<td><strong><?php echo Kohana::lang('ui_main.username');?>:</strong><br />
+					<td><strong><?php echo Kohana::lang('ui_main.email_address');?>:</strong><br />
 						<input type="text" name="username" id="username" class="login_text" />
 					</td>
 				</tr>
@@ -42,7 +41,7 @@
 				</tr>
 				<tr>
 					<td>
-						<a href="<?php echo url::site()?>login/forgot_password">
+						<a href="<?php echo url::site('users/reset_password'); ?>">
 							<?php echo Kohana::lang('ui_main.forgot_password');?>
 						</a>
 					</td>

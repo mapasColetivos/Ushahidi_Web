@@ -1,5 +1,4 @@
 <?php defined('SYSPATH') or die('No direct script access.');
-
 /**
  * Users Controller
  *
@@ -321,6 +320,106 @@ class Users_Controller extends Main_Controller {
 		$this->template->content->form_saved = $form_saved;
 		$this->template->content->form = $form;
 		$this->template->header->header_block = $this->themes->header_block();
-    }
+	}
+	
+	/**
+	 * Loads the page for resetting a user's password
+	 */
+	public function reset_password($user_id = 0)
+	{
+		$this->template->content = View::factory('users/reset_password')
+			->bind('errors', $errors)
+			->bind('form', $form)
+			->bind('form_error', $form_error)
+			->bind('message', $message)
+			->bind('message_class', $message_class);
+		
+		$form = array();
+		if ($_GET AND ! empty($_GET['token']))
+		{
+			$form = array('token' => $_GET['token'], 'action' => 'change_password');
+		}
+		else
+		{
+			$form = array('resetemail' => '', 'action' => 'forgot_password');
+		}
+		
+		$errors = $form;
+		$form_error = FALSE;
+
+		if ($_POST AND csrf::valid($this->input->post('form_auth_token')))
+		{
+			// Set up validation
+			$validation = Validation::factory($_POST)
+				->pre_filter('trim');
+
+			if ($_POST['action'] == 'forgot_password')
+			{
+				$validation->add_rules('resetemail', 'required', 'email');
+				$user = User_Model::get_user_by_email($this->input->post('resetemail'));
+
+				if ($validation->validate() AND $user->loaded)
+				{
+					// Send the email with instructions on how to reset password
+					$email_sent =  email::send_reset_password_email($user);
+
+					$message = $email_sent
+						? Kohana::lang('ui_main.password_reset_email')
+						: Kohana::lang('ui_main.unable_send_email');
+
+					$message_class = $email_sent ? 'green-box' : 'red-box';
+				}
+				else
+				{
+					if ( ! $user->loaded)
+					{
+						$validation->add_error('resetemail', 'invalid');
+					}
+					else
+					{
+						$validation->add_error('resetemail', 'email');
+					}
+				
+					$form_error = TRUE;
+				}
+			}
+			elseif ($_POST['action'] == 'change_password')
+			{
+				$validation->add_rules('token', 'required')
+					->add_rules('password', 'required', 'length['.Kohana::config('auth.password_length').']', 'alpha_numeric')
+					->add_rules('password', 'required', 'length['.Kohana::config('auth.password_length').']', 'alpha_numeric', 'matches[password_again]');
+				
+				if ($validation->validate())
+				{
+					// Change the password
+					$user = ORM::factory('user', $user_id);
+					if ($user->loaded AND $user->is_valid_reset_password_token($validation->token))
+					{
+						$user->password = $validation->password;
+						$user->save();
+						
+						url::redirect('login?change_pwd_succes');
+						exit();
+					}
+					else
+					{
+						$validation->add_error('token', 'invalid');
+						$form_error = TRUE;
+					}
+				}
+				else
+				{
+					$form_error = TRUE;
+				}
+			}
+
+			if ($form_error)
+			{
+				$errors = arr::overwrite($errors, $validation->errors('auth'));
+				$form = arr::overwrite($form, $validation->as_array());
+			}
+		}
+		
+	}
 
 }

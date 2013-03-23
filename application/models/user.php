@@ -610,4 +610,170 @@ class User_Model extends Auth_User_Model {
 		     ->find_all();
 	}
 
-} // End User_Model
+	/**
+	 * Gets the layers for the current user. If the user has
+	 * the "superadmin" role, all the layers as returned
+	 *
+	 * @return array
+	 */
+	public function get_layers_array()
+	{
+		$layers = array();
+		foreach ($this->get_layers as $layer)
+		{
+			$layers[] = $layer->as_array();
+		}
+
+		return $layers;
+	}
+	
+	/**
+	 * Gets the list of layers created by the current user. The
+	 * entries in the return array are ORM objects
+	 *
+	 * @return array
+	 */
+	public function get_layers()
+	{
+		$layers = array();
+
+		foreach ($this->layer as $layer)
+		{
+			$layers[] = $layer;
+		}
+
+		return $layers;
+	}
+
+	/**
+	 * Gets the list of viewable incidents/maps for the current user.
+	 * Where the $visitor parameter has been specified and they are an
+	 * administrator on the deployment, all the user's incidents (maps)
+	 * are returned. Otherwise, only the public ones (incident_privacy = 0)
+	 * are returned.
+	 *
+	 * @param mixed $visitor
+	 * @return array
+	 */
+	public function get_visible_incidents($visitor = NULL)
+	{
+		$fetch_all = ! empty ($visitor) AND
+			($visitor->is_administrator() OR $visitor->id === $this->id);
+
+		$visible_incidents = array();
+
+		foreach ($this->incident as $incident)
+		{
+			if ($fetch_all)
+			{
+				$visible_incidents[] = $incident;
+			}
+			else
+			{
+				if ($incident->incident_privacy == 0)
+				{
+					$visible_incidents[] = $incident;
+				}
+			}
+		}
+
+		return $visible_incidents;
+	}
+
+	/**
+	 * Whether the current user is an administrator i.e. either has
+	 * the admin or superadmin role
+	 *
+	 * @return bool
+	 */
+	public function is_administrator()
+	{
+		return $this->has(ORM::factory('role', 'superadmin')) OR
+			$this->has(ORM::factory('role', 'admin'));
+	}
+	
+	/**
+	 * Gets the incidents that the user is following
+	 * 
+	 * @return array
+	 */
+	public function get_incidents_following()
+	{
+		$incident_ids = array();
+		
+		foreach ($this->incident_follows as $follow)
+		{
+			$incident_ids[] = $follow->incident_id;
+		}
+		
+		// Sanity check
+		if ( ! count($incident_ids)) return array();
+		
+		// Fetch the followed incidents
+		$incidents = array();
+		foreach (ORM::factory('incident')->in('id', $incident_ids)->find_all() as $incident)
+		{
+			$incidents[] = $incident;
+		}
+			
+		return $incidents;
+	}
+
+	/**
+	 * Gets the legends created by the current user
+	 * @return array
+	 */
+	public function get_legends_array()
+	{
+		$legends = array();
+		
+		// Get the legends
+		$incident_legends = Database::instance()
+			->select('DISTINCT incident_legend.id', 'legend.legend_name', 'incident_legend.legend_color')
+			->from('incident_legend')
+			->join('legend', 'legend.id', 'incident_legend.legend_id')
+			->join('location', 'location.incident_legend_id', 'incident_legend.id')
+			->where('incident_legend.user_id', $this->id)
+			->get();
+		
+		foreach ($incident_legends as $legend)
+		{
+			$legends[] = array(
+				'id' => $legend->id,
+				'legend_name' => $legend->legend_name,
+				'legend_color' => $legend->legend_color
+			);
+		}
+
+		return $legends;
+
+	}
+	
+	/**
+	 * Generates and returns a challenge token for a user who has forgotten their
+	 * password. This token is sent along with the reset password link
+	 *
+	 * @param  string  salt
+	 * @return string
+	 */
+	public function get_reset_password_token($salt = NULL)
+	{
+		// Hash data consists of the email and last_login fields
+		$salt = $salt ? $salt : text::random('alnum', 32);
+		$key = Kohana::config('settings.forgot_password_secret');
+		return $salt . hash_hmac('sha1', $this->last_login . $this->email, $salt . $key);
+	}
+	
+	/**
+	 * Checks if the specified $token is a valid reset password token
+	 *
+	 * @param  string token
+	 * @return bool
+	 */
+	public function is_valid_reset_password_token($token)
+	{
+		$salt = substr($token, 0, 32);
+		return $this->get_reset_password_token($salt) == $token;
+	}
+
+}

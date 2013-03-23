@@ -77,7 +77,11 @@ class Settings_Model extends ORM {
 		if (self::new_schema())
 		{
 			$setting = ORM::factory('settings')->where('key', $key)->find();
-			
+			if ( ! $setting->loaded)
+			{			
+				$setting->key = $key;
+			}
+
 			$setting->value = $value;
 			$setting->save();
 		}
