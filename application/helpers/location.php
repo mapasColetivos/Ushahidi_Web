@@ -102,13 +102,6 @@ class location_Core {
 		// a. News
 		if (isset($post->location_news))
 		{
-			// Delete all the news links
-			ORM::factory('media')
-			    ->where('location_id', $location_id)
-			    ->where('incident_id', $incident_id)
-			    ->where('media_type', 4)
-			    ->delete_all();
-
 			foreach ($post->location_news as $item)
 			{
 				if ( ! empty($item))
@@ -128,13 +121,6 @@ class location_Core {
 		// b. Video
 		if (isset($post->location_video))
 		{
-			// Delete all the vide links
-			ORM::factory('media')
-			    ->where('location_id', $location_id)
-			    ->where('incident_id', $incident_id)
-			    ->where('media_type', 2)
-			    ->delete_all();
-
 			foreach ($post->location_video as $item)
 			{
 				if ( ! empty($item))
@@ -154,13 +140,6 @@ class location_Core {
 		// c. Photos
 		if ( ! empty($post->location_photo))
 		{
-			// Delete all the images
-			ORM::factory('media')
-			    ->where('location_id', $location_id)
-			    ->where('incident_id', $incident_id)
-			    ->where('media_type', 1)
-			    ->delete_all();
-
 			$filenames = upload::save('location_photo');
 			$i = 1;
 
