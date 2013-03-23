@@ -3,7 +3,6 @@
 /**
  * Model for reported Incidents
  *
- *
  * PHP version 5
  * LICENSE: This source file is subject to LGPL license
  * that is available through the world-wide-web at the following URI:
@@ -13,7 +12,6 @@
  * @copyright  Ushahidi - http://www.ushahidi.com
  * @license    http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License (LGPL)
  */
-
 class Incident_Model extends ORM {
 	/**
 	 * One-to-may relationship definition
@@ -31,10 +29,10 @@ class Incident_Model extends ORM {
 		'cluster' => 'cluster_incident',
 		'geometry',
 		'incident_kml',
-		'location_layer',
 		'incident_tags',
 		'location',
 		'incident_follows',
+		'incident_legend'
 	);
 
 	/**
@@ -94,7 +92,7 @@ class Incident_Model extends ORM {
 	public static function get_total_reports($approved = FALSE)
 	{
 		return ($approved)
-			? ORM::factory('incident')->where('incident_active', '1')->count_all()
+			? ORM::factory('incident')->where('incident_active', '1')->where('incident_privacy', 0)->count_all()
 			: ORM::factory('incident')->count_all();
 	}
 
@@ -107,8 +105,8 @@ class Incident_Model extends ORM {
 	public static function get_total_reports_by_verified($verified = FALSE)
 	{
 		return ($verified)
-			? ORM::factory('incident')->where('incident_verified', '1')->where('incident_active', '1')->count_all()
-			: ORM::factory('incident')->where('incident_verified', '0')->where('incident_active', '1')->count_all();
+			? ORM::factory('incident')->where('incident_verified', '1')->where('incident_active', '1')->where('incident_privacy', 0)->count_all()
+			: ORM::factory('incident')->where('incident_verified', '0')->where('incident_active', '1')->where('incident_privacy', 0)->count_all();
 	}
 
 	/**
@@ -403,7 +401,8 @@ class Incident_Model extends ORM {
 		}
 		else
 		{
-			$sql .= 'WHERE i.incident_active = 1 ';
+			$sql .= 'WHERE i.incident_active = 1 '
+			    . "AND i.incident_privacy = 0 ";
 		}
 
 		// Check for the additional conditions for the query
@@ -682,40 +681,56 @@ class Incident_Model extends ORM {
 	 *     - Created a location entry
 	 *     - Uploaded a KML for the current incident
 	 *     - Uploaded media (image, video etc) for the incident
+	 *     - Added a legend to the incident/map
 	 * @return array
 	 */
 	public function get_collaborators()
 	{
-		$collaborators = array();
+		$collaborator_ids = array();
 
 		// Locations
 		foreach ($this->location as $location)
 		{
-			if ( ! array_key_exists($location->user->id, $collaborators))
-			{
-				$collaborators[$location->user->id] = $location->user;
-			}
+			$collaborator_ids[] = $location->user_id;
 		}
 
 		// Media
 		foreach ($this->media as $media)
 		{
-			if ( ! array_key_exists($media->user->id, $collaborators))
-			{
-				$collaborators[$media->user->id] = $media->user;
-			}
+			$collaborator_ids[] = $media->user_id;
 		}
 
 		// KMLS
 		foreach ($this->incident_kml as $kml)
 		{
-			if ( ! array_key_exists($kml->user->id, $collaborators))
-			{
-				$collaborators[$kml->user->id] = $kml->user;
-			}
+			$collaborator_ids[] = $kml->user_id;
+		}
+		
+		// Legends
+		foreach ($this->incident_legend as $legend)
+		{
+			$collaborators_ids[] = $legend->user_id;
 		}
 
-		return array_values($collaborators);
+		// Sanity check
+		if ( ! count($collaborator_ids)) return array();
+		
+		// Get the unique values
+		$collaborator_ids = array_unique($collaborator_ids);
+		
+		$collaborators = array();
+
+		// Fetch the entries
+		$collaborators_iterator = ORM::factory('user')
+			->in('id', $collaborator_ids)
+			->find_all();
+
+		foreach ($collaborators_iterator as $collaborator)
+		{
+			$collaborators[] = $collaborator;
+		}
+
+		return $collaborators;
 	}
 
 	/**
@@ -734,10 +749,19 @@ class Incident_Model extends ORM {
 	 */
 	public function get_layers()
 	{
-		$layers = array();
+		$layer_ids = array();
 		foreach ($this->incident_kml as $kml)
 		{
-			$layers[] = $kml->layer;
+			$layer_ids[] = $kml->layer_id;
+		}
+
+		// Sanity check
+		if ( ! count($layer_ids)) return array();
+
+		$layers = array();
+		foreach (ORM::factory('layer')->in('id', $layer_ids)->find_all() as $layer)
+		{
+			$layers[] = $layer;
 		}
 		return $layers;
 	}
@@ -751,7 +775,7 @@ class Incident_Model extends ORM {
 	 */
 	public function is_owner($user)
 	{
-		return ($this->user_id == $user->id) OR $user->username == "admin";
+		return ($this->user_id == $user->id) OR $user->has(ORM::factory('role', 'superadmin'));
 	}
 
 	/**
@@ -766,6 +790,209 @@ class Incident_Model extends ORM {
 			$categories[] = $category->category_id;
 		}
 		return $categories;
+	}
+
+	/**
+	 * Gets the locations for this incident as an array
+	 *
+	 * @return array
+	 */
+	public function get_locations_array()
+	{
+		$locations = array();
+		foreach ($this->location as $location)
+		{
+			$locations[$location->id] = $location->as_array();
+		}
+
+		// Map media types to their actual names
+		$media_type_map = array(1 => 'photo', 2 => 'video', 4 => 'news');
+
+		foreach ($this->media as $media)
+		{
+			$location_id = $media->location_id;
+			if (array_key_exists($location_id, $locations))
+			{
+				$media_type = $media_type_map[$media->media_type];
+				
+				if ( ! array_key_exists($media_type, $locations[$location_id]))
+				{
+					$locations[$location_id][$media_type] = array();
+				}
+				
+				// Media type entry
+				$entry = array(
+				    "id" => $media->id,
+				    "location_id" => $location_id,
+				    "media_type" => $media_type,
+				    "media_link" => trim($media->media_link),
+				    "media_thumb" => $media->media_thumb					
+				);
+				
+				$locations[$location_id][$media_type][] = $entry;
+			}
+		}
+
+		return  ( ! count($locations)) ? $locations : array_values($locations);
+	}
+
+	/**
+	 * Associates an the incident with the layer by creating
+	 * an entry in incident_kml
+	 * @param  ORM $user
+	 * @param  ORM $layer
+	 */
+	public function add_layer($user, $layer)
+	{
+		$entry = ORM::factory('incident_kml')
+			->where('incident_id', $this->id)
+			->where('layer_id', $layer->id)
+			->find();
+
+		if ( ! $entry->loaded)
+		{
+			$entry = new Incident_Kml_Model();
+			$entry->incident_id = $this->id;
+			$entry->layer_id = $layer->id;
+			$entry->user_id = $user->id;
+			$entry->save();
+
+			return TRUE;
+		}
+
+		Kohana::log("error", "The layer has already been associated with this incident");
+		return FALSE;
+	}
+
+	/**
+	 * Checks if the specified user has access to the
+	 * incident
+	 *
+	 * @param  ORM $user
+	 * @return bool
+	 */
+	public function has_access($user)
+	{
+		// If the incident is public, return TRUE
+		if ( ! $this->incident_privacy OR $user->loaded)
+		{
+			return TRUE;
+		}
+
+		// If the incident is private and no user has been specified
+		// return FALSE
+		if ($this->incident_privacy AND empty($user))
+		{
+			return FALSE;
+		}
+
+		// Default
+		return FALSE;
+	}
+	
+	/**
+	 * Gets the legends for the current incident
+	 *
+	 * @return array
+	 */
+	public function get_legends_array()
+	{
+		$legends = array();
+		
+		// Get the legends
+		$incident_legends = Database::instance()
+			->select('incident_legend.id', 'legend.legend_name', 'incident_legend.legend_color')
+			->from('incident_legend')
+			->join('legend', 'legend.id', 'incident_legend.legend_id')
+			->where('incident_legend.incident_id', $this->id)
+			->get();
+		
+		foreach ($incident_legends as $legend)
+		{
+			$legends[] = array(
+				'id' => $legend->id,
+				'legend_name' => $legend->legend_name,
+				'legend_color' => $legend->legend_color
+			);
+		}
+
+		return $legends;
+	}
+	
+	/**
+	 * Adds a legend to the incident
+	 * 
+	 * @param int $incident_id ID of the incident
+	 * @param array $post_data Name and color of the legend packed into an object
+	 * @param int $user_id ID of the user adding the legend
+	 * @return mixed array on success, FALSE otherwise
+	 */
+	public static function add_legend($incident_id, $post_data, $user_id)
+	{
+		// Add the legend
+		$legend_orm = Legend_Model::add_legend($post_data['legend_name']);		
+		
+		// Use a try/catch block so that we fail gracefully should a DB
+		// constraint be violated
+		try
+		{
+			$incident_legend = new Incident_Legend_Model();
+			$incident_legend->incident_id = $incident_id;
+			$incident_legend->legend_id = $legend_orm->id;
+			$incident_legend->legend_color = $post_data['legend_color'];
+			$incident_legend->user_id = $user_id;
+			$incident_legend->save();
+
+			return array(
+				'id' => $incident_legend->id,
+				'legend_name' => $legend_orm->legend_name,
+				'legend_color' => $incident_legend->legend_color
+			);
+		}
+		catch (Kohana_Exception $e)
+		{
+			// Log the error
+			Kohana::log("error", $e->getMessage());			
+		}
+		
+		return FALSE;
+	}
+	
+	/**
+	 * Gets an array of the incident's tags
+	 *
+	 * @return array
+	 */
+	public function get_tags()
+	{
+		$tag_ids = array();
+		foreach ($this->incident_tags as $tag)
+		{
+			$tag_ids[] = $tag->tag_id;
+		}
+
+		if ( ! count($tag_ids)) return array();
+
+		$tags = array();
+		foreach (ORM::factory('tag')->in('id', $tag_ids)->find_all() as $tag)
+		{
+			$tags[] = $tag;
+		}
+		
+		return $tags;
+	}
+	
+	/**
+	 * Removes the layer specified in layer_id from the incident in incident_id
+	 *
+	 * @param  int   incident_id
+	 * @param  int   layer_id
+	 */
+	public static function remove_kml($incident_id, $layer_id)
+	{
+		ORM::factory('incident_kml')
+			->where(array('incident_id'=> $incident_id, 'layer_id' => $layer_id))
+			->delete_all();
 	}
 
 }

@@ -92,8 +92,67 @@ class Layer_Model extends ORM {
 	 */
 	public static function is_valid_layer($layer_id)
 	{
-		return (intval($layer_id) > 0)
-				? self::factory('layer', intval($layer_id))->loaded
-				: FALSE;
+		return ORM::factory('layer', intval($layer_id))->loaded;
+	}
+
+	/**
+	 * Override the default delete behaviour
+	 * If the entry has an upload, the file is purged from the file system
+	 *
+	 * @return  mixed ORM on success, FALSE otherwise
+	 */
+	public function delete()
+	{
+		if ( ! empty($this->layer_file))
+		{
+			// Generate the absolute file path for the layer file (KML, KMZ)
+			$file_path = Kohana::config('upload.directory', TRUE).$this->layer_file;
+			if (file_exists($file_path))
+			{
+				try
+				{
+					// Purge KML from uploads directory
+					unlink($file_path);
+				}
+				catch (Kohana_Exception $e)
+				{
+					Kohana::log("error", sprintf("Error deleting file (%s) - %s", $file_path, $e->getMessage()));
+					return FALSE;
+				}
+			}
+		}
+
+		return parent::delete();
+	}
+	
+	/**
+	 * Gets the list of visible layers
+	 * 
+	 * @return ORM_Iterator
+	 */
+	public static function get_visible_layers()
+	{
+		return ORM::factory('layer')->where('layer_visible', 1)->find_all();
+	}
+	
+	/**
+	 * Gets and returns an array of all the layers in the DB
+	 *
+	 * @param  bool $desc When TRUE, orders the records in descending order
+	 * @return array
+	 */
+	public static function get_layers_array($desc = TRUE)
+	{
+		$layers_iterator = ($desc)
+			? ORM::factory('layer')->orderby('id', 'DESC')->find_all()
+			: ORM::factory('layer')->find_all();
+		
+		$layers_array = array();
+		foreach ($layers_iterator as $layer)
+		{
+			$layers_array[] = $layer->as_array();
+		}
+		
+		return $layers_array;
 	}
 }

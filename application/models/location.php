@@ -24,20 +24,29 @@ class Location_Model extends ORM {
 		'incident_person',
 		'feed_item',
 		'reporter',
-		'checkin'
+		'checkin',
 	);
 	
 	/**
-	 * Belongs-to relatioship definition
+	 * Belongs-to relationship definition
 	 * @var array
 	 */
-	protected $belongs_to = array('incident', 'user');
+	protected $belongs_to = array(
+		'incident',
+		'user'
+	);
 
 	/**
 	 * Many-to-one relationship definition
 	 * @var array
 	 */
-	protected $has_one = array('country');
+	protected $has_one = array(
+		// A location has one country
+		'country',
+
+		// A location has one legend
+		'incident_legend'
+	);
 	
 	/**
 	 * Database table name
@@ -48,12 +57,81 @@ class Location_Model extends ORM {
 	/**
 	 * Checks if a location id exists in the database
 	 * @param int $location_id Database ID of the the location
-	 * @return bool
+	 * @return mixed ORM if location exists, FALSE otherwise
 	 */
 	public static function is_valid_location($location_id)
 	{
-		return (intval($location_id) > 0)
-			? ORM::factory('location', intval($location_id))->loaded
-			: FALSE;
+		$location_orm = ORM::factory('location', intval($location_id));
+		return $location_orm->loaded ? $location_orm : FALSE;
 	}
+
+	/**
+	 * Gets an array of all the media for the current location
+	 * @return array
+	 */
+	public function get_media_array()
+	{
+		// Main media types
+		$media = array(
+		    'photo' => array(),
+		    'video' => array(),
+		    'news' => array()
+		);
+
+		// Mapping of the media type values to the indices of the return structure
+		$map = array(
+		    1 => 'photo',
+		    2 => 'video',
+		    4 => 'news'
+		);
+
+		// Get the media
+		foreach ($this->media as $entry)
+		{
+			if ($entry->loaded)
+			{
+				$media_type = $map[$entry->media_type];
+				$media[$media_type][] = array(
+				    "id" => $entry->id,
+				    "location_id" => $entry->location_id,
+				    "media_type" => $media_type,
+				    "media_link" => trim($entry->media_link),
+				    "media_thumb" => $entry->media_thumb
+				);
+			}
+		}
+
+		return $media;
+	}
+
+	/**
+	 * Returns the location as a GeoJSON feature
+	 * @return array
+	 */
+	public function as_geojson_feature()
+	{
+		$image_thumb = $this->incident->category[0]->category_image_thumb;
+		$thumb = ( ! empty($image_thumb)) ? url::file_loc("img").'media/uploads/'.$image_thumb : "";
+
+		$image_icon = $this->incident->category[0]->category_image;
+		$icon = ( ! empty($image_icon)) ? url::file_loc("img").'media/uploads/'.$image_icon : "";
+
+		return array(
+		    "type" => "Feature",
+		    "properties" => array(
+		        "id" => $this->id,
+		        "name" => $this->location_name,
+				"incident_legend_id" => $this->incident_legend_id,
+		        "link" => url::site("locations/".$this->id),
+		        "color" => $this->incident_legend->legend_color,
+		        "thumb" => $thumb,
+		        "icon" => $icon,
+		    ),
+		    "geometry" => array(
+		        "type" => "Point",
+		        "coordinates" => array($this->longitude, $this->latitude)
+		    )
+		);
+	}
+
 }

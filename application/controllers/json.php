@@ -250,10 +250,6 @@ class Json_Controller extends Template_Controller {
 			// Compare marker against all remaining markers.
 			foreach ($markers as $key => $target)
 			{
-				// This function returns the distance between two markers, at a defined zoom level.
-				// $pixels = $this->_pixelDistance($marker['latitude'], $marker['longitude'],
-				// $target['latitude'], $target['longitude'], $zoomLevel);
-
 				$pixels = abs($marker['longitude']-$target['longitude']) +
 					abs($marker['latitude']-$target['latitude']);
 					
@@ -651,7 +647,7 @@ class Json_Controller extends Template_Controller {
 
 			$content = file_get_contents($layer_link);
 
-			if ($content !== false)
+			if ($content !== FALSE)
 			{
 				echo $content;
 			}
@@ -731,8 +727,10 @@ class Json_Controller extends Template_Controller {
 	 * @param int $incident_id - Incident to get geometry for
 	 * @return array
 	 */
-	public function _get_geometry_data_for_incident($incident_id) {
-		if (self::$geometry_data) {
+	public function _get_geometry_data_for_incident($incident_id)
+	{
+		if (self::$geometry_data)
+		{
 			return isset(self::$geometry_data[$incident_id]) ? self::$geometry_data[$incident_id] : array();
 		}
 
@@ -748,48 +746,6 @@ class Json_Controller extends Template_Controller {
 		}
 
 		return isset(self::$geometry_data[$incident_id]) ? self::$geometry_data[$incident_id] : array();
-	}
-
-
-	/**
-	 * Convert Longitude to Cartesian (Pixels) value
-	 * @param double $lon - Longitude
-	 * @return int
-	 */
-	private function _lonToX($lon)
-	{
-		return round(OFFSET + RADIUS * $lon * pi() / 180);
-	}
-
-	/**
-	 * Convert Latitude to Cartesian (Pixels) value
-	 * @param double $lat - Latitude
-	 * @return int
-	 */
-	private function _latToY($lat)
-	{
-		return round(OFFSET - RADIUS *
-					log((1 + sin($lat * pi() / 180)) /
-					(1 - sin($lat * pi() / 180))) / 2);
-	}
-
-	/**
-	 * Calculate distance using Cartesian (pixel) coordinates
-	 * @param int $lat1 - Latitude for point 1
-	 * @param int $lon1 - Longitude for point 1
-	 * @param int $lon2 - Latitude for point 2
-	 * @param int $lon2 - Longitude for point 2
-	 * @return int
-	 */
-	private function _pixelDistance($lat1, $lon1, $lat2, $lon2, $zoom)
-	{
-		$x1 = $this->_lonToX($lon1);
-		$y1 = $this->_latToY($lat1);
-
-		$x2 = $this->_lonToX($lon2);
-		$y2 = $this->_latToY($lat2);
-
-		return sqrt(pow(($x1-$x2),2) + pow(($y1-$y2),2)) >> (21 - $zoom);
 	}
 
 	/**
@@ -879,6 +835,7 @@ class Json_Controller extends Template_Controller {
 			'location.location_name',
 			'location.latitude',
 			'location.longitude',
+			'incident_legend.legend_color',
 			'category.category_title',
 			'category.category_color',
 			'category.category_image',
@@ -887,11 +844,15 @@ class Json_Controller extends Template_Controller {
 
 		// Build the predicate list first because the Database library
 		// doesn't 
-		$incident_where = "1=1";
+		$incident_where = "1=1 AND incident.incident_privacy = 0";
 		if (Incident_Model::is_valid_incident($incident_id, FALSE))
 		{
 			$incident_where = array();
 			$incident_where['location.incident_id'] = $incident_id;
+		}
+		else
+		{
+			$incident_id = FALSE;
 		}
 
 		// Category ID
@@ -915,6 +876,17 @@ class Json_Controller extends Template_Controller {
 
 			$incident_where['location.user_id'] = intval($_GET['uid']);
 		}
+		
+		// Legend ID
+		if (isset($_GET['legend']) AND Incident_Legend_Model::exists($_GET['legend']))
+		{
+			if ( ! is_array($incident_where))
+			{
+				$incident_where = array();
+			}
+			
+			$incident_where['location.incident_legend_id'] = intval($_GET['legend']);
+		}
 
 		// Get the locations
 		$markers_result = Database::instance()
@@ -923,20 +895,28 @@ class Json_Controller extends Template_Controller {
 		    ->join('incident', 'incident.id', 'location.incident_id')
 		    ->join('incident_category', 'incident_category.incident_id', 'incident.id')
 		    ->join('category', 'category.id', 'incident_category.category_id')
+			->join('incident_legend', 'incident_legend.id', 'location.incident_legend_id', 'LEFT')
 		    ->where('incident.incident_active', 1)
 		    ->where($incident_where)
 		    ->get();
-
+		
 		$markers = array();
 		foreach ($markers_result as $marker)
 		{
+			// Icon
 			$icon = ! empty($marker->category_image)
 			    ? url::file_loc('img').'media/uploads/'.$marker->category_image
 			    : "";
 
+			// Thumb
 			$thumb = ! empty($marker->category_image_thumb)
 			    ? url::file_loc('img').'media/uploads/'.$marker->category_image_thumb
 			    : "";
+
+			// Show the legend color if the incident has been specified
+			$color = ($incident_id AND ! empty($marker->legend_color))
+				? $marker->legend_color
+				: $marker->category_color;
 
 			$location_item = array(
 				"type" => "Feature",
@@ -945,7 +925,7 @@ class Json_Controller extends Template_Controller {
 					"name" => $marker->location_name,
 					"link" => "",
 					"category" => $marker->category_title,
-					"color" => $marker->category_color,
+					"color" => $color,
 					"thumb" => $thumb,
 					"icon" => $icon,
 				),
@@ -974,11 +954,18 @@ class Json_Controller extends Template_Controller {
 	 */
 	public function location_popup($location_id)
 	{
-		if (Location_Model::is_valid_location($location_id))
+		if (($location = Location_Model::is_valid_location($location_id)) != FALSE)
 		{
-			$popup = View::factory('locations/popup');
-			$popup->location = ORM::factory('location', $location_id);
-			$popup->video_embeder = new VideoEmbed();
+			$popup = View::factory('locations/popup')
+				->set('location', $location)
+				->set('video_embeder', new VideoEmbed())
+				->bind('location_media', $location_media);
+			
+			$location_media = array();
+			foreach ($location->media as $media)
+			{
+				$location_media[] = $media;
+			}
 			
 			$popup->render(TRUE);
 		}

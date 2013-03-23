@@ -44,7 +44,7 @@
 				<div class="search">
 					<p>
 						<input type="text" id="location_find_main" name="location_find"
-						    value="" title="buscar local" class="findtext" placeholder="digitar endereÃ§o, SÃ£o Paulo, SP">
+						    value="" title="buscar local" class="findtext" placeholder="digitar endereço, São Paulo, SP">
 						<span id="find_loading" class="report-find-loading"></span>								
 					</p>
 				</div>				    

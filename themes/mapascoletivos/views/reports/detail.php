@@ -3,14 +3,21 @@
 
 		<!-- social -->
 		<div id="social">
+        	compartilhar: 			
+			<!-- TODO Finish up the email button -->
+			<div id="convidar">
+				<?php echo html::anchor("#", "<img src='/themes/default/images/icons/mail.png'/>", array('class'=>'btn_convidar')); ?>
+			</div>
+			<!-- /TODO -->
+            
 			<div id="facebook_button">
-				<?php 
+				<?php
 					// URL to share on Facebook
-					echo html::anchor($incident->share_url(), "", 
+					echo html::anchor($incident->share_url(), "",
 					    array("name"=>"fb_share", "type"=>"icon", "share_url"=>$incident->share_url()));
 
 					// Facebook sharing JavaScript
-					echo html::script("http://static.ak.fbcdn.net/connect.php/js/FB.Share"); 
+					echo html::script("http://static.ak.fbcdn.net/connect.php/js/FB.Share");
 				?>
 			</div>
 			<div id="twitter_button">
@@ -24,7 +31,7 @@
 					    "data-lang" => "pt"
 					));
 
-					// Twitter widget JavaScript 
+					// Twitter widget JavaScript
 					echo html::script("https://platform.twitter.com/widgets.js");
 				?>
 			</div>
@@ -33,14 +40,31 @@
 
 		<!-- left_column -->
 		<div id="left_column">
-			<!-- TODO Finish up the email button -->
-			<div id="convidar">
-				<?php echo html::anchor("#", "Convidar", array('class'=>'btn_convidar')); ?>
+        
+        	<!-- follow incident(map) -->
+			<div class="follow">
+				<p>
+				<?php
+					// Attributes for the anchor
+					$attributes = array(
+						'data-incident-id' => $incident->id,
+						'data-action-name' => 'follow',
+						'class' => 'incident-follow'
+					);
+
+					if ($user->is_incident_follower($incident))
+					{
+						// Add the following class
+						$attributes['class'] = 'incident-follow following';
+						$attributes['data-action-name'] = 'unfollow';
+					}
+
+					echo html::anchor("#", "", $attributes);
+				?>
+				</p>
 			</div>
-			<div class="links">
-				<?php echo html::anchor("locations/create/".$incident->id, "Colobar", array('class' => 'btn_collaborate')); ?>
-			</div>
-			<!-- /TODO -->
+			<!-- /follow -->
+			
 
 			<div class="description_map">
 				<h2><?php echo $incident->incident_title; ?></h2>
@@ -53,36 +77,35 @@
 					</p>
 					<p>
 					<!-- Incident tags go here -->
-						Tags: 
-					<?php 
-						foreach ($incident->incident_tags as $incident_tag)
+						Tags:
+					<?php
+						foreach ($incident_tags as $tag)
 						{
-							$tag = $incident_tag->tag;
 							echo html::anchor('reports/?t='.$tag->id, $tag->value);
 						}
 					?>
 					</p>
 				</div>
 			</div>
-			
+
 			<div class="divisor"></div>
 
 			<div class="maps_count">
 				<p>exibições: </p>
 				<p>última atualização:</p>
 				<table>
-					<tr>	
-						<td><span><?php echo $incident->count_images(); ?></span>
-							</br>
-						fotos
+					<tr>
+						<td>
+							<span><?php echo $incident->count_images(); ?></span><br/>
+							fotos
 						</td>
-						<td><span><?php echo $incident->count_videos(); ?></span>
-							</br>
-						videos
+						<td>
+							<span><?php echo $incident->count_videos(); ?></span><br/>
+							videos
 						</td>
-						<td><span><?php echo $incident->count_reports(); ?></span>
-							</br>
-						reports
+						<td>
+							<span><?php echo $incident->count_reports(); ?></span><br/>
+							reports
 						</td>
 					</tr>
 				</table>
@@ -99,7 +122,7 @@
 					<?php
 					 	// Show the author's gravatar
 						$creator = $incident->user;
-						echo html::anchor("users/index/".$creator->id, 
+						echo html::anchor("users/index/".$creator->id,
 							html::image($creator->gravatar(), array('width'=>'30px', 'title'=>$creator->username)));
 					?>
 				</p>
@@ -114,8 +137,8 @@
 						{
 							// Display the collaborator's avatar
 							echo html::anchor(
-								"users/index/".$collaborator->id, 
-								html::image($collaborator->gravatar(), 
+								"users/index/".$collaborator->id,
+								html::image($collaborator->gravatar(),
 									array('width'=>'30px', 'title'=>$collaborator->username)));
 						}
 					?>
@@ -159,8 +182,11 @@
 		<div id="right_column">
 			<div id="filters_bar">
 				<h1 id="map_title"><?php echo $incident->incident_title; ?></h1>
+                <div class="links">
+				<?php echo html::anchor("locations/create/".$incident->id, "Colaborar", array('class' => 'btn_collaborate')); ?>
+			</div></h1>
+	
 
-				<?php if ($incident->incident_kml->count()): ?>
 				<div class="map-filters">
 					<div id="menu_filters">
 						<a href="#" class="filter-switch">
@@ -169,33 +195,11 @@
 						</a>
 					</div>
 				</div>
-				<?php endif; ?>
-
 			</div>
 
 			<!-- map display -->
 			<div id="user_map">
-				<?php if ($incident->incident_kml->count()): ?>
-				<!-- incident layers -->
-				<div class="layers-overlay" style="display:none;">
-					<div class="map-layers">
-						<ul class="layers-listing">
-					 	<?php foreach ($incident->incident_kml as $kml): ?>
-					 	<?php if ($kml->layer->loaded): ?>
-					 		<li>
-					 			<a href="#" data-layer-id="<?php echo $kml->layer_id; ?>" data-layer-name="<?php echo $kml->layer->layer_name; ?>">
-						 			<span class="layer-color" style="background-color: #<?php echo $kml->layer->layer_color; ?>"></span>
-						 			<span class="user-layer-name"><?php echo $kml->layer->layer_name; ?></span>
-					 			</a>
-					 		</li>
-					 	<?php endif; ?>
-					 	<?php endforeach; ?>
-						</ul>
-
-					</div>
-				</div>
-				<!-- /incident layers -->
-				<?php endif; ?>
+				<?php echo $map_filters; ?>
 			</div>
 
 			<!-- map comments -->

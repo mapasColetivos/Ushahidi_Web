@@ -15,7 +15,6 @@
 
 		// Array of JavaScript files to be included
 		$js_array = array(
-			'media/js/tailorbirds.js',
 			'media/js/selectToUISlider.jQuery',
 		);
 

@@ -25,17 +25,7 @@ if (window.Ushahidi) {
 	 * Overload Ushahidi.Map.addLayer
 	 */
 	mapasColetivos.Map.prototype.addLayer = function(layerType, options, save) {
-
-		if (layerType === Ushahidi.GEOJSON) {
-			// Enable layer selection on hover
-			options.selectOnHover = true;
-
-		} else if (layerType === Ushahidi.KML) {
-			options.selectOnHover = false;
-
-			// Delegate feature selection to the parent function
-			mapasColetivos.Map.prototype.onFeatureSelect = Ushahidi.Map.prototype.onFeatureSelect;
-		}
+		options.selectOnHover = (layerType === Ushahidi.GEOJSON);
 		Ushahidi.Map.prototype.addLayer.call(this, layerType, options, save);
 		return this;
 	}
@@ -49,7 +39,7 @@ if (window.Ushahidi) {
 
 		// Cache the currently selected feature
 		this._selectedFeature = feature;
-
+		
 		// Get the location id of the selected feature
 		var locationId = feature.attributes.id;
 		var context = this;
@@ -71,7 +61,7 @@ if (window.Ushahidi) {
 						response,
 						null,
 						false,
-						this.onPopupClose
+						context.onPopupClose
 					);
 
 					// Display the popup
@@ -83,7 +73,9 @@ if (window.Ushahidi) {
 
 					// Register click events for the popup
 					var responseDOM = $("#location_popup_"+locationId);
-					$(".close_image_popup", responseDOM).click(context.onPopupClose);
+					$(".close_image_popup", responseDOM).click(function(){
+						popup.destroy();
+					});
 
 					// Attach events to the popup DOM
 					attachEvents2Popup(responseDOM);
@@ -103,66 +95,56 @@ if (window.Ushahidi) {
 
 		// Show the first element
 		$(".asset_area div.assets", dom).remove();
-		$(".asset_area").append($(assets[idx]).fadeIn());
+		displayMediaAsset(idx, false);
 
 		// Next button clicked
 		$("#asset_nav_next", dom).click(function(e) {
-			$(".asset_area div.assets", dom).fadeOut().remove();
-			if ((idx + 1) == assetCount) {
-				// We're already on the last item
-				idx = 0;
-				$(".asset_area", dom).append($(assets[idx]).fadeIn("slow"));						
-			} else {
-				idx += 1;
-				$(".asset_area", dom).append($(assets[idx]).fadeIn("slow"));
-			}
-
-			$("#current_asset_pos", dom).html((idx+1));
-
+			idx += ((idx + 1) == assetCount) ? -idx : 1;
+			displayMediaAsset(idx, true);
 			return false;
 		});
 
 		// Previous button clicked
 		$("#asset_nav_previous", dom).click(function(e){
-			$(".asset_area div.assets", dom).fadeOut().remove();
-			if (idx == 0) {
-				// We're already on the first item
-				idx = assetCount - 1;
-				$(".asset_area", dom).append($(assets[idx]).fadeIn("slow"));
-			} else {
-				idx -= 1;
-				$(".asset_area", dom).append($(assets[idx]).fadeIn("slow"));
-			}
-			$("#current_asset_pos", dom).html((idx+1));
+			idx = (idx == 0) ? assetCount - 1 : idx - 1;
+			displayMediaAsset(idx, true);
 			return false;
 		});
-
-		// Mouseover events
-		$(".hooverable", dom).mouseover(function(e){
-			var overlayWidth = $("img.delimiter", this).width();
-			var imgNode = $("img.delimiter", this); 
-			var margin = (imgNode.position() !== null) ? $(imgNode).position().left : 0;
-
-			if (overlayWidth < 100 || margin == 0) {
-				overlayWidth = $("div.assets", this).width();
-				margin = 0;
+		
+		// Displays the media asset
+		function displayMediaAsset(index, clearAssetArea) {
+			if (clearAssetArea) {
+				$(".asset_area div.assets", dom).fadeOut('slow').remove();
 			}
 
-			// Attributes for the overlay
-			var attrs = {
-				"margin-left": margin  + "px",
-				"width": overlayWidth + "px"
-			};
-			$(".asset-overlay", dom).css(attrs).show();
-			e.stopPropagation();
-		});
+			// Get the asset at the specified index
+			var asset = $(assets[index]);
+			
+			// Display the asset
+			setTimeout(function() {
+				$(".asset_area", dom).append(asset);
+				$(asset).fadeIn('slow');
+			}, 300);
 
-		// Hide the overlay on mouseout
-		$(".hooverable", dom).mouseout(function(e){
-			$(".asset-overlay", dom).hide();
-			e.stopPropagation();
-		});
+			// Update the position
+			$("#current_asset_pos", dom).html(index+1);
+
+			// Only bind mouse(over/out) events when the asset
+			// doesn't have a node with the "ignore-hover" class
+			if (!$(".ignore-hover", asset).length) {
+				// Mouseover
+				$(".hooverable", dom).mouseover(function(e) {
+					$(".asset-overlay", dom).show();
+					return false;
+				});
+				
+				// Mouseout
+				$(".hooverable", dom).mouseout(function(e){
+					$(".asset-overlay", dom).hide();
+					return false;
+				});
+			}
+		}
 	}
-
 }
 </script>

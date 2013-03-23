@@ -28,7 +28,7 @@
 				<?php } ?>
 					<li><a href="<?php echo url::site();?>profile/user/<?php echo $loggedin_user->username; ?>"><?php echo Kohana::lang('ui_main.view_public_profile'); ?></a></li>
 
-					<li><a href="<?php echo url::site();?>logout"><em><?php echo Kohana::lang('ui_admin.logout');?></em></a></li>
+					<li><a href="<?php echo url::site();?>login/logout"><em><?php echo Kohana::lang('ui_admin.logout');?></em></a></li>
 
 				</ul>
 

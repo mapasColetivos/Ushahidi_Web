@@ -23,8 +23,8 @@ class User_Model extends Auth_User_Model {
 	 */
 	protected $has_many = array(
 		'alert',
-		'comment', 
-		'openid', 
+		'comment',
+		'openid',
 		'private_message',
 		'rating',
 		'media',
@@ -33,13 +33,13 @@ class User_Model extends Auth_User_Model {
 		'incident_kml',
 		'user_followers',
 		'layer',
-		'location_layer',
+		'incident_legend',
 		'incident_follows',
 	);
-	
+
 	/**
 	 * Creates a basic user and assigns to login and member roles
-	 * 
+	 *
 	 * @param   string  usename
 	 * @param   string  name
 	 * @param   string  email
@@ -99,7 +99,7 @@ class User_Model extends Auth_User_Model {
 	public static function get_user_by_id($user_id)
 	{
 		$user = ORM::factory('user', $user_id);
-		
+
 		return $user->loaded ? $user : FALSE;
 	}
 
@@ -138,7 +138,7 @@ class User_Model extends Auth_User_Model {
 		// Initalize validation
 		$post = Validation::factory($post)
 				->pre_filter('trim', TRUE);
-		
+
 		if ($auth === NULL)
 		{
 			$auth = new Auth;
@@ -172,9 +172,9 @@ class User_Model extends Auth_User_Model {
 			$post->add_callbacks('password' ,'User_Model::validate_password');
 		}
 
-		// 
+		//
 		// Additional validation rules - for mapasColetivos
-		// 
+		//
 		if ( ! empty($post->web))
 		{
 			$post->add_rules('web', 'url');
@@ -311,7 +311,7 @@ class User_Model extends Auth_User_Model {
 		// Remove assigned roles
 		// Have to use db->query() since we don't have an ORM model for roles_users
 		$this->db->query('DELETE FROM roles_users WHERE user_id = ?',$this->id);
-		
+
 		// Remove assigned badges
 		$this->db->query('DELETE FROM badge_users WHERE user_id = ?',$this->id);
 
@@ -319,12 +319,12 @@ class User_Model extends Auth_User_Model {
 		ORM::factory('alert')
 		    ->where('user_id', $this->id)
 		    ->delete_all();
-		
+
 		// Delete user_token
 		ORM::factory('user_token')
 		    ->where('user_id', $this->id)
 		    ->delete_all();
-		
+
 		// Delete openid
 		ORM::factory('openid')
 		    ->where('user_id', $this->id)
@@ -334,10 +334,10 @@ class User_Model extends Auth_User_Model {
 		ORM::factory('user_devices')
 		    ->where('user_id', $this->id)
 		    ->delete_all();
-		
+
 		parent::delete();
 	}
-	
+
 	/**
 	 * Check if user has specified permission
 	 * @param $permission String permission name
@@ -349,7 +349,7 @@ class User_Model extends Auth_User_Model {
 		{
 			return TRUE;
 		}
-		
+
 		foreach ($this->roles as $user_role)
 		{
 			if ($user_role->has(ORM::factory('permission',$permission)))
@@ -357,10 +357,10 @@ class User_Model extends Auth_User_Model {
 				return TRUE;
 			}
 		}
-		
+
 		return FALSE;
 	}
-	
+
 	/**
 	 * Get user's dashboard
 	 */
@@ -368,14 +368,14 @@ class User_Model extends Auth_User_Model {
 	{
 		if ($this->has_permission('admin_ui'))
 			return 'admin';
-		
+
 		if ($this->has_permission('member_ui'))
 			return 'members';
-		
+
 		// Just in case someone has a login only role
 		if ($this->has(ORM::factory('role','login')))
 			return '';
-		
+
 		// Send anyone else to login
 		return 'login';
 	}
@@ -450,59 +450,54 @@ class User_Model extends Auth_User_Model {
 	 *     2. Uploading a KML for that incident
 	 *     3. Submitting a location for the incident
 	 *     4. Uploading media (news source link, images, video) for the incident
+	 *     5. Creating a legend on an incident
 	 *
 	 * @return array
 	 */
 	public function get_incidents_collaborated_on()
 	{
-		$incidents = array();
+		$incident_ids = array();
 
 		// Get the incidents
 		foreach ($this->incident as $incident)
 		{
-			$this->_add_incident_to_array($incidents, $incident);
+			$incident_ids[] = $incident->id;
 		}
 
 		// KMLs uploaded by the user (incident_kml)
 		foreach ($this->incident_kml as $kml)
 		{
-			$this->_add_incident_to_array($incidents, $kml->incident);
+			$incident_ids[] = $kml->incident_id;
 		}
 
 		// Locations created by the user (location)
 		foreach ($this->location as $location)
 		{
-			$this->_add_incident_to_array($incidents, $location->incident);
-		}
-
-		// Location layers (location_layer)
-		foreach ($this->location_layer as $location_layer)
-		{
-			$this->_add_incident_to_array($incidents, $location_layer->incident);
+			$incident_ids[] = $location->incident_id;
 		}
 
 		// Media
 		foreach ($this->media as $media)
 		{
-			$this->_add_incident_to_array($incidents, $media->incident);
+			$incident_ids[] = $media->incident_id;
 		}
-
-		return array_values($incidents);
-	}
-
-	/**
-	 * Given an incident checks whether it exists in the provided buffer
-	 * and adds it (if it doesn't exist)
-	 *
-	 * @param   array          $incidents List of incidents
-	 * @param   Incident_Model $incident Incident to be added
-	 */
-	private function _add_incident_to_array(array & $incidents, $incident)
-	{
-		if ( ! array_key_exists($incident->id, $incidents))
+		
+		// Legends created by this user
+		foreach ($this->incident_legend as $legend)
 		{
-			$incidents[$incident->id] = $incident;
+			$incident_ids[] = $legend->incident_id;
 		}
+
+		if ( ! count($incident_ids)) return array();
+
+		$incidents = array();
+		$incident_ids = array_unique($incident_ids);
+		foreach (ORM::factory('incident')->in('id', $incident_ids)->find_all() as $incident)
+		{
+			$incidents[] = $incident;
+		}
+		
+		return $incidents;
 	}
 
 	/**
@@ -562,7 +557,7 @@ class User_Model extends Auth_User_Model {
 	{
 		if (Incident_Model::is_valid_incident($incident_id, FALSE))
 		{
-			$follow_orm = new Incident_Follow_Model();			
+			$follow_orm = new Incident_Follow_Model();
 			$follow_orm->user_id = $this->id;
 			$follow_orm->incident_id = $incident_id;
 			$follow_orm->save();
@@ -746,7 +741,6 @@ class User_Model extends Auth_User_Model {
 		}
 
 		return $legends;
-
 	}
 	
 	/**
