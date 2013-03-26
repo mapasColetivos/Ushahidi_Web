@@ -144,11 +144,19 @@ img#claro{
 }
 #map_title {
 	color:#666;
-	margin:0;
-	padding: 12px 0 0 10px;
-	font-size: 16px;
-	font-weight: bold;
+	margin-left:10px; 
+	margin-top: -5px;
 	font-size: 18px;
+	font-weight: bold;
+	text-transform: capitalize;
+}
+
+#map_user_title{
+	color:#666;
+	padding: 18px 0 0 10px;
+	font-size: 18px;
+	font-weight: bold;
+	text-transform: capitalize;
 }
 
 p#mapeador{
