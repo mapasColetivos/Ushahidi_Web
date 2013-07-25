@@ -182,7 +182,8 @@
 		<div id="right_column">
 			<div id="filters_bar">
 				<h1 id="map_title"><?php echo $incident->incident_title; ?></h1>
-                <span><div class="links"><?php echo html::anchor("locations/create/".$incident->id, "Colaborar", array('class' => 'btn_collaborate')); ?></span>
+                <div class="links">
+				<?php echo html::anchor("locations/create/".$incident->id, "Colaborar", array('class' => 'btn_collaborate')); ?>
 			</div></h1>
 	
 
